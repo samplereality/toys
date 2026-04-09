@@ -28,15 +28,17 @@ Uses the `goodlinks://` protocol to send links to the GoodLinks macOS app. No co
 
 Sends a silent background HTTP request to the GoodLinks API server running on your Mac. This is the best option for authenticated/VPN pages because no new tabs are opened and your session is completely undisturbed.
 
+The extension POSTs to `http://localhost:9428/api/v1/links` using `Authorization: Bearer <token>` authentication.
+
 **Setup:**
 
 1. Open **GoodLinks** on your Mac
 2. Go to **Settings > API**
-3. Enable **API Server**
-4. Note the server URL and copy the **API Token**
+3. Enable **API Server** (the default port is `9428`)
+4. Copy the **API Token**
 5. In the extension, right-click the icon > **Options** (or go to `chrome://extensions/` and click Details > Extension options)
 6. Select **Local API Server** as the save method
-7. Paste the server URL and API token
+7. Enter `http://localhost:9428` as the server URL and paste your API token
 8. Click **Test Connection** to verify, then **Save Settings**
 
 ## Configuration
@@ -44,8 +46,8 @@ Sends a silent background HTTP request to the GoodLinks API server running on yo
 Right-click the extension icon and select **Options** to configure:
 
 - **Save Method**: URL Scheme or Local API Server
-- **API Server URL**: The localhost URL from GoodLinks settings (only for API method)
-- **API Token**: The token from GoodLinks settings (only for API method)
+- **API Server URL**: The localhost URL from GoodLinks settings (default port: `9428`)
+- **API Token**: The Bearer token from GoodLinks settings
 - **Default Tags**: Comma-separated tags to pre-fill when saving
 
 ## Browser Compatibility

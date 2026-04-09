@@ -54,10 +54,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     testResult.classList.add("hidden");
 
     try {
-      const response = await fetch(`${url}/api/v1/links`, {
+      const response = await fetch(`${url}/api/v1/tags`, {
         method: "GET",
         headers: {
-          "GoodLinks-Token": token,
+          Authorization: `Bearer ${token}`,
         },
       });
 

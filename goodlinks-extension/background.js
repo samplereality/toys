@@ -44,7 +44,7 @@ async function saveViaApi(settings, linkData) {
   const body = {
     url: linkData.url,
     title: linkData.title || undefined,
-    tagNames: linkData.tags.length > 0 ? linkData.tags : undefined,
+    tags: linkData.tags.length > 0 ? linkData.tags : undefined,
     starred: linkData.starred || undefined,
   };
 
@@ -52,7 +52,7 @@ async function saveViaApi(settings, linkData) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "GoodLinks-Token": settings.apiToken,
+      Authorization: `Bearer ${settings.apiToken}`,
     },
     body: JSON.stringify(body),
   });
