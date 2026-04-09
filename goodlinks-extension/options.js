@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const apiUrlInput = document.getElementById("apiUrl");
   const apiTokenInput = document.getElementById("apiToken");
   const defaultTagsInput = document.getElementById("defaultTags");
+  const fetchContentInput = document.getElementById("fetchContent");
+  const contentFetchSection = document.getElementById("content-fetch-settings");
   const apiSettingsSection = document.getElementById("api-settings");
   const saveBtn = document.getElementById("save-btn");
   const testBtn = document.getElementById("test-btn");
@@ -15,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     apiUrl: "",
     apiToken: "",
     defaultTags: "",
+    fetchContent: true,
   });
 
   // Populate form
@@ -22,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   apiUrlInput.value = settings.apiUrl;
   apiTokenInput.value = settings.apiToken;
   defaultTagsInput.value = settings.defaultTags;
+  fetchContentInput.checked = settings.fetchContent;
 
   updateApiSettingsVisibility();
 
@@ -34,8 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const method = document.querySelector('input[name="saveMethod"]:checked').value;
     if (method === "api") {
       apiSettingsSection.classList.remove("disabled");
+      contentFetchSection.classList.remove("disabled");
     } else {
       apiSettingsSection.classList.add("disabled");
+      contentFetchSection.classList.add("disabled");
     }
   }
 
@@ -87,6 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       apiUrl: apiUrlInput.value.trim().replace(/\/+$/, ""), // strip trailing slashes
       apiToken: apiTokenInput.value.trim(),
       defaultTags: defaultTagsInput.value.trim(),
+      fetchContent: fetchContentInput.checked,
     };
 
     await chrome.storage.sync.set(newSettings);

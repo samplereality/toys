@@ -11,6 +11,7 @@ chrome.commands?.onCommand?.addListener(async (command) => {
       apiUrl: "",
       apiToken: "",
       defaultTags: "",
+      fetchContent: true,
     });
 
     const tags = settings.defaultTags
@@ -61,9 +62,11 @@ async function saveViaApi(settings, linkData) {
     throw new Error(`API error ${response.status}`);
   }
 
-  // After saving metadata via API, trigger the URL scheme so GoodLinks
-  // runs its normal content-fetch pipeline to download the full article.
-  await triggerContentFetch(linkData.url);
+  // Optionally trigger the URL scheme so GoodLinks runs its normal
+  // content-fetch pipeline to download the full article.
+  if (settings.fetchContent) {
+    await triggerContentFetch(linkData.url);
+  }
 }
 
 async function triggerContentFetch(url) {

@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     apiUrl: "",
     apiToken: "",
     defaultTags: "",
+    fetchContent: true,
   });
 
   // Pre-fill default tags
@@ -102,10 +103,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       throw new Error(`API error ${response.status}: ${text || response.statusText}`);
     }
 
-    // After saving metadata via API, trigger the URL scheme so GoodLinks
-    // runs its normal content-fetch pipeline to download the full article.
-    // The link already exists, so this just nudges the app to fetch content.
-    await triggerContentFetch(linkData.url);
+    // Optionally trigger the URL scheme so GoodLinks runs its normal
+    // content-fetch pipeline to download the full article.
+    if (settings.fetchContent) {
+      await triggerContentFetch(linkData.url);
+    }
   }
 
   async function triggerContentFetch(url) {

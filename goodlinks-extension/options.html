@@ -62,6 +62,22 @@
       </div>
     </section>
 
+    <section id="content-fetch-settings">
+      <h2>Article Content Download</h2>
+
+      <div class="field checkbox-field">
+        <label>
+          <input type="checkbox" id="fetchContent" checked>
+          <strong>Trigger article download via URL scheme</strong>
+        </label>
+        <span class="hint">After saving via the API, also fires <code>goodlinks://</code> to
+          trigger GoodLinks to download the full article for offline reading.
+          Chrome will ask to open GoodLinks the first time — check
+          "Always allow" in that dialog to make it silent.
+          Disable this if you don't need offline content or find the prompt disruptive.</span>
+      </div>
+    </section>
+
     <section>
       <h2>Defaults</h2>
 
