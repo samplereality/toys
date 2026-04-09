@@ -88,18 +88,35 @@ document.addEventListener("DOMContentLoaded", async () => {
       starred: linkData.starred || undefined,
     };
 
+    const authHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${settings.apiToken}`,
+    };
+
     const response = await fetch(`${settings.apiUrl}/api/v1/links`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${settings.apiToken}`,
-      },
+      headers: authHeaders,
       body: JSON.stringify(body),
     });
 
     if (!response.ok) {
       const text = await response.text().catch(() => "");
       throw new Error(`API error ${response.status}: ${text || response.statusText}`);
+    }
+
+    // After saving, trigger GoodLinks to download the article content
+    // by calling the Get Article Content endpoint.
+    try {
+      const link = await response.json();
+      const linkId = link.id || link.data?.id;
+      if (linkId) {
+        await fetch(
+          `${settings.apiUrl}/api/v1/links/${linkId}/content?format=html`,
+          { headers: { Authorization: `Bearer ${settings.apiToken}` } }
+        );
+      }
+    } catch {
+      // Content fetch is best-effort; the link is already saved
     }
   }
 
