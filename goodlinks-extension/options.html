@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Save to GoodLinks - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div id="app">
+    <h1>Save to GoodLinks</h1>
+    <p class="subtitle">Configure how links are saved to GoodLinks.</p>
+
+    <div id="status-msg" class="hidden"></div>
+
+    <section>
+      <h2>Save Method</h2>
+
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="saveMethod" value="urlscheme" checked>
+          <div>
+            <strong>URL Scheme</strong>
+            <span class="hint">Uses <code>goodlinks://</code> to open the GoodLinks app directly.
+              Requires GoodLinks installed on macOS. No extra configuration needed.</span>
+          </div>
+        </label>
+
+        <label class="radio-option">
+          <input type="radio" name="saveMethod" value="api">
+          <div>
+            <strong>Local API Server</strong>
+            <span class="hint">Sends a background HTTP request to the GoodLinks API server.
+              Silent save without opening new tabs. Requires enabling the API server in
+              GoodLinks &gt; Settings &gt; API.</span>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <section id="api-settings">
+      <h2>API Server Settings</h2>
+      <p class="hint">
+        Open GoodLinks on your Mac, go to <strong>Settings &gt; API</strong>,
+        enable <strong>API Server</strong>, and copy the details below.
+      </p>
+
+      <div class="field">
+        <label for="apiUrl">API Server URL</label>
+        <input type="text" id="apiUrl" placeholder="http://localhost:port">
+        <span class="hint">The URL shown in GoodLinks API settings (e.g. http://localhost:56789).</span>
+      </div>
+
+      <div class="field">
+        <label for="apiToken">API Token</label>
+        <input type="password" id="apiToken" placeholder="Paste your API token here">
+        <span class="hint">The token from GoodLinks API settings. Click the copy button in GoodLinks to get it.</span>
+      </div>
+
+      <div class="field">
+        <button id="test-btn">Test Connection</button>
+        <span id="test-result" class="hidden"></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Defaults</h2>
+
+      <div class="field">
+        <label for="defaultTags">Default Tags</label>
+        <input type="text" id="defaultTags" placeholder="e.g. library, research">
+        <span class="hint">Comma-separated tags to pre-fill when saving. You can change them per-save.</span>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button id="save-btn" class="primary">Save Settings</button>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
