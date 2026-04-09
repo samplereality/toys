@@ -88,14 +88,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       starred: linkData.starred || undefined,
     };
 
-    const authHeaders = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${settings.apiToken}`,
-    };
-
     const response = await fetch(`${settings.apiUrl}/api/v1/links`, {
       method: "POST",
-      headers: authHeaders,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${settings.apiToken}`,
+      },
       body: JSON.stringify(body),
     });
 
@@ -104,19 +102,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       throw new Error(`API error ${response.status}: ${text || response.statusText}`);
     }
 
-    // After saving, trigger GoodLinks to download the article content
-    // by calling the Get Article Content endpoint.
+    // After saving metadata via API, trigger the URL scheme so GoodLinks
+    // runs its normal content-fetch pipeline to download the full article.
+    // The link already exists, so this just nudges the app to fetch content.
+    await triggerContentFetch(linkData.url);
+  }
+
+  async function triggerContentFetch(url) {
+    const params = new URLSearchParams();
+    params.set("url", url);
+    params.set("quick", "1");
+    const goodlinksUrl = `goodlinks://x-callback-url/save?${params.toString()}`;
+
+    const newTab = await chrome.tabs.create({ url: goodlinksUrl, active: false });
+    await new Promise((resolve) => setTimeout(resolve, 500));
     try {
-      const link = await response.json();
-      const linkId = link.id || link.data?.id;
-      if (linkId) {
-        await fetch(
-          `${settings.apiUrl}/api/v1/links/${linkId}/content?format=html`,
-          { headers: { Authorization: `Bearer ${settings.apiToken}` } }
-        );
-      }
+      await chrome.tabs.remove(newTab.id);
     } catch {
-      // Content fetch is best-effort; the link is already saved
+      // Tab may have already closed
     }
   }
 
