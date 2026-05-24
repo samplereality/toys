@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reveal Editor</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <strong>Reveal Editor</strong>
+    <input id="deck-title" type="text" aria-label="Presentation title" placeholder="Untitled presentation">
+  </div>
+  <div class="topbar-actions">
+    <label class="field">
+      Theme
+      <select id="theme-select">
+        <option value="black">black</option>
+        <option value="white">white</option>
+        <option value="league">league</option>
+        <option value="beige">beige</option>
+        <option value="sky">sky</option>
+        <option value="night">night</option>
+        <option value="serif">serif</option>
+        <option value="simple">simple</option>
+        <option value="solarized">solarized</option>
+        <option value="blood">blood</option>
+        <option value="moon">moon</option>
+      </select>
+    </label>
+    <button id="btn-preview" type="button">Preview</button>
+    <button id="btn-export-html" type="button">Export HTML</button>
+    <button id="btn-export-json" type="button" title="Save project as JSON">Save .json</button>
+    <button id="btn-import-json" type="button" title="Load project from JSON">Load .json</button>
+    <button id="btn-new" type="button" class="danger" title="Start a new deck">New</button>
+    <span id="status" class="status"></span>
+  </div>
+</header>
+
+<main class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <span>Slides</span>
+      <button id="btn-add-slide" type="button" title="Add slide">+</button>
+    </div>
+    <ol id="slide-list" class="slide-list"></ol>
+  </aside>
+
+  <section class="editor">
+    <div class="toolbar" id="toolbar">
+      <button type="button" data-cmd="formatBlock" data-arg="h1" title="Heading 1">H1</button>
+      <button type="button" data-cmd="formatBlock" data-arg="h2" title="Heading 2">H2</button>
+      <button type="button" data-cmd="formatBlock" data-arg="h3" title="Heading 3">H3</button>
+      <button type="button" data-cmd="formatBlock" data-arg="p" title="Paragraph">P</button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="bold" title="Bold (Ctrl/Cmd+B)"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="Italic (Ctrl/Cmd+I)"><i>I</i></button>
+      <button type="button" data-cmd="underline" title="Underline"><u>U</u></button>
+      <button type="button" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="insertUnorderedList" title="Bulleted list">&bull; List</button>
+      <button type="button" data-cmd="insertOrderedList" title="Numbered list">1. List</button>
+      <button type="button" data-action="blockquote" title="Blockquote">&ldquo; &rdquo;</button>
+      <button type="button" data-action="code-inline" title="Inline code">&lt;/&gt;</button>
+      <button type="button" data-action="code-block" title="Code block">{ }</button>
+      <span class="sep"></span>
+      <button type="button" data-action="link" title="Link">Link</button>
+      <button type="button" data-action="image" title="Insert image">Image</button>
+      <button type="button" data-action="hr" title="Horizontal rule">HR</button>
+      <button type="button" data-action="fragment" title="Wrap selection as reveal.js fragment (appears on click)">Fragment</button>
+      <span class="sep"></span>
+      <button type="button" data-cmd="removeFormat" title="Clear formatting">Clear</button>
+      <button type="button" id="toggle-source" title="Toggle HTML source">&lt;/&gt; Source</button>
+    </div>
+
+    <div class="stage">
+      <div class="slide-frame" id="slide-frame">
+        <div id="slide-editor" class="slide-editor" contenteditable="true" spellcheck="true"></div>
+        <textarea id="slide-source" class="slide-source" spellcheck="false" hidden></textarea>
+        <div id="drop-overlay" class="drop-overlay" hidden>Drop image to embed</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <label class="field">
+        Transition
+        <select id="slide-transition">
+          <option value="">(default)</option>
+          <option value="none">none</option>
+          <option value="fade">fade</option>
+          <option value="slide">slide</option>
+          <option value="convex">convex</option>
+          <option value="concave">concave</option>
+          <option value="zoom">zoom</option>
+        </select>
+      </label>
+      <label class="field">
+        Background
+        <input id="slide-bg" type="text" placeholder="#000, rebeccapurple, linear-gradient(...)" />
+      </label>
+      <label class="field grow">
+        Speaker notes
+        <textarea id="slide-notes" rows="2" placeholder="Notes shown in the speaker view"></textarea>
+      </label>
+    </div>
+  </section>
+</main>
+
+<div id="preview-modal" class="modal" hidden>
+  <div class="modal-head">
+    <strong>Preview</strong>
+    <button type="button" id="preview-close">Close</button>
+  </div>
+  <iframe id="preview-frame" title="Preview"></iframe>
+</div>
+
+<input id="file-input" type="file" accept="image/*" hidden>
+<input id="json-input" type="file" accept="application/json,.json" hidden>
+
+<script src="app.js"></script>
+</body>
+</html>
