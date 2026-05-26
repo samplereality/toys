@@ -21,13 +21,17 @@ RedirectMatch 404 /\.htaccess$
 
   # ----- Content-Security-Policy -----
   # script-src and style-src include cdn.jsdelivr.net so JSZip + reveal themes
-  # load. If you vendor those locally, drop the cdn.jsdelivr.net allowances.
+  # load. style-src also lists fonts.googleapis.com because several reveal
+  # themes do `@import url(https://fonts.googleapis.com/...)` at the top of
+  # their CSS to fetch webfont rules; the font files themselves come from
+  # fonts.gstatic.com (in font-src). If you vendor everything locally, you
+  # can drop the external allowances.
   # 'unsafe-inline' in style-src is needed because the editor sets inline
   # style="font-size:..." on r-fit-text and inline style="height:..." on
   # r-stretch elements.
   Header always set Content-Security-Policy "default-src 'self'; \
 script-src 'self' https://cdn.jsdelivr.net; \
-style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; \
+style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; \
 img-src 'self' data: https:; \
 media-src 'self' data: https:; \
 font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; \
