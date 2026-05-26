@@ -904,6 +904,14 @@ ${sections}
       ? `Preview — from slide ${slideNumber(state.slides.findIndex(s => s.id === state.currentId))}`
       : 'Preview';
     els.previewModal.hidden = false;
+    // Hand keyboard focus to the iframe so arrow keys / space navigate
+    // immediately. Done on the iframe's load so reveal's key listeners
+    // are wired up before we focus.
+    els.previewFrame.addEventListener('load', () => {
+      try {
+        els.previewFrame.contentWindow?.focus();
+      } catch {}
+    }, { once: true });
   }
 
   function closePreview() {
