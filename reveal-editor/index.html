@@ -29,7 +29,9 @@
         <option value="moon">moon</option>
       </select>
     </label>
-    <button id="btn-preview" type="button">Preview</button>
+    <button id="btn-preview" type="button" title="Preview from start (P)">Preview</button>
+    <button id="btn-preview-here" type="button" title="Preview starting from the current slide (Shift+P)">Preview from Here</button>
+    <button id="btn-theme-toggle" type="button" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">☾</button>
     <button id="btn-export-html" type="button">Export HTML</button>
     <button id="btn-export-json" type="button" title="Save project as JSON">Save .json</button>
     <button id="btn-import-json" type="button" title="Load project from JSON">Load .json</button>
@@ -68,7 +70,28 @@
       <button type="button" data-action="link" title="Link">Link</button>
       <button type="button" data-action="image" title="Insert image">Image</button>
       <button type="button" data-action="hr" title="Horizontal rule">HR</button>
-      <button type="button" data-action="fragment" title="Wrap selection as reveal.js fragment (appears on click)">Fragment</button>
+      <span class="sep"></span>
+      <button type="button" data-action="fit-text" title="Fit text to slide (r-fit-text)">Fit</button>
+      <button type="button" data-action="stretch" title="Stretch to fill slide (r-stretch)">Stretch</button>
+      <span class="sep"></span>
+      <select id="fragment-type" class="toolbar-select" title="Fragment animation">
+        <option value="">fade-in</option>
+        <option value="fade-out">fade-out</option>
+        <option value="fade-up">fade-up</option>
+        <option value="fade-down">fade-down</option>
+        <option value="fade-left">fade-left</option>
+        <option value="fade-right">fade-right</option>
+        <option value="fade-in-then-out">fade-in-then-out</option>
+        <option value="fade-in-then-semi-out">fade-in-then-semi-out</option>
+        <option value="grow">grow</option>
+        <option value="shrink">shrink</option>
+        <option value="strike">strike</option>
+        <option value="highlight-red">highlight-red</option>
+        <option value="highlight-green">highlight-green</option>
+        <option value="highlight-blue">highlight-blue</option>
+        <option value="highlight-current-red">highlight-current-red</option>
+      </select>
+      <button type="button" data-action="fragment" title="Toggle fragment on current block, or wrap selection. Click again to remove.">Fragment</button>
       <span class="sep"></span>
       <button type="button" data-cmd="removeFormat" title="Clear formatting">Clear</button>
       <button type="button" id="toggle-source" title="Toggle HTML source">&lt;/&gt; Source</button>
@@ -97,19 +120,44 @@
       </label>
       <label class="field">
         Background
-        <input id="slide-bg" type="text" placeholder="#000, rebeccapurple, linear-gradient(...)" />
+        <select id="slide-bg-type">
+          <option value="">(none)</option>
+          <option value="color">color / CSS</option>
+          <option value="image">image URL</option>
+          <option value="video">video URL</option>
+          <option value="iframe">iframe URL</option>
+        </select>
       </label>
       <label class="field grow">
-        Speaker notes
-        <textarea id="slide-notes" rows="2" placeholder="Notes shown in the speaker view"></textarea>
+        <span id="slide-bg-label">Value</span>
+        <input id="slide-bg-value" type="text" placeholder="Pick a background type first" disabled />
       </label>
+      <label class="field checkbox">
+        <input id="slide-vertical" type="checkbox" />
+        <span>Vertical sub-slide</span>
+      </label>
+      <div class="field grow notes-field">
+        <div class="notes-head">
+          <span>Speaker notes</span>
+          <button type="button" id="btn-notes-popout" title="Open notes in a larger editor">⤢ Expand</button>
+        </div>
+        <textarea id="slide-notes" rows="2" placeholder="Notes shown in the speaker view"></textarea>
+      </div>
     </div>
   </section>
+
+  <aside id="notes-panel" class="notes-panel" hidden>
+    <div class="notes-panel-head">
+      <strong>Speaker notes — <span id="notes-panel-slide">slide</span></strong>
+      <button type="button" id="notes-panel-close" title="Close notes panel" aria-label="Close notes panel">×</button>
+    </div>
+    <textarea id="notes-panel-text" placeholder="Notes shown in the speaker view (press S during a presentation)"></textarea>
+  </aside>
 </main>
 
 <div id="preview-modal" class="modal" hidden>
   <div class="modal-head">
-    <strong>Preview</strong>
+    <strong id="preview-title">Preview</strong>
     <button type="button" id="preview-close">Close</button>
   </div>
   <iframe id="preview-frame" title="Preview"></iframe>
