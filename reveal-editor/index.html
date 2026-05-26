@@ -33,9 +33,8 @@
     <button id="btn-preview-here" type="button" title="Preview starting from the current slide (Shift+P)">Preview from Here</button>
     <button id="btn-theme-toggle" type="button" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">☾</button>
     <button id="btn-export-html" type="button">Export HTML</button>
-    <button id="btn-export-json" type="button" title="Save project as JSON">Save .json</button>
-    <button id="btn-import-json" type="button" title="Load project from JSON">Load .json</button>
-    <button id="btn-new" type="button" class="danger" title="Start a new deck">New</button>
+    <button id="btn-projects" type="button" title="Manage saved projects">Projects…</button>
+    <button id="btn-new" type="button" title="New deck">+ New</button>
     <span id="status" class="status"></span>
   </div>
 </header>
@@ -160,12 +159,34 @@
     <strong id="preview-title">Preview</strong>
     <button type="button" id="preview-close">Close</button>
   </div>
-  <iframe id="preview-frame" title="Preview"></iframe>
+  <iframe id="preview-frame" title="Preview"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+          allowfullscreen></iframe>
+</div>
+
+<div id="projects-modal" class="modal projects-modal" hidden>
+  <div class="modal-head">
+    <strong>Projects</strong>
+    <button type="button" id="projects-close">Close</button>
+  </div>
+  <div class="projects-body">
+    <div class="projects-toolbar">
+      <button type="button" id="projects-new">+ New project</button>
+      <button type="button" id="projects-export-all">Export all (.zip)</button>
+      <label class="projects-import">
+        <span>Import .json or .zip…</span>
+        <input id="projects-import-input" type="file" accept="application/json,.json,application/zip,.zip" multiple hidden>
+      </label>
+    </div>
+    <ul id="projects-list" class="projects-list" aria-label="Saved projects"></ul>
+  </div>
 </div>
 
 <input id="file-input" type="file" accept="image/*" hidden>
-<input id="json-input" type="file" accept="application/json,.json" hidden>
 
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+        integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG"
+        crossorigin="anonymous"></script>
 <script src="app.js"></script>
 </body>
 </html>

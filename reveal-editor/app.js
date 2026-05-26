@@ -1,9 +1,10 @@
 // Reveal Editor — a small browser GUI for building reveal.js decks.
-(() => {
+(async () => {
   'use strict';
 
   const REVEAL_VERSION = '5.1.0';
-  const STORAGE_KEY = 'reveal-editor:project:v1';
+  const LIBRARY_KEY = 'reveal-editor:library:v1';
+  const LEGACY_STORAGE_KEY = 'reveal-editor:project:v1';
   const THEME_KEY = 'reveal-editor:ui-theme';
 
   const $ = (sel) => document.querySelector(sel);
@@ -31,7 +32,13 @@
     notes: $('#slide-notes'),
     status: $('#status'),
     fileInput: $('#file-input'),
-    jsonInput: $('#json-input'),
+    projectsButton: $('#btn-projects'),
+    projectsModal: $('#projects-modal'),
+    projectsClose: $('#projects-close'),
+    projectsList: $('#projects-list'),
+    projectsNew: $('#projects-new'),
+    projectsExportAll: $('#projects-export-all'),
+    projectsImportInput: $('#projects-import-input'),
     previewModal: $('#preview-modal'),
     previewFrame: $('#preview-frame'),
     previewClose: $('#preview-close'),
@@ -87,50 +94,221 @@
     return s;
   }
 
-  function blankProject() {
+  function blankProject(name) {
     const first = newSlide('<h1>My presentation</h1><p>Subtitle or intro</p>');
+    const now = Date.now();
     return {
-      title: 'Untitled presentation',
+      id: uid(),
+      name: name || 'Untitled presentation',
+      createdAt: now,
+      modifiedAt: now,
+      title: name || 'Untitled presentation',
       theme: 'black',
       slides: [first],
       currentId: first.id,
     };
   }
 
-  let state = loadProject() || blankProject();
+  function normalizeProject(p, fallbackName) {
+    if (!p || typeof p !== 'object') return null;
+    if (!Array.isArray(p.slides) || p.slides.length === 0) return null;
+    p.slides.forEach(migrateSlide);
+    if (!p.currentId || !p.slides.some(s => s.id === p.currentId)) {
+      p.currentId = p.slides[0].id;
+    }
+    if (!p.id) p.id = uid();
+    if (!p.title) p.title = fallbackName || 'Untitled presentation';
+    if (!p.name) p.name = p.title;
+    if (!p.theme) p.theme = 'black';
+    const now = Date.now();
+    if (!p.createdAt) p.createdAt = now;
+    if (!p.modifiedAt) p.modifiedAt = now;
+    return p;
+  }
+
+  // -------- Library (multi-project storage, IndexedDB-backed) --------
+  let library = null;          // { version, currentProjectId, projects: [...] }
+  let state = null;            // current project entry (reference into library.projects)
   let sourceMode = false;
   let saveTimer = null;
 
-  // -------- Persistence --------
-  function loadProject() {
+  const DB_NAME = 'reveal-editor';
+  const DB_VERSION = 1;
+  const STORE_META = 'meta';
+  const STORE_PROJECTS = 'projects';
+  const META_KEY = 'state';
+
+  let db = null;
+  let dbReady = null;       // promise resolved once db is open (or null if it failed)
+  const dirtyProjects = new Set();   // ids of projects that need flushing
+  let metaDirty = false;
+
+  function openDb() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = (e) => {
+        const d = e.target.result;
+        if (!d.objectStoreNames.contains(STORE_META)) d.createObjectStore(STORE_META);
+        if (!d.objectStoreNames.contains(STORE_PROJECTS)) d.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function idbGet(storeName, key) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const req = tx.objectStore(storeName).get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  function idbGetAll(storeName) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const req = tx.objectStore(storeName).getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  function idbPut(storeName, value, key) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      const req = key !== undefined ? store.put(value, key) : store.put(value);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  function idbDelete(storeName, key) {
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readwrite');
+      const req = tx.objectStore(storeName).delete(key);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  // Open the DB and assemble the in-memory library, migrating from
+  // localStorage on first run if needed.
+  async function loadLibrary() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      const data = JSON.parse(raw);
-      if (!data.slides || !Array.isArray(data.slides) || data.slides.length === 0) return null;
-      data.slides.forEach(migrateSlide);
-      if (!data.currentId || !data.slides.some(s => s.id === data.currentId)) {
-        data.currentId = data.slides[0].id;
+      db = await openDb();
+    } catch (e) {
+      console.warn('IndexedDB unavailable, falling back to in-memory only:', e);
+      return freshLibrary();
+    }
+
+    // Already-migrated case: pull projects + meta from IDB.
+    const existing = await idbGetAll(STORE_PROJECTS);
+    if (existing.length > 0) {
+      const meta = await idbGet(STORE_META, META_KEY);
+      const projects = existing.map(p => normalizeProject(p)).filter(Boolean);
+      let currentProjectId = meta?.currentProjectId;
+      if (!projects.some(p => p.id === currentProjectId)) currentProjectId = projects[0].id;
+      // Sort: keep stable but newest first as a default presentation order.
+      projects.sort((a, b) => (b.modifiedAt || 0) - (a.modifiedAt || 0));
+      return { version: 1, currentProjectId, projects };
+    }
+
+    // First-run migration from the multi-project localStorage key.
+    try {
+      const raw = localStorage.getItem(LIBRARY_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.projects) && parsed.projects.length > 0) {
+          const projects = parsed.projects.map(p => normalizeProject(p)).filter(Boolean);
+          for (const p of projects) await idbPut(STORE_PROJECTS, p);
+          let currentProjectId = parsed.currentProjectId;
+          if (!projects.some(p => p.id === currentProjectId)) currentProjectId = projects[0].id;
+          await idbPut(STORE_META, { currentProjectId }, META_KEY);
+          try { localStorage.removeItem(LIBRARY_KEY); } catch {}
+          return { version: 1, currentProjectId, projects };
+        }
       }
-      return data;
-    } catch {
-      return null;
+    } catch (e) { console.warn('library migration failed:', e); }
+
+    // Second-run migration: legacy single-slot key.
+    try {
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (legacy) {
+        const p = normalizeProject(JSON.parse(legacy));
+        if (p) {
+          await idbPut(STORE_PROJECTS, p);
+          await idbPut(STORE_META, { currentProjectId: p.id }, META_KEY);
+          try { localStorage.removeItem(LEGACY_STORAGE_KEY); } catch {}
+          return { version: 1, currentProjectId: p.id, projects: [p] };
+        }
+      }
+    } catch (e) { console.warn('legacy migration failed:', e); }
+
+    // Truly fresh — create one blank project and persist it.
+    const lib = freshLibrary();
+    try {
+      await idbPut(STORE_PROJECTS, lib.projects[0]);
+      await idbPut(STORE_META, { currentProjectId: lib.currentProjectId }, META_KEY);
+    } catch {}
+    return lib;
+  }
+
+  function freshLibrary() {
+    const p = blankProject();
+    return { version: 1, currentProjectId: p.id, projects: [p] };
+  }
+
+  // Mark a project (or the current one) for the next flush.
+  function markDirty(projectId) {
+    dirtyProjects.add(projectId || (state && state.id));
+    metaDirty = true;
+  }
+
+  // Flush whatever's dirty to IndexedDB. Called by scheduleSave / saveProject.
+  async function flushDirty() {
+    if (!db) return;
+    try {
+      // Snapshot the dirty set so concurrent edits during await don't lose us
+      // entries that were marked after this run started.
+      const ids = Array.from(dirtyProjects);
+      dirtyProjects.clear();
+      const wasMetaDirty = metaDirty;
+      metaDirty = false;
+
+      for (const id of ids) {
+        const p = library.projects.find(x => x.id === id);
+        if (!p) continue;
+        p.modifiedAt = Date.now();
+        await idbPut(STORE_PROJECTS, p);
+      }
+      if (wasMetaDirty) {
+        await idbPut(STORE_META, { currentProjectId: library.currentProjectId }, META_KEY);
+      }
+      setStatus('Saved', true);
+    } catch (e) {
+      setStatus('Save failed: ' + (e.name === 'QuotaExceededError'
+        ? 'browser storage is full'
+        : (e.message || String(e))), false);
     }
   }
 
+  // Compatibility shim. Most code paths call saveProject()/saveLibrary() —
+  // route them through the dirty-tracking flush.
   function saveProject() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      setStatus('Saved', true);
-    } catch (e) {
-      setStatus('Save failed: ' + e.message, false);
-    }
+    if (state) markDirty(state.id);
+    flushDirty();
+  }
+  function saveLibrary() { saveProject(); }
+
+  async function deleteProjectRecord(id) {
+    if (!db) return;
+    try { await idbDelete(STORE_PROJECTS, id); } catch (e) { console.warn('delete failed', e); }
   }
 
   function scheduleSave() {
     setStatus('Saving…', false);
+    if (state) markDirty(state.id);
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(saveProject, 400);
+    saveTimer = setTimeout(() => { saveTimer = null; flushDirty(); }, 400);
   }
 
   function setStatus(text, ok) {
@@ -745,25 +923,113 @@
   }
 
   // -------- Image drop / paste --------
-  function insertImageFromFile(file) {
+  // Defaults tuned for 1080p slides on a 16:9 deck. Photos shrink ~10–30×;
+  // anything below skipBelow is left alone (icons, screenshots, diagrams).
+  const IMAGE_OPTIMIZE = {
+    maxDim: 1920,
+    quality: 0.85,
+    skipBelow: 200 * 1024,
+  };
+
+  function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+      r.readAsDataURL(file);
+    });
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+      r.readAsDataURL(blob);
+    });
+  }
+
+  function loadImageFromFile(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+      img.src = url;
+    });
+  }
+
+  function formatBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(0) + ' KB';
+    return (n / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  // Returns { dataUrl, origSize, newSize, skipped }. On any failure we fall
+  // through to the original file so the user always gets their image.
+  async function optimizeImage(file) {
+    const orig = file.size;
+    const pass = async () => ({ dataUrl: await fileToDataUrl(file), origSize: orig, newSize: orig, skipped: true });
+
+    if (orig <= IMAGE_OPTIMIZE.skipBelow) return pass();
+    // SVG: vector, don't rasterize. GIF: probably animated, canvas drops frames.
+    if (file.type === 'image/svg+xml' || file.type === 'image/gif') return pass();
+
+    let img;
+    try { img = await loadImageFromFile(file); } catch { return pass(); }
+
+    let w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return pass();
+    const longest = Math.max(w, h);
+    if (longest > IMAGE_OPTIMIZE.maxDim) {
+      const scale = IMAGE_OPTIMIZE.maxDim / longest;
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+    }
+
+    // Preserve transparency for PNGs; everything else re-encodes as JPEG.
+    const outType = (file.type === 'image/png') ? 'image/png' : 'image/jpeg';
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (outType === 'image/jpeg') {
+      // JPEG has no alpha — paint white behind transparent sources.
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.drawImage(img, 0, 0, w, h);
+
+    const blob = await new Promise(r => canvas.toBlob(r, outType, IMAGE_OPTIMIZE.quality));
+    if (!blob || blob.size >= orig) return pass();
+    return { dataUrl: await blobToDataUrl(blob), origSize: orig, newSize: blob.size, skipped: false };
+  }
+
+  async function insertImageFromFile(file) {
     if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result;
-      if (sourceMode) {
-        const ta = els.source;
-        const pos = ta.selectionStart;
-        const before = ta.value.slice(0, pos);
-        const after = ta.value.slice(ta.selectionEnd);
-        const tag = `<img src="${dataUrl}" alt="">`;
-        ta.value = before + tag + after;
-        ta.selectionStart = ta.selectionEnd = pos + tag.length;
-        onEditorInput();
-      } else {
-        insertHTMLAtCursor(`<img src="${dataUrl}" alt="">`);
-      }
-    };
-    reader.readAsDataURL(file);
+    let result;
+    try {
+      result = await optimizeImage(file);
+    } catch (e) {
+      console.warn('image optimize failed; using original', e);
+      result = { dataUrl: await fileToDataUrl(file), origSize: file.size, newSize: file.size, skipped: true };
+    }
+    const tag = `<img src="${result.dataUrl}" alt="">`;
+    if (sourceMode) {
+      const ta = els.source;
+      const pos = ta.selectionStart;
+      const before = ta.value.slice(0, pos);
+      const after = ta.value.slice(ta.selectionEnd);
+      ta.value = before + tag + after;
+      ta.selectionStart = ta.selectionEnd = pos + tag.length;
+      onEditorInput();
+    } else {
+      insertHTMLAtCursor(tag);
+    }
+    if (!result.skipped) {
+      const saved = Math.round((1 - result.newSize / result.origSize) * 100);
+      setStatus(`Image: ${formatBytes(result.origSize)} → ${formatBytes(result.newSize)} (${saved}% smaller)`, true);
+    }
   }
 
   let dragDepth = 0;
@@ -925,14 +1191,8 @@ ${sections}
     download(html, (state.title || 'presentation') + '.html', 'text/html');
   }
 
-  function exportJson() {
-    captureCurrentContent();
-    const json = JSON.stringify(state, null, 2);
-    download(json, (state.title || 'presentation') + '.json', 'application/json');
-  }
-
   function download(content, filename, type) {
-    const blob = new Blob([content], { type });
+    const blob = (content instanceof Blob) ? content : new Blob([content], { type });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -943,36 +1203,302 @@ ${sections}
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  function importJson(file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result);
-        if (!data.slides || !Array.isArray(data.slides) || data.slides.length === 0) {
-          throw new Error('Not a valid project file');
-        }
-        // Repair missing IDs and migrate legacy fields
-        data.slides.forEach(s => { if (!s.id) s.id = uid(); migrateSlide(s); });
-        if (!data.currentId || !data.slides.some(s => s.id === data.currentId)) {
-          data.currentId = data.slides[0].id;
-        }
-        data.title = data.title || 'Untitled presentation';
-        data.theme = data.theme || 'black';
-        state = data;
-        renderAll();
-        saveProject();
-      } catch (e) {
-        alert('Could not load project: ' + e.message);
-      }
-    };
-    reader.readAsText(file);
+  // -------- Project library ops --------
+  function switchProject(id) {
+    if (!id || id === state.id) return;
+    const p = library.projects.find(x => x.id === id);
+    if (!p) return;
+    captureCurrentContent();
+    markDirty(state.id);          // flush whatever was edited in the outgoing project
+    state = p;
+    library.currentProjectId = id;
+    metaDirty = true;
+    renderAll();
+    flushDirty();
+  }
+
+  function createProject(name) {
+    captureCurrentContent();
+    if (state) markDirty(state.id);
+    const p = blankProject(name);
+    library.projects.push(p);
+    state = p;
+    library.currentProjectId = p.id;
+    markDirty(p.id);
+    metaDirty = true;
+    renderAll();
+    flushDirty();
+    renderProjectsList();
   }
 
   function newProject() {
-    if (!confirm('Discard the current deck and start a new one?')) return;
-    state = blankProject();
-    renderAll();
-    saveProject();
+    createProject();
+    closeProjectsModal();
+  }
+
+  function duplicateProject(id) {
+    const p = library.projects.find(x => x.id === id);
+    if (!p) return;
+    captureCurrentContent();
+    if (state) markDirty(state.id);
+    const copy = JSON.parse(JSON.stringify(p));
+    copy.id = uid();
+    copy.name = (p.name || p.title || 'Untitled') + ' (copy)';
+    copy.title = copy.name;
+    copy.createdAt = Date.now();
+    copy.modifiedAt = Date.now();
+    copy.slides.forEach(s => { s.id = uid(); });
+    copy.currentId = copy.slides[0].id;
+    library.projects.push(copy);
+    markDirty(copy.id);
+    flushDirty();
+    renderProjectsList();
+  }
+
+  function deleteProject(id) {
+    const idx = library.projects.findIndex(x => x.id === id);
+    if (idx < 0) return;
+    const p = library.projects[idx];
+    if (!confirm(`Delete "${p.name || p.title}"? This can't be undone.`)) return;
+    library.projects.splice(idx, 1);
+    deleteProjectRecord(id);
+    if (library.projects.length === 0) {
+      const fresh = blankProject();
+      library.projects.push(fresh);
+      state = fresh;
+      library.currentProjectId = fresh.id;
+      markDirty(fresh.id);
+      renderAll();
+    } else if (state.id === id) {
+      state = library.projects[Math.max(0, idx - 1)];
+      library.currentProjectId = state.id;
+      renderAll();
+    }
+    metaDirty = true;
+    flushDirty();
+    renderProjectsList();
+  }
+
+  function renameProject(id, newName) {
+    const p = library.projects.find(x => x.id === id);
+    if (!p) return;
+    const trimmed = (newName || '').trim() || 'Untitled presentation';
+    p.name = trimmed;
+    p.title = trimmed;
+    p.modifiedAt = Date.now();
+    if (state.id === id) {
+      els.deckTitle.value = trimmed;
+    }
+    markDirty(id);
+    flushDirty();
+    renderProjectsList();
+  }
+
+  function exportProjectAsJson(id) {
+    const p = library.projects.find(x => x.id === id);
+    if (!p) return;
+    if (state.id === id) captureCurrentContent();
+    const json = JSON.stringify(serializeProject(p), null, 2);
+    download(json, safeFilename(p.name || p.title || 'presentation') + '.json', 'application/json');
+  }
+
+  // Strip the project entry down to the fields that make sense in a file.
+  function serializeProject(p) {
+    return {
+      name: p.name,
+      title: p.title,
+      theme: p.theme,
+      slides: p.slides,
+      currentId: p.currentId,
+    };
+  }
+
+  function safeFilename(s) {
+    return String(s || 'untitled').replace(/[\\/:*?"<>|]+/g, '_').slice(0, 80) || 'untitled';
+  }
+
+  async function exportAllAsZip() {
+    if (typeof JSZip === 'undefined') {
+      alert('Could not load JSZip — check your internet connection.');
+      return;
+    }
+    captureCurrentContent();
+    saveLibrary();
+    const zip = new JSZip();
+    const used = new Map();
+    for (const p of library.projects) {
+      let base = safeFilename(p.name || p.title || 'untitled');
+      const n = (used.get(base) || 0) + 1;
+      used.set(base, n);
+      const filename = (n === 1 ? base : `${base}-${n}`) + '.json';
+      zip.file(filename, JSON.stringify(serializeProject(p), null, 2));
+    }
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const stamp = new Date().toISOString().slice(0, 10);
+    download(blob, `reveal-editor-projects-${stamp}.zip`, 'application/zip');
+  }
+
+  async function importFiles(fileList) {
+    const files = Array.from(fileList || []);
+    let added = 0;
+    const errors = [];
+    for (const f of files) {
+      try {
+        if (/\.zip$/i.test(f.name) || f.type === 'application/zip') {
+          added += await importZip(f);
+        } else {
+          await importJsonFile(f);
+          added++;
+        }
+      } catch (e) {
+        errors.push(`${f.name}: ${e.message || e}`);
+      }
+    }
+    if (added > 0) {
+      saveLibrary();
+      renderProjectsList();
+      setStatus(`Imported ${added} project${added === 1 ? '' : 's'}`, true);
+    }
+    if (errors.length) {
+      alert('Some files could not be imported:\n\n' + errors.join('\n'));
+    }
+  }
+
+  async function importJsonFile(file) {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const p = normalizeProject({ ...data, id: uid() }, file.name.replace(/\.json$/i, ''));
+    if (!p) throw new Error('Not a valid project file');
+    library.projects.push(p);
+    markDirty(p.id);
+  }
+
+  async function importZip(file) {
+    if (typeof JSZip === 'undefined') {
+      throw new Error('JSZip not loaded');
+    }
+    const zip = await JSZip.loadAsync(file);
+    const entries = Object.values(zip.files).filter(e => !e.dir && /\.json$/i.test(e.name));
+    let count = 0;
+    for (const entry of entries) {
+      try {
+        const text = await entry.async('string');
+        const data = JSON.parse(text);
+        const p = normalizeProject({ ...data, id: uid() }, entry.name.replace(/\.json$/i, ''));
+        if (p) {
+          library.projects.push(p);
+          markDirty(p.id);
+          count++;
+        }
+      } catch {
+        // Skip malformed entries.
+      }
+    }
+    return count;
+  }
+
+  // -------- Projects modal --------
+  function openProjectsModal() {
+    captureCurrentContent();
+    saveLibrary();
+    renderProjectsList();
+    els.projectsModal.hidden = false;
+  }
+
+  function closeProjectsModal() {
+    els.projectsModal.hidden = true;
+  }
+
+  function renderProjectsList() {
+    const list = els.projectsList;
+    list.innerHTML = '';
+    // Sort: most recently modified first.
+    const projects = library.projects.slice().sort((a, b) => (b.modifiedAt || 0) - (a.modifiedAt || 0));
+    if (projects.length === 0) {
+      const empty = document.createElement('li');
+      empty.className = 'projects-empty';
+      empty.textContent = 'No projects yet — create one.';
+      list.appendChild(empty);
+      return;
+    }
+    for (const p of projects) {
+      list.appendChild(renderProjectRow(p));
+    }
+  }
+
+  function renderProjectRow(p) {
+    const li = document.createElement('li');
+    if (p.id === state.id) li.classList.add('active');
+
+    const name = document.createElement('input');
+    name.type = 'text';
+    name.className = 'proj-name';
+    name.value = p.name || p.title || 'Untitled';
+    name.title = 'Rename';
+    name.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); name.blur(); }
+      else if (e.key === 'Escape') { name.value = p.name || p.title || ''; name.blur(); }
+    });
+    name.addEventListener('change', () => renameProject(p.id, name.value));
+
+    const meta = document.createElement('div');
+    meta.className = 'proj-meta';
+    const slideCount = (p.slides || []).length;
+    meta.textContent = `${slideCount} slide${slideCount === 1 ? '' : 's'} · ${formatRelative(p.modifiedAt)}${p.id === state.id ? ' · open' : ''}`;
+
+    const actions = document.createElement('div');
+    actions.className = 'proj-actions';
+
+    const openBtn = document.createElement('button');
+    openBtn.type = 'button';
+    openBtn.textContent = 'Open';
+    openBtn.disabled = p.id === state.id;
+    openBtn.addEventListener('click', () => {
+      switchProject(p.id);
+      closeProjectsModal();
+    });
+
+    const dupBtn = document.createElement('button');
+    dupBtn.type = 'button';
+    dupBtn.textContent = 'Duplicate';
+    dupBtn.addEventListener('click', () => duplicateProject(p.id));
+
+    const exportBtn = document.createElement('button');
+    exportBtn.type = 'button';
+    exportBtn.textContent = '.json';
+    exportBtn.title = 'Download this project as .json';
+    exportBtn.addEventListener('click', () => exportProjectAsJson(p.id));
+
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.className = 'danger';
+    delBtn.textContent = '×';
+    delBtn.title = 'Delete project';
+    delBtn.addEventListener('click', () => deleteProject(p.id));
+
+    actions.appendChild(openBtn);
+    actions.appendChild(dupBtn);
+    actions.appendChild(exportBtn);
+    actions.appendChild(delBtn);
+
+    li.appendChild(name);
+    li.appendChild(meta);
+    li.appendChild(actions);
+    return li;
+  }
+
+  function formatRelative(ts) {
+    if (!ts) return 'never';
+    const ms = Date.now() - ts;
+    const sec = Math.floor(ms / 1000);
+    if (sec < 60) return 'just now';
+    const min = Math.floor(sec / 60);
+    if (min < 60) return `${min} min ago`;
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return `${hr} hr ago`;
+    const day = Math.floor(hr / 24);
+    if (day < 30) return `${day} day${day === 1 ? '' : 's'} ago`;
+    return new Date(ts).toLocaleDateString();
   }
 
   // -------- UI theme --------
@@ -1038,7 +1564,13 @@ ${sections}
 
   // -------- Wiring --------
   function wire() {
-    els.deckTitle.addEventListener('input', () => { state.title = els.deckTitle.value; scheduleSave(); });
+    els.deckTitle.addEventListener('input', () => {
+      state.title = els.deckTitle.value;
+      // Keep the project name (shown in the Projects list) aligned with the
+      // deck title — users rename via either.
+      state.name = els.deckTitle.value;
+      scheduleSave();
+    });
     els.themeSelect.addEventListener('change', () => {
       state.theme = els.themeSelect.value;
       applyDeckTheme(state.theme);
@@ -1139,9 +1671,7 @@ ${sections}
     $('#btn-preview').addEventListener('click', () => showPreview());
     $('#btn-preview-here').addEventListener('click', () => showPreview({ fromCurrent: true }));
     $('#btn-export-html').addEventListener('click', exportHtml);
-    $('#btn-export-json').addEventListener('click', exportJson);
-    $('#btn-import-json').addEventListener('click', () => els.jsonInput.click());
-    $('#btn-new').addEventListener('click', newProject);
+    $('#btn-new').addEventListener('click', () => createProject());
     els.previewClose.addEventListener('click', closePreview);
     els.themeToggle.addEventListener('click', toggleUiTheme);
     els.notesPopout.addEventListener('click', toggleNotesPanel);
@@ -1154,10 +1684,15 @@ ${sections}
       scheduleSave();
     });
 
-    els.jsonInput.addEventListener('change', () => {
-      const file = els.jsonInput.files && els.jsonInput.files[0];
-      if (file) importJson(file);
-      els.jsonInput.value = '';
+    // Projects modal
+    els.projectsButton.addEventListener('click', openProjectsModal);
+    els.projectsClose.addEventListener('click', closeProjectsModal);
+    els.projectsNew.addEventListener('click', newProject);
+    els.projectsExportAll.addEventListener('click', exportAllAsZip);
+    els.projectsImportInput.addEventListener('change', () => {
+      const files = els.projectsImportInput.files;
+      if (files && files.length) importFiles(files);
+      els.projectsImportInput.value = '';
     });
 
     // Keyboard shortcuts
@@ -1171,6 +1706,7 @@ ${sections}
       else if (mod && e.key === 'p') { e.preventDefault(); showPreview(); }
       else if (e.key === 'Escape') {
         if (!els.previewModal.hidden) closePreview();
+        else if (!els.projectsModal.hidden) closeProjectsModal();
         else if (isNotesPanelOpen()) closeNotesPanel();
       }
     });
@@ -1185,13 +1721,21 @@ ${sections}
     });
 
     window.addEventListener('beforeunload', () => {
-      captureCurrentContent();
-      saveProject();
+      // Only flush if there's a pending debounced save. Saving unconditionally
+      // would overwrite localStorage with whatever's currently in memory even
+      // when the user hasn't actually edited anything.
+      if (saveTimer != null) {
+        captureCurrentContent();
+        saveProject();
+      }
     });
   }
 
   // -------- Init --------
   loadUiTheme();
+  setStatus('Loading…', false);
+  library = await loadLibrary();
+  state = library.projects.find(p => p.id === library.currentProjectId) || library.projects[0];
   renderAll();
   wire();
   setStatus('Ready', true);
