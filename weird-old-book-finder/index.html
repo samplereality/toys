@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weird Old Book Finder</title>
+
+    <!-- Google Books API -->
+    <script src="https://www.google.com/books/jsapi.js"></script>
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "IM Fell English", Georgia, serif;
+        background-color: #f4f1ea;
+        color: #3d3425;
+        min-height: 100vh;
+        padding: 2rem 1rem;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #5c4a32;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+      }
+
+      .form-stuff {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: center;
+      }
+
+      .form-group {
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .text-input {
+        font-family: "IM Fell English", Georgia, serif;
+        font-size: 1.2rem;
+        padding: 0.75rem 1rem;
+        border: 2px solid #8b7355;
+        border-radius: 4px;
+        background-color: #fffef9;
+        color: #3d3425;
+        width: 100%;
+      }
+
+      .text-input:focus {
+        outline: none;
+        border-color: #5c4a32;
+        box-shadow: 0 0 0 3px rgba(92, 74, 50, 0.2);
+      }
+
+      .text-input::placeholder {
+        color: #a89880;
+        font-style: italic;
+      }
+
+      .search-btn {
+        font-family: "IM Fell English", Georgia, serif;
+        font-size: 1.1rem;
+        padding: 0.75rem 1.5rem;
+        margin-top: 0.75rem;
+        background-color: #5c4a32;
+        color: #f4f1ea;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .search-btn:hover {
+        background-color: #7a6347;
+      }
+
+      .search-btn:active {
+        background-color: #4a3a28;
+      }
+
+      #status {
+        text-align: center;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        font-style: italic;
+        color: #6b5a45;
+      }
+
+      #bookInfo {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      #bookInfo h2 {
+        font-size: 1.4rem;
+        margin-bottom: 0.25rem;
+        color: #5c4a32;
+      }
+
+      #bookInfo p {
+        margin: 0.25rem 0;
+        color: #6b5a45;
+      }
+
+      #bookInfo a {
+        color: #8b5a2b;
+      }
+
+      #bookInfo a:hover {
+        color: #5c4a32;
+      }
+
+      #viewerCanvas {
+        width: 100%;
+        height: 600px;
+        border: 3px solid #8b7355;
+        border-radius: 4px;
+        background-color: #e8e4db;
+        margin-bottom: 2rem;
+      }
+
+      #viewerCanvas:empty {
+        display: none;
+      }
+
+      #footer {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #c4b8a5;
+      }
+
+      .footer {
+        text-align: center;
+        width: 100%;
+      }
+
+      .footer p {
+        font-size: 0.95rem;
+        color: #7a6b58;
+      }
+
+      .footer a {
+        color: #8b5a2b;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        color: #5c4a32;
+        text-decoration: underline;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #c4b8a5;
+        border-top-color: #5c4a32;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        vertical-align: middle;
+        margin-right: 0.5rem;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        #viewerCanvas {
+          height: 450px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h1>Weird Old Book Finder</h1>
+      </div>
+
+      <div class="row form-stuff">
+        <div class="form-group">
+          <input
+            type="text"
+            class="text-input form-control"
+            id="searchText"
+            maxlength="70"
+            placeholder="Type your query!"
+            autofocus
+          />
+          <button id="searchBtn" class="search-btn">Find a Book</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="status"></div>
+        <div id="bookInfo"></div>
+        <div id="viewerCanvas"></div>
+      </div>
+
+      <div id="footer" class="row">
+        <div class="footer">
+          <p>
+            [ made by
+            <a href="https://saturation.social/@clive" target="_blank">clive</a>
+            | here's
+            <a
+              href="https://clivethompson.medium.com/a-search-engine-that-finds-you-weird-old-books-3a74fbb5f3d4"
+              target="_blank"
+              >why</a
+            >
+            | Glitchlet version by Mark Sample (and claude) ]
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Google Books API
+      google.books.load();
+
+      // ---------------------------------------------------------------------
+      // Google Books API key.
+      // Declared ONCE, here at the top, BEFORE any code reads it. Using `const`
+      // means it must be initialized before use, so it has to live above the
+      // search function (not inside it, and not below the line that uses it).
+      //
+      // Replace the placeholder with your key. Keep the quotes.
+      // In the Google Cloud Console, restrict this key to HTTP referrers (your
+      // site's domain) + the Books API only, since it is visible in page source.
+      // ---------------------------------------------------------------------
+      const API_KEY = "PASTE_YOUR_KEY_HERE";
+
+      // DOM elements
+      const searchInput = document.getElementById("searchText");
+      const searchBtn = document.getElementById("searchBtn");
+      const statusDiv = document.getElementById("status");
+      const bookInfoDiv = document.getElementById("bookInfo");
+      const viewerCanvas = document.getElementById("viewerCanvas");
+
+      let viewer = null;
+
+      // Handle search
+      function doSearch() {
+        const query = searchInput.value.trim();
+
+        if (!query) {
+          showStatus("Please enter a search term!");
+          return;
+        }
+
+        // Validate: alphanumeric and spaces only
+        if (!/^[a-zA-Z0-9\s]+$/.test(query)) {
+          showStatus("Sorry, you can only use letters, numbers, and spaces!");
+          return;
+        }
+
+        findWeirdOldBook(query);
+      }
+
+      // Button click
+      searchBtn.addEventListener("click", doSearch);
+
+      // Enter key in input
+      searchInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          doSearch();
+        }
+      });
+
+      // Show status message
+      function showStatus(message, isLoading = false) {
+        if (isLoading) {
+          statusDiv.innerHTML = '<span class="loading"></span>' + message;
+        } else {
+          statusDiv.textContent = message;
+        }
+      }
+
+      // Clear book info
+      function clearBookInfo() {
+        bookInfoDiv.innerHTML = "";
+        viewerCanvas.innerHTML = "";
+      }
+
+      // Display book info
+      function showBookInfo(book) {
+        const info = book.volumeInfo;
+        const year = info.publishedDate
+          ? info.publishedDate.substring(0, 4)
+          : "Unknown year";
+        const authors = info.authors
+          ? info.authors.join(", ")
+          : "Unknown author";
+        const link = info.infoLink || "#";
+
+        bookInfoDiv.innerHTML = `
+        <h2>${info.title}</h2>
+        <p>${authors} (${year})</p>
+        <p><a href="${link}" target="_blank">View on Google Books →</a></p>
+      `;
+      }
+
+      // Search for a weird old book
+      async function findWeirdOldBook(query) {
+        showStatus("Searching the dusty archives...", true);
+        clearBookInfo();
+
+        try {
+          // Search Google Books API for old, public domain books
+          // Filter: free-ebooks ensures they're public domain (generally pre-1923)
+          const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&filter=free-ebooks&maxResults=40&printType=books&key=${API_KEY}`;
+
+          const response = await fetch(searchUrl);
+
+          // Surface real API errors instead of disguising them as "no results".
+          if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            console.error("Books API error:", response.status, err);
+            if (response.status === 429) {
+              showStatus(
+                "Out of API quota for the day, or the API key is missing/invalid."
+              );
+            } else if (response.status === 403) {
+              showStatus(
+                "The API key was rejected (check key restrictions in Google Cloud)."
+              );
+            } else {
+              showStatus(
+                `The book service returned an error (${response.status}). Try again later.`
+              );
+            }
+            return;
+          }
+
+          const data = await response.json();
+
+          if (!data.items || data.items.length === 0) {
+            showStatus(
+              "Alas, we didn't find any weird old books for that query. Try another!"
+            );
+            return;
+          }
+
+          // Filter for books that have an embeddable viewer
+          const embeddableBooks = data.items.filter(
+            (book) =>
+              book.accessInfo && book.accessInfo.embeddable === true && book.id
+          );
+
+          if (embeddableBooks.length === 0) {
+            showStatus(
+              "Found some books, but none are viewable here. Try another search!"
+            );
+            return;
+          }
+
+          // Pick a random book from the results
+          const randomBook =
+            embeddableBooks[Math.floor(Math.random() * embeddableBooks.length)];
+          const bookId = randomBook.id;
+
+          showStatus("Found one! Loading the book viewer...");
+          showBookInfo(randomBook);
+
+          // Display in Google Books viewer
+          displayBook(bookId);
+        } catch (error) {
+          console.error("Search error:", error);
+          showStatus(
+            "Something went wrong searching for books. Please try again!"
+          );
+        }
+      }
+
+      // Display book in the Google Books embedded viewer
+      function displayBook(bookId) {
+        // Clear previous viewer
+        viewerCanvas.innerHTML = "";
+
+        // Create new viewer instance
+        viewer = new google.books.DefaultViewer(viewerCanvas);
+
+        viewer.load(
+          bookId,
+          function () {
+            // Error callback - book couldn't be loaded
+            showStatus(
+              "Hmm, that book wouldn't load. Searching for another..."
+            );
+          },
+          function () {
+            // Success callback
+            showStatus("");
+          }
+        );
+      }
+
+      // Show a welcome message on load
+      document.addEventListener("DOMContentLoaded", function () {
+        showStatus("Enter a word or phrase to discover a weird old book!");
+      });
+    </script>
+  </body>
+</html>
