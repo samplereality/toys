@@ -262,6 +262,19 @@
       // ---------------------------------------------------------------------
       const API_KEY = "PASTE_YOUR_KEY_HERE";
 
+      // ---------------------------------------------------------------------
+      // How "old" counts. The Books API has NO date-range parameter, so we
+      // fetch results and throw out anything newer than this year ourselves.
+      // 1928 ≈ the public-domain line; raise it (e.g. 1965) for more results,
+      // lower it for weirder/older finds.
+      // ---------------------------------------------------------------------
+      const MAX_YEAR = 1928;
+
+      // Books are fetched 40 at a time; we'll page through up to this many
+      // pages to build a decent pool of OLD books after filtering out modern
+      // ones. More pages = more API calls per search, but better odds.
+      const MAX_PAGES = 4;
+
       // DOM elements
       const searchInput = document.getElementById("searchText");
       const searchBtn = document.getElementById("searchBtn");
@@ -332,63 +345,74 @@
       `;
       }
 
-      // Search for a weird old book
+      // Pull a 4-digit year out of a publishedDate like "1893", "1893-05",
+      // or "1893-05-01". Returns null if there's no usable date.
+      function getYear(book) {
+        const d = book.volumeInfo && book.volumeInfo.publishedDate;
+        if (!d) return null;
+        const match = String(d).match(/\d{4}/);
+        return match ? parseInt(match[0], 10) : null;
+      }
+
+      // Fetch one 40-result page of free ebooks for a query.
+      async function fetchBooksPage(query, startIndex) {
+        const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&filter=free-ebooks&maxResults=40&startIndex=${startIndex}&printType=books&key=${API_KEY}`;
+
+        const response = await fetch(searchUrl);
+
+        // Surface real API errors instead of disguising them as "no results".
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          console.error("Books API error:", response.status, err);
+          if (response.status === 429) {
+            throw new Error("quota");
+          } else if (response.status === 403) {
+            throw new Error("key");
+          }
+          throw new Error("http-" + response.status);
+        }
+
+        const data = await response.json();
+        return data.items || [];
+      }
+
+      // Search for a weird OLD book.
+      // The Books API can't filter by date, so we page through results and keep
+      // only embeddable books published in MAX_YEAR or earlier.
       async function findWeirdOldBook(query) {
         showStatus("Searching the dusty archives...", true);
         clearBookInfo();
 
         try {
-          // Search Google Books API for old, public domain books
-          // Filter: free-ebooks ensures they're public domain (generally pre-1923)
-          const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&filter=free-ebooks&maxResults=40&printType=books&key=${API_KEY}`;
+          const oldBooks = [];
 
-          const response = await fetch(searchUrl);
+          // Page through results, collecting old + embeddable books as we go.
+          for (let page = 0; page < MAX_PAGES; page++) {
+            const items = await fetchBooksPage(query, page * 40);
+            if (items.length === 0) break; // no more results to page through
 
-          // Surface real API errors instead of disguising them as "no results".
-          if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            console.error("Books API error:", response.status, err);
-            if (response.status === 429) {
-              showStatus(
-                "Out of API quota for the day, or the API key is missing/invalid."
-              );
-            } else if (response.status === 403) {
-              showStatus(
-                "The API key was rejected (check key restrictions in Google Cloud)."
-              );
-            } else {
-              showStatus(
-                `The book service returned an error (${response.status}). Try again later.`
-              );
+            for (const book of items) {
+              const year = getYear(book);
+              const embeddable =
+                book.accessInfo &&
+                book.accessInfo.embeddable === true &&
+                book.id;
+              if (embeddable && year !== null && year <= MAX_YEAR) {
+                oldBooks.push(book);
+              }
             }
-            return;
           }
 
-          const data = await response.json();
-
-          if (!data.items || data.items.length === 0) {
+          if (oldBooks.length === 0) {
             showStatus(
-              "Alas, we didn't find any weird old books for that query. Try another!"
+              `Found books, but none published in ${MAX_YEAR} or earlier. Try another query!`
             );
             return;
           }
 
-          // Filter for books that have an embeddable viewer
-          const embeddableBooks = data.items.filter(
-            (book) =>
-              book.accessInfo && book.accessInfo.embeddable === true && book.id
-          );
-
-          if (embeddableBooks.length === 0) {
-            showStatus(
-              "Found some books, but none are viewable here. Try another search!"
-            );
-            return;
-          }
-
-          // Pick a random book from the results
+          // Pick a random old book from the pool.
           const randomBook =
-            embeddableBooks[Math.floor(Math.random() * embeddableBooks.length)];
+            oldBooks[Math.floor(Math.random() * oldBooks.length)];
           const bookId = randomBook.id;
 
           showStatus("Found one! Loading the book viewer...");
@@ -398,9 +422,19 @@
           displayBook(bookId);
         } catch (error) {
           console.error("Search error:", error);
-          showStatus(
-            "Something went wrong searching for books. Please try again!"
-          );
+          if (error.message === "quota") {
+            showStatus(
+              "Out of API quota for the day, or the API key is missing/invalid."
+            );
+          } else if (error.message === "key") {
+            showStatus(
+              "The API key was rejected (check key restrictions in Google Cloud)."
+            );
+          } else {
+            showStatus(
+              "Something went wrong searching for books. Please try again!"
+            );
+          }
         }
       }
 
