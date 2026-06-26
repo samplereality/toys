@@ -270,10 +270,17 @@
       // ---------------------------------------------------------------------
       const MAX_YEAR = 1928;
 
-      // Books are fetched 40 at a time; we'll page through up to this many
-      // pages to build a decent pool of OLD books after filtering out modern
-      // ones. More pages = more API calls per search, but better odds.
-      const MAX_PAGES = 4;
+      // The API returns results in RELEVANCE order, which buries genuinely old
+      // books deep in the result set. So we don't just read the top pages — we
+      // sample random pages from deeper in, where the pre-1880 oddities live.
+      const PAGE_SIZE = 40; // Books API max per request
+      const PAGES_PER_SEARCH = 5; // how many pages we fetch per search (API calls)
+      const MAX_REACH = 600; // don't page deeper than this (API gets unreliable)
+
+      // How strongly to favor older books when picking. Higher = older.
+      // The weight of a book is (its age past MAX_YEAR) ^ OLD_BIAS, so with
+      // OLD_BIAS = 2 an 1850 book is ~ (79/4)^2 ≈ 390x more likely than an 1925.
+      const OLD_BIAS = 2;
 
       // DOM elements
       const searchInput = document.getElementById("searchText");
@@ -354,9 +361,10 @@
         return match ? parseInt(match[0], 10) : null;
       }
 
-      // Fetch one 40-result page of free ebooks for a query.
+      // Fetch one page of free ebooks for a query. Returns the items plus the
+      // reported total, so we know how deep we can page.
       async function fetchBooksPage(query, startIndex) {
-        const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&filter=free-ebooks&maxResults=40&startIndex=${startIndex}&printType=books&key=${API_KEY}`;
+        const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&filter=free-ebooks&maxResults=${PAGE_SIZE}&startIndex=${startIndex}&printType=books&key=${API_KEY}`;
 
         const response = await fetch(searchUrl);
 
@@ -373,33 +381,97 @@
         }
 
         const data = await response.json();
-        return data.items || [];
+        return { items: data.items || [], totalItems: data.totalItems || 0 };
+      }
+
+      // Keep only embeddable books published in MAX_YEAR or earlier, de-duped.
+      function collectOldBooks(items, out, seenIds) {
+        for (const book of items) {
+          const year = getYear(book);
+          const embeddable =
+            book.accessInfo && book.accessInfo.embeddable === true && book.id;
+          if (
+            embeddable &&
+            year !== null &&
+            year <= MAX_YEAR &&
+            !seenIds.has(book.id)
+          ) {
+            seenIds.add(book.id);
+            out.push(book);
+          }
+        }
+      }
+
+      // In-place Fisher-Yates shuffle.
+      function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      }
+
+      // Weighted random pick that strongly favors older books, so the rare
+      // pre-1880 finds actually surface instead of being drowned out.
+      function pickFavoringOld(books) {
+        const weights = books.map((b) =>
+          Math.pow(MAX_YEAR - getYear(b) + 1, OLD_BIAS)
+        );
+        const total = weights.reduce((a, b) => a + b, 0);
+        let r = Math.random() * total;
+        for (let i = 0; i < books.length; i++) {
+          r -= weights[i];
+          if (r <= 0) return books[i];
+        }
+        return books[books.length - 1];
       }
 
       // Search for a weird OLD book.
-      // The Books API can't filter by date, so we page through results and keep
-      // only embeddable books published in MAX_YEAR or earlier.
+      // Strategy: the API has no date filter and orders by relevance (which
+      // buries old books), so we read the first page, then sample RANDOM deeper
+      // pages to reach the old oddities, keep only books <= MAX_YEAR, and pick
+      // with a bias toward the oldest.
       async function findWeirdOldBook(query) {
         showStatus("Searching the dusty archives...", true);
         clearBookInfo();
 
         try {
           const oldBooks = [];
+          const seenIds = new Set();
 
-          // Page through results, collecting old + embeddable books as we go.
-          for (let page = 0; page < MAX_PAGES; page++) {
-            const items = await fetchBooksPage(query, page * 40);
-            if (items.length === 0) break; // no more results to page through
+          // First page, which also tells us how many results exist.
+          const first = await fetchBooksPage(query, 0);
+          collectOldBooks(first.items, oldBooks, seenIds);
 
-            for (const book of items) {
-              const year = getYear(book);
-              const embeddable =
-                book.accessInfo &&
-                book.accessInfo.embeddable === true &&
-                book.id;
-              if (embeddable && year !== null && year <= MAX_YEAR) {
-                oldBooks.push(book);
-              }
+          if (first.items.length === 0) {
+            showStatus(
+              "Alas, we didn't find any books for that query. Try another!"
+            );
+            return;
+          }
+
+          // Build a shuffled list of deeper start indexes. Google's totalItems
+          // is inflated and deep pages get flaky, so cap our reach.
+          const reachable = Math.min(first.totalItems, MAX_REACH);
+          const deeperStarts = [];
+          for (let s = PAGE_SIZE; s + PAGE_SIZE <= reachable; s += PAGE_SIZE) {
+            deeperStarts.push(s);
+          }
+          shuffle(deeperStarts);
+
+          // Fetch a handful of random deeper pages. These are best-effort: a
+          // deep page that errors shouldn't kill the whole search, but a
+          // quota/key problem should still surface.
+          for (
+            let i = 0;
+            i < deeperStarts.length && i < PAGES_PER_SEARCH - 1;
+            i++
+          ) {
+            try {
+              const page = await fetchBooksPage(query, deeperStarts[i]);
+              collectOldBooks(page.items, oldBooks, seenIds);
+            } catch (e) {
+              if (e.message === "quota" || e.message === "key") throw e;
+              console.warn("Skipping deep page", deeperStarts[i], e.message);
             }
           }
 
@@ -410,9 +482,8 @@
             return;
           }
 
-          // Pick a random old book from the pool.
-          const randomBook =
-            oldBooks[Math.floor(Math.random() * oldBooks.length)];
+          // Pick a book, favoring the oldest in the pool.
+          const randomBook = pickFavoringOld(oldBooks);
           const bookId = randomBook.id;
 
           showStatus("Found one! Loading the book viewer...");
