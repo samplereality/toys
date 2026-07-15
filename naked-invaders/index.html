@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Naked Invaders</title>
+<style>
+  :root {
+    --green: #33ff33;
+    --dim: #1d7a1d;
+    --bg: #2b2b2b;
+  }
+  body {
+    background: var(--bg);
+    color: #ddd;
+    font-family: "Courier New", Courier, monospace;
+    margin: 0;
+    padding: 24px 16px 48px;
+  }
+  h1 {
+    color: var(--green);
+    text-align: center;
+    letter-spacing: 0.2em;
+    font-size: 28px;
+    margin: 0 0 4px;
+    text-transform: uppercase;
+  }
+  p.tagline {
+    text-align: center;
+    color: #aaa;
+    max-width: 720px;
+    margin: 0 auto 20px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .wrap {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  canvas {
+    background: #000;
+    border: 2px solid var(--green);
+    image-rendering: pixelated;
+    display: block;
+  }
+  #codepanel {
+    width: 430px;
+    height: 544px;
+    overflow-y: auto;
+    background: #101010;
+    border: 1px solid #555;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
+  #codepanel h2 {
+    color: #999;
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    margin: 0 0 8px;
+    padding-bottom: 4px;
+  }
+  pre {
+    margin: 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .consts {
+    color: #7ec8e3;
+    margin-bottom: 14px;
+  }
+  .rule {
+    margin-bottom: 12px;
+  }
+  .rule label {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    cursor: pointer;
+    color: #888;
+  }
+  .rule label input {
+    accent-color: var(--green);
+    transform: translateY(2px);
+  }
+  .rule pre {
+    color: var(--green);
+    margin-left: 22px;
+    transition: opacity 0.15s;
+  }
+  .rule.off pre {
+    opacity: 0.3;
+    text-decoration: line-through;
+    text-decoration-color: #f55;
+  }
+  .rule.off label { color: #f55; }
+  .controls {
+    width: 430px;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  .controls button {
+    flex: 1;
+    background: #111;
+    color: var(--green);
+    border: 1px solid var(--green);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .controls button:hover { background: #0a2a0a; }
+  .gamecol .keys {
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  footer {
+    text-align: center;
+    color: #777;
+    font-size: 12px;
+    margin-top: 32px;
+    line-height: 1.6;
+  }
+  footer a { color: #9f9; }
+</style>
+</head>
+<body>
+
+<h1>The Naked Invaders</h1>
+<p class="tagline">
+  A game of Space Invaders that wears its source code on the outside.
+  Every rule the game runs is listed on the right &mdash; as the actual code.
+  Untick a line and the game truly stops running it. No collisions? No score?
+  No edge to turn the fleet around? Find out what a game is made of by taking it apart while it runs.
+</p>
+
+<div class="wrap">
+  <div class="gamecol">
+    <canvas id="game" width="480" height="540"></canvas>
+    <div class="keys">&larr; &rarr; move &nbsp;&middot;&nbsp; space fire &nbsp;&middot;&nbsp; R restart</div>
+  </div>
+  <div class="panelcol">
+    <div id="codepanel">
+      <h2>the code, running live</h2>
+      <pre class="consts" id="consts"></pre>
+      <div id="rules"></div>
+    </div>
+    <div class="controls">
+      <button id="restoreBtn">restore all code</button>
+      <button id="restartBtn">restart game</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  A homage to <em>The Naked Game</em>, a Flash-era Pong that let you switch off its own code line by line.<br>
+  Everything here is one HTML file &mdash; view source to see the rest of the machine.
+</footer>
+
+<script>
+"use strict";
+
+// ---- constants (shown in the panel) ----------------------------------
+const W = 480, H = 540;
+const PLAYER_SPEED   = 4;
+const PLAYER_W       = 26, PLAYER_H = 14;
+const BULLET_SPEED   = 8;
+const BOMB_SPEED     = 3;
+const BOMB_CHANCE    = 0.02;
+const INVADER_STEP   = 8;
+const DESCENT        = 18;
+const INVADER_POINTS = 10;
+const ROWS = 4, COLS = 8;
+const INV_W = 22, INV_H = 16;
+const MARGIN = 8;
+
+// ---- game state -------------------------------------------------------
+let player, bullets, bombs, invaders, dir;
+let stepTimer, stepInterval;
+let score, lives, over, flash;
+let hits, canFire, marched, firePressed;
+const keys = {};
+
+function spawnWave() {
+  invaders = [];
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++)
+      invaders.push({ x: 44 + c * 46, y: 70 + r * 36, alive: true });
+  dir = 1;
+  stepInterval = 5 + invaders.length;
+  stepTimer = stepInterval;
+}
+
+function reset() {
+  player = { x: W / 2 - PLAYER_W / 2, y: H - 60 };
+  bullets = [];
+  bombs = [];
+  score = 0;
+  lives = 3;
+  over = false;
+  flash = 0;
+  firePressed = false;
+  spawnWave();
+}
+
+// ---- the rules --------------------------------------------------------
+// Each function below is displayed in the side panel *verbatim* (via
+// Function.prototype.toString) and only runs while its checkbox is on.
+
+function movePlayer() {
+  if (keys.ArrowLeft)  player.x -= PLAYER_SPEED;
+  if (keys.ArrowRight) player.x += PLAYER_SPEED;
+}
+
+function clampPlayer() {
+  player.x = Math.max(MARGIN,
+             Math.min(W - PLAYER_W - MARGIN, player.x));
+}
+
+function limitFire() {
+  if (bullets.length > 0) canFire = false;
+}
+
+function firePlayer() {
+  if (firePressed && canFire) {
+    bullets.push({ x: player.x + PLAYER_W / 2,
+                   y: player.y - 6 });
+  }
+}
+
+function moveBullets() {
+  for (const b of bullets) b.y -= BULLET_SPEED;
+}
+
+function cullBullets() {
+  bullets = bullets.filter(b => b.y > -10);
+}
+
+function marchInvaders() {
+  if (--stepTimer > 0) return;
+  stepTimer = stepInterval;
+  for (const a of invaders)
+    if (a.alive) a.x += INVADER_STEP * dir;
+  marched = true;
+}
+
+function reverseAtEdge() {
+  if (!marched) return;
+  const live = invaders.filter(a => a.alive);
+  if (live.some(a => a.x < MARGIN ||
+                     a.x + INV_W > W - MARGIN)) {
+    dir = -dir;
+    for (const a of live) {
+      a.x += INVADER_STEP * dir;
+      a.y += DESCENT;
+    }
+  }
+}
+
+function dropBombs() {
+  if (Math.random() < BOMB_CHANCE) {
+    const live = invaders.filter(a => a.alive);
+    if (live.length === 0) return;
+    const a = live[Math.floor(Math.random() * live.length)];
+    bombs.push({ x: a.x + INV_W / 2, y: a.y + INV_H });
+  }
+}
+
+function moveBombs() {
+  for (const b of bombs) b.y += BOMB_SPEED;
+  bombs = bombs.filter(b => b.y < H + 10);
+}
+
+function hitInvaders() {
+  for (const b of bullets) {
+    for (const a of invaders) {
+      if (a.alive &&
+          b.x > a.x && b.x < a.x + INV_W &&
+          b.y > a.y && b.y < a.y + INV_H) {
+        a.alive = false;
+        b.dead = true;
+        hits += 1;
+      }
+    }
+  }
+  bullets = bullets.filter(b => !b.dead);
+}
+
+function addScore() {
+  score += hits * INVADER_POINTS;
+}
+
+function speedUp() {
+  const n = invaders.filter(a => a.alive).length;
+  stepInterval = 5 + n;
+}
+
+function hitPlayer() {
+  for (const b of bombs) {
+    if (b.x > player.x && b.x < player.x + PLAYER_W &&
+        b.y > player.y && b.y < player.y + PLAYER_H) {
+      b.dead = true;
+      lives -= 1;
+      flash = 40;
+    }
+  }
+  bombs = bombs.filter(b => !b.dead);
+}
+
+function invadersLand() {
+  if (invaders.some(a => a.alive &&
+                    a.y + INV_H >= player.y)) {
+    lives = 0;
+  }
+}
+
+function nextWave() {
+  if (invaders.every(a => !a.alive)) spawnWave();
+}
+
+function checkGameOver() {
+  if (lives <= 0) over = true;
+}
+
+const RULES = [
+  { fn: movePlayer,    note: "steer the cannon with the arrow keys" },
+  { fn: clampPlayer,   note: "keep the cannon inside the screen" },
+  { fn: limitFire,     note: "classic rule: one bullet on screen at a time" },
+  { fn: firePlayer,    note: "fire a bullet when space is pressed" },
+  { fn: moveBullets,   note: "bullets travel upward" },
+  { fn: cullBullets,   note: "remove bullets that leave the screen" },
+  { fn: marchInvaders, note: "the fleet marches sideways on a timer" },
+  { fn: reverseAtEdge, note: "at the edge: reverse direction, descend" },
+  { fn: dropBombs,     note: "random invaders drop bombs" },
+  { fn: moveBombs,     note: "bombs fall toward you" },
+  { fn: hitInvaders,   note: "collision detection: bullets kill invaders" },
+  { fn: addScore,      note: "each kill is worth points" },
+  { fn: speedUp,       note: "the fewer invaders left, the faster they march" },
+  { fn: hitPlayer,     note: "collision detection: bombs hurt you" },
+  { fn: invadersLand,  note: "if the fleet reaches you, it's over" },
+  { fn: nextWave,      note: "clear the fleet and a new wave spawns" },
+  { fn: checkGameOver, note: "no lives left means game over" },
+];
+for (const r of RULES) { r.id = r.fn.name; r.on = true; }
+const RULE = Object.fromEntries(RULES.map(r => [r.id, r]));
+
+function run(id) {
+  if (RULE[id].on) RULE[id].fn();
+}
+
+// ---- main loop --------------------------------------------------------
+function update() {
+  if (over) return;
+  hits = 0;
+  canFire = true;
+  marched = false;
+
+  run("movePlayer");
+  run("clampPlayer");
+  run("limitFire");
+  run("firePlayer");
+  firePressed = false;
+  run("moveBullets");
+  run("cullBullets");
+  run("marchInvaders");
+  run("reverseAtEdge");
+  run("dropBombs");
+  run("moveBombs");
+  run("hitInvaders");
+  run("addScore");
+  run("speedUp");
+  run("hitPlayer");
+  run("invadersLand");
+  run("nextWave");
+  run("checkGameOver");
+
+  if (flash > 0) flash--;
+}
+
+// ---- rendering --------------------------------------------------------
+const ctx = document.getElementById("game").getContext("2d");
+
+const INVADER_SPRITE = [
+  "..X.....X..",
+  "...X...X...",
+  "..XXXXXXX..",
+  ".XX.XXX.XX.",
+  "XXXXXXXXXXX",
+  "X.XXXXXXX.X",
+  "X.X.....X.X",
+  "...XX.XX...",
+];
+const PLAYER_SPRITE = [
+  "......X......",
+  ".....XXX.....",
+  ".....XXX.....",
+  ".XXXXXXXXXXX.",
+  "XXXXXXXXXXXXX",
+  "XXXXXXXXXXXXX",
+  "XXXXXXXXXXXXX",
+];
+
+function drawSprite(sprite, x, y, scale) {
+  for (let r = 0; r < sprite.length; r++)
+    for (let c = 0; c < sprite[r].length; c++)
+      if (sprite[r][c] === "X")
+        ctx.fillRect(x + c * scale, y + r * scale, scale, scale);
+}
+
+function draw() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = "#33ff33";
+
+  // baseline
+  ctx.fillRect(0, H - 24, W, 2);
+
+  // invaders
+  for (const a of invaders)
+    if (a.alive) drawSprite(INVADER_SPRITE, a.x, a.y, 2);
+
+  // player (blinks while recently hit)
+  if (flash === 0 || Math.floor(flash / 4) % 2 === 0)
+    drawSprite(PLAYER_SPRITE, player.x, player.y, 2);
+
+  // bullets & bombs
+  for (const b of bullets) ctx.fillRect(b.x - 1, b.y - 8, 2, 8);
+  for (const b of bombs)   ctx.fillRect(b.x - 2, b.y, 4, 9);
+
+  // HUD
+  ctx.font = '16px "Courier New", monospace';
+  ctx.textAlign = "left";
+  ctx.fillText("SCORE " + score, 12, 24);
+  ctx.textAlign = "right";
+  ctx.fillText("LIVES " + lives, W - 12, 24);
+
+  if (over) {
+    ctx.textAlign = "center";
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillText("GAME OVER", W / 2, H / 2 - 10);
+    ctx.font = '14px "Courier New", monospace';
+    ctx.fillText("press R to restart", W / 2, H / 2 + 18);
+  }
+}
+
+function frame() {
+  update();
+  draw();
+  requestAnimationFrame(frame);
+}
+
+// ---- input ------------------------------------------------------------
+window.addEventListener("keydown", (e) => {
+  if (["ArrowLeft", "ArrowRight", " "].includes(e.key)) e.preventDefault();
+  keys[e.key] = true;
+  if (e.key === " " && !e.repeat) firePressed = true;
+  if (e.key === "r" || e.key === "R") reset();
+});
+window.addEventListener("keyup", (e) => { keys[e.key] = false; });
+
+// ---- build the code panel ----------------------------------------------
+const CONSTS_SRC = `const PLAYER_SPEED   = ${PLAYER_SPEED};
+const BULLET_SPEED   = ${BULLET_SPEED};
+const BOMB_SPEED     = ${BOMB_SPEED};
+const BOMB_CHANCE    = ${BOMB_CHANCE};
+const INVADER_STEP   = ${INVADER_STEP};
+const DESCENT        = ${DESCENT};
+const INVADER_POINTS = ${INVADER_POINTS};
+const ROWS = ${ROWS}, COLS = ${COLS};`;
+
+document.getElementById("consts").textContent = CONSTS_SRC;
+
+const rulesDiv = document.getElementById("rules");
+for (const r of RULES) {
+  const div = document.createElement("div");
+  div.className = "rule";
+
+  const label = document.createElement("label");
+  const box = document.createElement("input");
+  box.type = "checkbox";
+  box.checked = true;
+  box.addEventListener("change", () => {
+    r.on = box.checked;
+    div.classList.toggle("off", !r.on);
+    box.blur(); // give the keyboard back to the game
+  });
+  label.appendChild(box);
+  label.appendChild(document.createTextNode("// " + r.note));
+
+  const pre = document.createElement("pre");
+  pre.textContent = r.fn.toString();
+
+  div.appendChild(label);
+  div.appendChild(pre);
+  rulesDiv.appendChild(div);
+  r.box = box;
+  r.div = div;
+}
+
+document.getElementById("restoreBtn").addEventListener("click", () => {
+  for (const r of RULES) {
+    r.on = true;
+    r.box.checked = true;
+    r.div.classList.remove("off");
+  }
+});
+document.getElementById("restartBtn").addEventListener("click", reset);
+
+// ---- go ----------------------------------------------------------------
+reset();
+frame();
+</script>
+</body>
+</html>
