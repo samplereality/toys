@@ -78,21 +78,19 @@
   }
   .rule {
     margin-bottom: 12px;
-  }
-  .rule label {
-    display: flex;
-    gap: 6px;
-    align-items: baseline;
     cursor: pointer;
-    color: #888;
+    user-select: none;
+    padding: 2px 4px;
+    margin-left: -4px;
+    margin-right: -4px;
   }
-  .rule label input {
-    accent-color: var(--green);
-    transform: translateY(2px);
+  .rule:hover { background: #1c1c1c; }
+  .rule .note {
+    color: #888;
   }
   .rule pre {
     color: var(--green);
-    margin-left: 22px;
+    margin-left: 16px;
     transition: opacity 0.15s;
   }
   .rule.off pre {
@@ -100,7 +98,15 @@
     text-decoration: line-through;
     text-decoration-color: #f55;
   }
-  .rule.off label { color: #f55; }
+  .rule.off .note { color: #f55; }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: none;
+    border: none;
+    pointer-events: none;
+    z-index: 10;
+  }
   .controls {
     width: 430px;
     margin-top: 10px;
@@ -140,9 +146,12 @@
 <p class="tagline">
   A game of Space Invaders that wears its source code on the outside.
   Every rule the game runs is listed on the right &mdash; as the actual code.
-  Untick a line and the game truly stops running it. No collisions? No score?
-  No edge to turn the fleet around? Find out what a game is made of by taking it apart while it runs.
+  Click a line to switch it off and the game truly stops running it. No collisions? No score?
+  No edge to turn the fleet around? Remove a boundary and nothing disappears &mdash;
+  it just keeps going, out of the game and onto the page.
 </p>
+
+<canvas id="overlay"></canvas>
 
 <div class="wrap">
   <div class="gamecol">
@@ -278,6 +287,9 @@ function dropBombs() {
 
 function moveBombs() {
   for (const b of bombs) b.y += BOMB_SPEED;
+}
+
+function cullBombs() {
   bombs = bombs.filter(b => b.y < H + 10);
 }
 
@@ -343,6 +355,7 @@ const RULES = [
   { fn: reverseAtEdge, note: "at the edge: reverse direction, descend" },
   { fn: dropBombs,     note: "random invaders drop bombs" },
   { fn: moveBombs,     note: "bombs fall toward you" },
+  { fn: cullBombs,     note: "remove bombs that fall off the screen" },
   { fn: hitInvaders,   note: "collision detection: bullets kill invaders" },
   { fn: addScore,      note: "each kill is worth points" },
   { fn: speedUp,       note: "the fewer invaders left, the faster they march" },
@@ -376,6 +389,7 @@ function update() {
   run("reverseAtEdge");
   run("dropBombs");
   run("moveBombs");
+  run("cullBombs");
   run("hitInvaders");
   run("addScore");
   run("speedUp");
@@ -388,7 +402,20 @@ function update() {
 }
 
 // ---- rendering --------------------------------------------------------
-const ctx = document.getElementById("game").getContext("2d");
+const gameCanvas = document.getElementById("game");
+const ctx = gameCanvas.getContext("2d");
+
+// A second, invisible canvas covers the whole page. Anything that leaves
+// the game board is drawn here too, so switched-off boundaries don't make
+// things vanish -- they escape, and crawl over the rest of the page.
+const overlay = document.getElementById("overlay");
+const octx = overlay.getContext("2d");
+function sizeOverlay() {
+  overlay.width = window.innerWidth;
+  overlay.height = window.innerHeight;
+}
+window.addEventListener("resize", sizeOverlay);
+sizeOverlay();
 
 const INVADER_SPRITE = [
   "..X.....X..",
@@ -410,11 +437,11 @@ const PLAYER_SPRITE = [
   "XXXXXXXXXXXXX",
 ];
 
-function drawSprite(sprite, x, y, scale) {
+function drawSprite(g, sprite, x, y, scale) {
   for (let r = 0; r < sprite.length; r++)
     for (let c = 0; c < sprite[r].length; c++)
       if (sprite[r][c] === "X")
-        ctx.fillRect(x + c * scale, y + r * scale, scale, scale);
+        g.fillRect(x + c * scale, y + r * scale, scale, scale);
 }
 
 function draw() {
@@ -428,11 +455,11 @@ function draw() {
 
   // invaders
   for (const a of invaders)
-    if (a.alive) drawSprite(INVADER_SPRITE, a.x, a.y, 2);
+    if (a.alive) drawSprite(ctx, INVADER_SPRITE, a.x, a.y, 2);
 
   // player (blinks while recently hit)
   if (flash === 0 || Math.floor(flash / 4) % 2 === 0)
-    drawSprite(PLAYER_SPRITE, player.x, player.y, 2);
+    drawSprite(ctx, PLAYER_SPRITE, player.x, player.y, 2);
 
   // bullets & bombs
   for (const b of bullets) ctx.fillRect(b.x - 1, b.y - 8, 2, 8);
@@ -454,9 +481,39 @@ function draw() {
   }
 }
 
+// true if a w-by-h object at (x, y) pokes outside the game board
+function escaped(x, y, w, h) {
+  return x < 0 || x + w > W || y < 0 || y + h > H;
+}
+
+function drawEscaped() {
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  const rect = gameCanvas.getBoundingClientRect();
+  const bx = rect.left + gameCanvas.clientLeft;
+  const by = rect.top + gameCanvas.clientTop;
+  octx.fillStyle = "#33ff33";
+
+  for (const a of invaders)
+    if (a.alive && escaped(a.x, a.y, INV_W, INV_H))
+      drawSprite(octx, INVADER_SPRITE, bx + a.x, by + a.y, 2);
+
+  if ((flash === 0 || Math.floor(flash / 4) % 2 === 0) &&
+      escaped(player.x, player.y, PLAYER_W, PLAYER_H))
+    drawSprite(octx, PLAYER_SPRITE, bx + player.x, by + player.y, 2);
+
+  for (const b of bullets)
+    if (escaped(b.x - 1, b.y - 8, 2, 8))
+      octx.fillRect(bx + b.x - 1, by + b.y - 8, 2, 8);
+
+  for (const b of bombs)
+    if (escaped(b.x - 2, b.y, 4, 9))
+      octx.fillRect(bx + b.x - 2, by + b.y, 4, 9);
+}
+
 function frame() {
   update();
   draw();
+  drawEscaped();
   requestAnimationFrame(frame);
 }
 
@@ -485,33 +542,28 @@ const rulesDiv = document.getElementById("rules");
 for (const r of RULES) {
   const div = document.createElement("div");
   div.className = "rule";
+  div.title = "click to toggle this code on/off";
 
-  const label = document.createElement("label");
-  const box = document.createElement("input");
-  box.type = "checkbox";
-  box.checked = true;
-  box.addEventListener("change", () => {
-    r.on = box.checked;
-    div.classList.toggle("off", !r.on);
-    box.blur(); // give the keyboard back to the game
-  });
-  label.appendChild(box);
-  label.appendChild(document.createTextNode("// " + r.note));
+  const note = document.createElement("div");
+  note.className = "note";
+  note.textContent = "// " + r.note;
 
   const pre = document.createElement("pre");
   pre.textContent = r.fn.toString();
 
-  div.appendChild(label);
+  div.appendChild(note);
   div.appendChild(pre);
+  div.addEventListener("click", () => {
+    r.on = !r.on;
+    div.classList.toggle("off", !r.on);
+  });
   rulesDiv.appendChild(div);
-  r.box = box;
   r.div = div;
 }
 
 document.getElementById("restoreBtn").addEventListener("click", () => {
   for (const r of RULES) {
     r.on = true;
-    r.box.checked = true;
     r.div.classList.remove("off");
   }
 });
