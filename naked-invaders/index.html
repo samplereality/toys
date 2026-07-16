@@ -184,7 +184,7 @@ const W = 480, H = 540;
 const PLAYER_SPEED   = 4;
 const PLAYER_W       = 26, PLAYER_H = 14;
 const BULLET_SPEED   = 8;
-const BOMB_SPEED     = 3;
+const GRAVITY        = 3;
 const BOMB_CHANCE    = 0.02;
 const INVADER_STEP   = 8;
 const DESCENT        = 18;
@@ -192,9 +192,11 @@ const INVADER_POINTS = 10;
 const ROWS = 4, COLS = 8;
 const INV_W = 22, INV_H = 16;
 const MARGIN = 8;
+const BUNKER_CELL = 4;
+const BUNKER_Y = H - 130;
 
 // ---- game state -------------------------------------------------------
-let player, bullets, bombs, invaders, dir;
+let player, bullets, bombs, invaders, bunkers, dir;
 let stepTimer, stepInterval;
 let score, lives, over, flash;
 let hits, canFire, marched, firePressed;
@@ -210,6 +212,27 @@ function spawnWave() {
   stepTimer = stepInterval;
 }
 
+const BUNKER_SHAPE = [
+  "..XXXXXXX..",
+  ".XXXXXXXXX.",
+  "XXXXXXXXXXX",
+  "XXXXXXXXXXX",
+  "XXXXXXXXXXX",
+  "XXXX...XXXX",
+  "XXX.....XXX",
+  "XXX.....XXX",
+];
+
+function spawnBunkers() {
+  bunkers = [];
+  for (let i = 0; i < 4; i++)
+    bunkers.push({
+      x: 38 + i * 120,
+      y: BUNKER_Y,
+      cells: BUNKER_SHAPE.map(row => [...row].map(ch => ch === "X")),
+    });
+}
+
 function reset() {
   player = { x: W / 2 - PLAYER_W / 2, y: H - 60 };
   bullets = [];
@@ -220,6 +243,38 @@ function reset() {
   flash = 0;
   firePressed = false;
   spawnWave();
+  spawnBunkers();
+}
+
+// which bunker cell (if any) is solid at pixel (x, y)?
+function bunkerHit(x, y) {
+  for (const k of bunkers) {
+    const c = Math.floor((x - k.x) / BUNKER_CELL);
+    const r = Math.floor((y - k.y) / BUNKER_CELL);
+    if (r >= 0 && c >= 0 && k.cells[r] && k.cells[r][c]) return { k, r, c };
+  }
+  return null;
+}
+
+// blast a 3x3 chunk of cells around a hit
+function explodeBunker({ k, r, c }) {
+  for (let dr = -1; dr <= 1; dr++)
+    for (let dc = -1; dc <= 1; dc++)
+      if (r + dr >= 0 && c + dc >= 0 && k.cells[r + dr])
+        k.cells[r + dr][c + dc] = false;
+}
+
+// clear every bunker cell overlapping the given rectangle
+function eraseBunkerRect(x, y, w, h) {
+  for (const k of bunkers)
+    for (let r = 0; r < k.cells.length; r++)
+      for (let c = 0; c < k.cells[r].length; c++) {
+        const cx = k.x + c * BUNKER_CELL;
+        const cy = k.y + r * BUNKER_CELL;
+        if (cx < x + w && cx + BUNKER_CELL > x &&
+            cy < y + h && cy + BUNKER_CELL > y)
+          k.cells[r][c] = false;
+      }
 }
 
 // ---- the rules --------------------------------------------------------
@@ -285,12 +340,40 @@ function dropBombs() {
   }
 }
 
-function moveBombs() {
-  for (const b of bombs) b.y += BOMB_SPEED;
+function gravity() {
+  for (const b of bombs) b.y += GRAVITY;
 }
 
 function cullBombs() {
   bombs = bombs.filter(b => b.y < H + 10);
+}
+
+function bulletsErodeBunkers() {
+  for (const b of bullets) {
+    const hit = bunkerHit(b.x, b.y - 8);
+    if (hit) {
+      explodeBunker(hit);
+      b.dead = true;
+    }
+  }
+  bullets = bullets.filter(b => !b.dead);
+}
+
+function bombsErodeBunkers() {
+  for (const b of bombs) {
+    const hit = bunkerHit(b.x, b.y + 9);
+    if (hit) {
+      explodeBunker(hit);
+      b.dead = true;
+    }
+  }
+  bombs = bombs.filter(b => !b.dead);
+}
+
+function invadersCrushBunkers() {
+  for (const a of invaders)
+    if (a.alive && a.y + INV_H >= BUNKER_Y)
+      eraseBunkerRect(a.x, a.y, INV_W, INV_H);
 }
 
 function hitInvaders() {
@@ -336,6 +419,10 @@ function invadersLand() {
   }
 }
 
+function rebuildBunkers() {
+  if (invaders.every(a => !a.alive)) spawnBunkers();
+}
+
 function nextWave() {
   if (invaders.every(a => !a.alive)) spawnWave();
 }
@@ -354,13 +441,17 @@ const RULES = [
   { fn: marchInvaders, note: "the fleet marches sideways on a timer" },
   { fn: reverseAtEdge, note: "at the edge: reverse direction, descend" },
   { fn: dropBombs,     note: "random invaders drop bombs" },
-  { fn: moveBombs,     note: "bombs fall toward you" },
+  { fn: gravity,       note: "gravity: the only thing this world pulls down is bombs" },
   { fn: cullBombs,     note: "remove bombs that fall off the screen" },
+  { fn: bulletsErodeBunkers, note: "bunkers block your bullets, and erode" },
+  { fn: bombsErodeBunkers,   note: "bunkers absorb their bombs, and erode" },
+  { fn: invadersCrushBunkers, note: "the fleet bulldozes any bunker it touches" },
   { fn: hitInvaders,   note: "collision detection: bullets kill invaders" },
   { fn: addScore,      note: "each kill is worth points" },
   { fn: speedUp,       note: "the fewer invaders left, the faster they march" },
   { fn: hitPlayer,     note: "collision detection: bombs hurt you" },
   { fn: invadersLand,  note: "if the fleet reaches you, it's over" },
+  { fn: rebuildBunkers, note: "each new wave comes with fresh bunkers" },
   { fn: nextWave,      note: "clear the fleet and a new wave spawns" },
   { fn: checkGameOver, note: "no lives left means game over" },
 ];
@@ -388,13 +479,17 @@ function update() {
   run("marchInvaders");
   run("reverseAtEdge");
   run("dropBombs");
-  run("moveBombs");
+  run("gravity");
   run("cullBombs");
+  run("bulletsErodeBunkers");
+  run("bombsErodeBunkers");
+  run("invadersCrushBunkers");
   run("hitInvaders");
   run("addScore");
   run("speedUp");
   run("hitPlayer");
   run("invadersLand");
+  run("rebuildBunkers");
   run("nextWave");
   run("checkGameOver");
 
@@ -452,6 +547,14 @@ function draw() {
 
   // baseline
   ctx.fillRect(0, H - 24, W, 2);
+
+  // bunkers
+  for (const k of bunkers)
+    for (let r = 0; r < k.cells.length; r++)
+      for (let c = 0; c < k.cells[r].length; c++)
+        if (k.cells[r][c])
+          ctx.fillRect(k.x + c * BUNKER_CELL, k.y + r * BUNKER_CELL,
+                       BUNKER_CELL, BUNKER_CELL);
 
   // invaders
   for (const a of invaders)
@@ -529,7 +632,7 @@ window.addEventListener("keyup", (e) => { keys[e.key] = false; });
 // ---- build the code panel ----------------------------------------------
 const CONSTS_SRC = `const PLAYER_SPEED   = ${PLAYER_SPEED};
 const BULLET_SPEED   = ${BULLET_SPEED};
-const BOMB_SPEED     = ${BOMB_SPEED};
+const GRAVITY        = ${GRAVITY};
 const BOMB_CHANCE    = ${BOMB_CHANCE};
 const INVADER_STEP   = ${INVADER_STEP};
 const DESCENT        = ${DESCENT};
