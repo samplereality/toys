@@ -40,19 +40,36 @@
     align-items: flex-start;
     flex-wrap: wrap;
   }
-  canvas {
+  canvas#game {
     background: #000;
     border: 2px solid var(--green);
     image-rendering: pixelated;
     display: block;
+    cursor: crosshair;
   }
+  #strip {
+    width: 430px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin-bottom: 8px;
+  }
+  #strip span {
+    width: 14px;
+    height: 14px;
+    background: var(--green);
+    cursor: pointer;
+  }
+  #strip span:hover { outline: 1px solid #fff; }
+  #strip span.off { background: #6b1515; }
   #codepanel {
     width: 430px;
-    height: 544px;
+    height: 522px;
     overflow-y: auto;
     background: #101010;
     border: 1px solid #555;
-    padding: 10px 12px;
+    padding: 0 12px 10px;
     box-sizing: border-box;
     font-size: 11.5px;
     line-height: 1.35;
@@ -65,7 +82,21 @@
     text-transform: uppercase;
     border-bottom: 1px solid #333;
     margin: 0 0 8px;
-    padding-bottom: 4px;
+    padding: 10px 0 4px;
+  }
+  .group h3 {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #101010;
+    color: #b9b96a;
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 -12px 6px;
+    padding: 6px 12px 4px;
+    border-bottom: 1px solid #2a2a2a;
   }
   pre {
     margin: 0;
@@ -77,20 +108,17 @@
     margin-bottom: 14px;
   }
   .rule {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     cursor: pointer;
     user-select: none;
-    padding: 2px 4px;
+    padding: 3px 4px;
     margin-left: -4px;
     margin-right: -4px;
   }
   .rule:hover { background: #1c1c1c; }
-  .rule .note {
-    color: #888;
-  }
   .rule pre {
     color: var(--green);
-    margin-left: 16px;
+    margin-left: 8px;
     transition: opacity 0.15s;
   }
   .rule.off pre {
@@ -98,7 +126,11 @@
     text-decoration: line-through;
     text-decoration-color: #f55;
   }
-  .rule.off .note { color: #f55; }
+  @keyframes rulepulse {
+    0%, 100% { background: #1c1c1c; }
+    50%      { background: #2e4d2e; }
+  }
+  .rule.pulse { animation: rulepulse 0.4s 4; }
   #overlay {
     position: fixed;
     inset: 0;
@@ -146,9 +178,10 @@
 <p class="tagline">
   A game of Space Invaders that wears its source code on the outside.
   Every rule the game runs is listed on the right &mdash; as the actual code.
-  Click a line to switch it off and the game truly stops running it. No collisions? No score?
-  No edge to turn the fleet around? Remove a boundary and nothing disappears &mdash;
-  it just keeps going, out of the game and onto the page.
+  Click a line to switch it off and the game truly stops running it.
+  Not sure what a rule does? Neither were we, until we turned it off.
+  Hover a rule to see what it governs; click anything on the board to find the laws that govern it.
+  Remove a boundary and nothing disappears &mdash; it just keeps going, out of the game and onto the page.
 </p>
 
 <canvas id="overlay"></canvas>
@@ -159,6 +192,7 @@
     <div class="keys">&larr; &rarr; move &nbsp;&middot;&nbsp; space fire &nbsp;&middot;&nbsp; R restart</div>
   </div>
   <div class="panelcol">
+    <div id="strip"></div>
     <div id="codepanel">
       <h2>the code, running live</h2>
       <pre class="consts" id="consts"></pre>
@@ -196,10 +230,10 @@ const BUNKER_CELL = 4;
 const BUNKER_Y = H - 130;
 
 // ---- game state -------------------------------------------------------
-let player, bullets, bombs, invaders, bunkers, dir;
-let stepTimer, stepInterval;
-let score, lives, over, flash;
-let hits, canFire, marched, firePressed;
+let player, bullets, bombs, invaders, bunkers, fleetDir;
+let marchTimer, marchInterval;
+let score, lives, over, hitFlash;
+let kills, canFire, fleetMoved, firePressed;
 const keys = {};
 
 function spawnWave() {
@@ -207,9 +241,9 @@ function spawnWave() {
   for (let r = 0; r < ROWS; r++)
     for (let c = 0; c < COLS; c++)
       invaders.push({ x: 44 + c * 46, y: 70 + r * 36, alive: true });
-  dir = 1;
-  stepInterval = 5 + invaders.length;
-  stepTimer = stepInterval;
+  fleetDir = 1;
+  marchInterval = 5 + invaders.length;
+  marchTimer = marchInterval;
 }
 
 const BUNKER_SHAPE = [
@@ -240,7 +274,7 @@ function reset() {
   score = 0;
   lives = 3;
   over = false;
-  flash = 0;
+  hitFlash = 0;
   firePressed = false;
   spawnWave();
   spawnBunkers();
@@ -248,54 +282,56 @@ function reset() {
 
 // which bunker cell (if any) is solid at pixel (x, y)?
 function bunkerHit(x, y) {
-  for (const k of bunkers) {
-    const c = Math.floor((x - k.x) / BUNKER_CELL);
-    const r = Math.floor((y - k.y) / BUNKER_CELL);
-    if (r >= 0 && c >= 0 && k.cells[r] && k.cells[r][c]) return { k, r, c };
+  for (const bunker of bunkers) {
+    const c = Math.floor((x - bunker.x) / BUNKER_CELL);
+    const r = Math.floor((y - bunker.y) / BUNKER_CELL);
+    if (r >= 0 && c >= 0 && bunker.cells[r] && bunker.cells[r][c])
+      return { bunker, r, c };
   }
   return null;
 }
 
 // blast a 3x3 chunk of cells around a hit
-function explodeBunker({ k, r, c }) {
+function explodeBunker({ bunker, r, c }) {
   for (let dr = -1; dr <= 1; dr++)
     for (let dc = -1; dc <= 1; dc++)
-      if (r + dr >= 0 && c + dc >= 0 && k.cells[r + dr])
-        k.cells[r + dr][c + dc] = false;
+      if (r + dr >= 0 && c + dc >= 0 && bunker.cells[r + dr])
+        bunker.cells[r + dr][c + dc] = false;
 }
 
 // clear every bunker cell overlapping the given rectangle
 function eraseBunkerRect(x, y, w, h) {
-  for (const k of bunkers)
-    for (let r = 0; r < k.cells.length; r++)
-      for (let c = 0; c < k.cells[r].length; c++) {
-        const cx = k.x + c * BUNKER_CELL;
-        const cy = k.y + r * BUNKER_CELL;
+  for (const bunker of bunkers)
+    for (let r = 0; r < bunker.cells.length; r++)
+      for (let c = 0; c < bunker.cells[r].length; c++) {
+        const cx = bunker.x + c * BUNKER_CELL;
+        const cy = bunker.y + r * BUNKER_CELL;
         if (cx < x + w && cx + BUNKER_CELL > x &&
             cy < y + h && cy + BUNKER_CELL > y)
-          k.cells[r][c] = false;
+          bunker.cells[r][c] = false;
       }
 }
 
 // ---- the rules --------------------------------------------------------
 // Each function below is displayed in the side panel *verbatim* (via
-// Function.prototype.toString) and only runs while its checkbox is on.
+// Function.prototype.toString) and only runs while it hasn't been
+// clicked off.
 
 function movePlayer() {
   if (keys.ArrowLeft)  player.x -= PLAYER_SPEED;
   if (keys.ArrowRight) player.x += PLAYER_SPEED;
 }
 
-function clampPlayer() {
+function keepPlayerOnScreen() {
   player.x = Math.max(MARGIN,
              Math.min(W - PLAYER_W - MARGIN, player.x));
 }
 
-function limitFire() {
+function limitOneBullet() {
   if (bullets.length > 0) canFire = false;
 }
 
-function firePlayer() {
+function fireBullet() {
   if (firePressed && canFire) {
     bullets.push({ x: player.x + PLAYER_W / 2,
                    y: player.y - 6 });
@@ -303,158 +339,173 @@ function firePlayer() {
 }
 
 function moveBullets() {
-  for (const b of bullets) b.y -= BULLET_SPEED;
+  for (const shot of bullets) shot.y -= BULLET_SPEED;
 }
 
-function cullBullets() {
-  bullets = bullets.filter(b => b.y > -10);
+function removeOffscreenBullets() {
+  bullets = bullets.filter(shot => shot.y > -10);
+}
+
+function bulletsKillInvaders() {
+  for (const shot of bullets) {
+    for (const inv of invaders) {
+      if (inv.alive &&
+          shot.x > inv.x && shot.x < inv.x + INV_W &&
+          shot.y > inv.y && shot.y < inv.y + INV_H) {
+        inv.alive = false;
+        shot.dead = true;
+        kills += 1;
+      }
+    }
+  }
+  bullets = bullets.filter(shot => !shot.dead);
 }
 
 function marchInvaders() {
-  if (--stepTimer > 0) return;
-  stepTimer = stepInterval;
-  for (const a of invaders)
-    if (a.alive) a.x += INVADER_STEP * dir;
-  marched = true;
+  if (--marchTimer > 0) return;
+  marchTimer = marchInterval;
+  for (const inv of invaders)
+    if (inv.alive) inv.x += INVADER_STEP * fleetDir;
+  fleetMoved = true;
 }
 
-function reverseAtEdge() {
-  if (!marched) return;
-  const live = invaders.filter(a => a.alive);
-  if (live.some(a => a.x < MARGIN ||
-                     a.x + INV_W > W - MARGIN)) {
-    dir = -dir;
-    for (const a of live) {
-      a.x += INVADER_STEP * dir;
-      a.y += DESCENT;
+function reverseFleetAtEdge() {
+  if (!fleetMoved) return;
+  const fleet = invaders.filter(inv => inv.alive);
+  if (fleet.some(inv => inv.x < MARGIN ||
+                        inv.x + INV_W > W - MARGIN)) {
+    fleetDir = -fleetDir;
+    for (const inv of fleet) {
+      inv.x += INVADER_STEP * fleetDir;
+      inv.y += DESCENT;
     }
+  }
+}
+
+function speedUpFleet() {
+  const alive = invaders.filter(inv => inv.alive).length;
+  marchInterval = 5 + alive;
+}
+
+function fleetLands() {
+  if (invaders.some(inv => inv.alive &&
+                    inv.y + INV_H >= player.y)) {
+    lives = 0;
   }
 }
 
 function dropBombs() {
   if (Math.random() < BOMB_CHANCE) {
-    const live = invaders.filter(a => a.alive);
-    if (live.length === 0) return;
-    const a = live[Math.floor(Math.random() * live.length)];
-    bombs.push({ x: a.x + INV_W / 2, y: a.y + INV_H });
+    const fleet = invaders.filter(inv => inv.alive);
+    if (fleet.length === 0) return;
+    const bomber = fleet[Math.floor(Math.random() * fleet.length)];
+    bombs.push({ x: bomber.x + INV_W / 2, y: bomber.y + INV_H });
   }
 }
 
 function gravity() {
-  for (const b of bombs) b.y += GRAVITY;
+  for (const bomb of bombs) bomb.y += GRAVITY;
 }
 
-function cullBombs() {
-  bombs = bombs.filter(b => b.y < H + 10);
+function removeOffscreenBombs() {
+  bombs = bombs.filter(bomb => bomb.y < H + 10);
+}
+
+function bombsHurtPlayer() {
+  for (const bomb of bombs) {
+    if (bomb.x > player.x && bomb.x < player.x + PLAYER_W &&
+        bomb.y > player.y && bomb.y < player.y + PLAYER_H) {
+      bomb.dead = true;
+      lives -= 1;
+      hitFlash = 40;
+    }
+  }
+  bombs = bombs.filter(bomb => !bomb.dead);
 }
 
 function bulletsErodeBunkers() {
-  for (const b of bullets) {
-    const hit = bunkerHit(b.x, b.y - 8);
+  for (const shot of bullets) {
+    const hit = bunkerHit(shot.x, shot.y - 8);
     if (hit) {
       explodeBunker(hit);
-      b.dead = true;
+      shot.dead = true;
     }
   }
-  bullets = bullets.filter(b => !b.dead);
+  bullets = bullets.filter(shot => !shot.dead);
 }
 
 function bombsErodeBunkers() {
-  for (const b of bombs) {
-    const hit = bunkerHit(b.x, b.y + 9);
+  for (const bomb of bombs) {
+    const hit = bunkerHit(bomb.x, bomb.y + 9);
     if (hit) {
       explodeBunker(hit);
-      b.dead = true;
+      bomb.dead = true;
     }
   }
-  bombs = bombs.filter(b => !b.dead);
+  bombs = bombs.filter(bomb => !bomb.dead);
 }
 
 function invadersCrushBunkers() {
-  for (const a of invaders)
-    if (a.alive && a.y + INV_H >= BUNKER_Y)
-      eraseBunkerRect(a.x, a.y, INV_W, INV_H);
-}
-
-function hitInvaders() {
-  for (const b of bullets) {
-    for (const a of invaders) {
-      if (a.alive &&
-          b.x > a.x && b.x < a.x + INV_W &&
-          b.y > a.y && b.y < a.y + INV_H) {
-        a.alive = false;
-        b.dead = true;
-        hits += 1;
-      }
-    }
-  }
-  bullets = bullets.filter(b => !b.dead);
-}
-
-function addScore() {
-  score += hits * INVADER_POINTS;
-}
-
-function speedUp() {
-  const n = invaders.filter(a => a.alive).length;
-  stepInterval = 5 + n;
-}
-
-function hitPlayer() {
-  for (const b of bombs) {
-    if (b.x > player.x && b.x < player.x + PLAYER_W &&
-        b.y > player.y && b.y < player.y + PLAYER_H) {
-      b.dead = true;
-      lives -= 1;
-      flash = 40;
-    }
-  }
-  bombs = bombs.filter(b => !b.dead);
-}
-
-function invadersLand() {
-  if (invaders.some(a => a.alive &&
-                    a.y + INV_H >= player.y)) {
-    lives = 0;
-  }
+  for (const inv of invaders)
+    if (inv.alive && inv.y + INV_H >= BUNKER_Y)
+      eraseBunkerRect(inv.x, inv.y, INV_W, INV_H);
 }
 
 function rebuildBunkers() {
-  if (invaders.every(a => !a.alive)) spawnBunkers();
+  if (invaders.every(inv => !inv.alive)) spawnBunkers();
 }
 
-function nextWave() {
-  if (invaders.every(a => !a.alive)) spawnWave();
+function scorePoints() {
+  score += kills * INVADER_POINTS;
+}
+
+function spawnNextWave() {
+  if (invaders.every(inv => !inv.alive)) spawnWave();
 }
 
 function checkGameOver() {
   if (lives <= 0) over = true;
 }
 
-const RULES = [
-  { fn: movePlayer,    note: "steer the cannon with the arrow keys" },
-  { fn: clampPlayer,   note: "keep the cannon inside the screen" },
-  { fn: limitFire,     note: "classic rule: one bullet on screen at a time" },
-  { fn: firePlayer,    note: "fire a bullet when space is pressed" },
-  { fn: moveBullets,   note: "bullets travel upward" },
-  { fn: cullBullets,   note: "remove bullets that leave the screen" },
-  { fn: marchInvaders, note: "the fleet marches sideways on a timer" },
-  { fn: reverseAtEdge, note: "at the edge: reverse direction, descend" },
-  { fn: dropBombs,     note: "random invaders drop bombs" },
-  { fn: gravity,       note: "gravity: the only thing this world pulls down is bombs" },
-  { fn: cullBombs,     note: "remove bombs that fall off the screen" },
-  { fn: bulletsErodeBunkers, note: "bunkers block your bullets, and erode" },
-  { fn: bombsErodeBunkers,   note: "bunkers absorb their bombs, and erode" },
-  { fn: invadersCrushBunkers, note: "the fleet bulldozes any bunker it touches" },
-  { fn: hitInvaders,   note: "collision detection: bullets kill invaders" },
-  { fn: addScore,      note: "each kill is worth points" },
-  { fn: speedUp,       note: "the fewer invaders left, the faster they march" },
-  { fn: hitPlayer,     note: "collision detection: bombs hurt you" },
-  { fn: invadersLand,  note: "if the fleet reaches you, it's over" },
-  { fn: rebuildBunkers, note: "each new wave comes with fresh bunkers" },
-  { fn: nextWave,      note: "clear the fleet and a new wave spawns" },
-  { fn: checkGameOver, note: "no lives left means game over" },
+// ---- rule registry: grouped for the panel ------------------------------
+const GROUPS = [
+  { title: "the cannon", rules: [
+    { fn: movePlayer,             targets: ["player"] },
+    { fn: keepPlayerOnScreen,     targets: ["player"] },
+    { fn: limitOneBullet,         targets: ["player", "bullets"] },
+    { fn: fireBullet,             targets: ["player", "bullets"] },
+  ]},
+  { title: "your bullets", rules: [
+    { fn: moveBullets,            targets: ["bullets"] },
+    { fn: removeOffscreenBullets, targets: ["bullets"] },
+    { fn: bulletsKillInvaders,    targets: ["bullets", "invaders"] },
+  ]},
+  { title: "the fleet", rules: [
+    { fn: marchInvaders,          targets: ["invaders"] },
+    { fn: reverseFleetAtEdge,     targets: ["invaders"] },
+    { fn: speedUpFleet,           targets: ["invaders"] },
+    { fn: fleetLands,             targets: ["invaders", "player"] },
+  ]},
+  { title: "bombs & gravity", rules: [
+    { fn: dropBombs,              targets: ["bombs", "invaders"] },
+    { fn: gravity,                targets: ["bombs"] },
+    { fn: removeOffscreenBombs,   targets: ["bombs"] },
+    { fn: bombsHurtPlayer,        targets: ["bombs", "player"] },
+  ]},
+  { title: "the bunkers", rules: [
+    { fn: bulletsErodeBunkers,    targets: ["bunkers", "bullets"] },
+    { fn: bombsErodeBunkers,      targets: ["bunkers", "bombs"] },
+    { fn: invadersCrushBunkers,   targets: ["bunkers", "invaders"] },
+    { fn: rebuildBunkers,         targets: ["bunkers"] },
+  ]},
+  { title: "the law", rules: [
+    { fn: scorePoints,            targets: ["score"] },
+    { fn: spawnNextWave,          targets: ["invaders"] },
+    { fn: checkGameOver,          targets: ["lives"] },
+  ]},
 ];
+
+const RULES = GROUPS.flatMap(g => g.rules);
 for (const r of RULES) { r.id = r.fn.name; r.on = true; }
 const RULE = Object.fromEntries(RULES.map(r => [r.id, r]));
 
@@ -465,35 +516,57 @@ function run(id) {
 // ---- main loop --------------------------------------------------------
 function update() {
   if (over) return;
-  hits = 0;
+  kills = 0;
   canFire = true;
-  marched = false;
+  fleetMoved = false;
 
   run("movePlayer");
-  run("clampPlayer");
-  run("limitFire");
-  run("firePlayer");
+  run("keepPlayerOnScreen");
+  run("limitOneBullet");
+  run("fireBullet");
   firePressed = false;
   run("moveBullets");
-  run("cullBullets");
+  run("removeOffscreenBullets");
   run("marchInvaders");
-  run("reverseAtEdge");
+  run("reverseFleetAtEdge");
   run("dropBombs");
   run("gravity");
-  run("cullBombs");
+  run("removeOffscreenBombs");
   run("bulletsErodeBunkers");
   run("bombsErodeBunkers");
   run("invadersCrushBunkers");
-  run("hitInvaders");
-  run("addScore");
-  run("speedUp");
-  run("hitPlayer");
-  run("invadersLand");
+  run("bulletsKillInvaders");
+  run("scorePoints");
+  run("speedUpFleet");
+  run("bombsHurtPlayer");
+  run("fleetLands");
   run("rebuildBunkers");
-  run("nextWave");
+  run("spawnNextWave");
   run("checkGameOver");
 
-  if (flash > 0) flash--;
+  if (hitFlash > 0) hitFlash--;
+}
+
+// ---- highlight linkage: rules <-> board --------------------------------
+let hilite = null;        // Set of entity kinds to spotlight on the board
+let hiliteTimeout = null;
+let tick = 0;
+
+function setHilite(kinds, ms) {
+  clearTimeout(hiliteTimeout);
+  hilite = new Set(kinds);
+  if (ms) hiliteTimeout = setTimeout(() => { hilite = null; }, ms);
+}
+function clearHilite() {
+  clearTimeout(hiliteTimeout);
+  hilite = null;
+}
+
+// color for a kind of thing: pulses white while its rules are hovered
+function ink(kind) {
+  if (hilite && hilite.has(kind))
+    return tick % 14 < 7 ? "#ffffff" : "#99ff99";
+  return "#33ff33";
 }
 
 // ---- rendering --------------------------------------------------------
@@ -543,39 +616,47 @@ function draw() {
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, W, H);
 
-  ctx.fillStyle = "#33ff33";
-
   // baseline
+  ctx.fillStyle = "#33ff33";
   ctx.fillRect(0, H - 24, W, 2);
 
   // bunkers
-  for (const k of bunkers)
-    for (let r = 0; r < k.cells.length; r++)
-      for (let c = 0; c < k.cells[r].length; c++)
-        if (k.cells[r][c])
-          ctx.fillRect(k.x + c * BUNKER_CELL, k.y + r * BUNKER_CELL,
+  ctx.fillStyle = ink("bunkers");
+  for (const bunker of bunkers)
+    for (let r = 0; r < bunker.cells.length; r++)
+      for (let c = 0; c < bunker.cells[r].length; c++)
+        if (bunker.cells[r][c])
+          ctx.fillRect(bunker.x + c * BUNKER_CELL,
+                       bunker.y + r * BUNKER_CELL,
                        BUNKER_CELL, BUNKER_CELL);
 
   // invaders
-  for (const a of invaders)
-    if (a.alive) drawSprite(ctx, INVADER_SPRITE, a.x, a.y, 2);
+  ctx.fillStyle = ink("invaders");
+  for (const inv of invaders)
+    if (inv.alive) drawSprite(ctx, INVADER_SPRITE, inv.x, inv.y, 2);
 
   // player (blinks while recently hit)
-  if (flash === 0 || Math.floor(flash / 4) % 2 === 0)
+  ctx.fillStyle = ink("player");
+  if (hitFlash === 0 || Math.floor(hitFlash / 4) % 2 === 0)
     drawSprite(ctx, PLAYER_SPRITE, player.x, player.y, 2);
 
   // bullets & bombs
-  for (const b of bullets) ctx.fillRect(b.x - 1, b.y - 8, 2, 8);
-  for (const b of bombs)   ctx.fillRect(b.x - 2, b.y, 4, 9);
+  ctx.fillStyle = ink("bullets");
+  for (const shot of bullets) ctx.fillRect(shot.x - 1, shot.y - 8, 2, 8);
+  ctx.fillStyle = ink("bombs");
+  for (const bomb of bombs) ctx.fillRect(bomb.x - 2, bomb.y, 4, 9);
 
   // HUD
   ctx.font = '16px "Courier New", monospace';
   ctx.textAlign = "left";
+  ctx.fillStyle = ink("score");
   ctx.fillText("SCORE " + score, 12, 24);
   ctx.textAlign = "right";
+  ctx.fillStyle = ink("lives");
   ctx.fillText("LIVES " + lives, W - 12, 24);
 
   if (over) {
+    ctx.fillStyle = "#33ff33";
     ctx.textAlign = "center";
     ctx.font = '28px "Courier New", monospace';
     ctx.fillText("GAME OVER", W / 2, H / 2 - 10);
@@ -594,26 +675,30 @@ function drawEscaped() {
   const rect = gameCanvas.getBoundingClientRect();
   const bx = rect.left + gameCanvas.clientLeft;
   const by = rect.top + gameCanvas.clientTop;
-  octx.fillStyle = "#33ff33";
 
-  for (const a of invaders)
-    if (a.alive && escaped(a.x, a.y, INV_W, INV_H))
-      drawSprite(octx, INVADER_SPRITE, bx + a.x, by + a.y, 2);
+  octx.fillStyle = ink("invaders");
+  for (const inv of invaders)
+    if (inv.alive && escaped(inv.x, inv.y, INV_W, INV_H))
+      drawSprite(octx, INVADER_SPRITE, bx + inv.x, by + inv.y, 2);
 
-  if ((flash === 0 || Math.floor(flash / 4) % 2 === 0) &&
+  octx.fillStyle = ink("player");
+  if ((hitFlash === 0 || Math.floor(hitFlash / 4) % 2 === 0) &&
       escaped(player.x, player.y, PLAYER_W, PLAYER_H))
     drawSprite(octx, PLAYER_SPRITE, bx + player.x, by + player.y, 2);
 
-  for (const b of bullets)
-    if (escaped(b.x - 1, b.y - 8, 2, 8))
-      octx.fillRect(bx + b.x - 1, by + b.y - 8, 2, 8);
+  octx.fillStyle = ink("bullets");
+  for (const shot of bullets)
+    if (escaped(shot.x - 1, shot.y - 8, 2, 8))
+      octx.fillRect(bx + shot.x - 1, by + shot.y - 8, 2, 8);
 
-  for (const b of bombs)
-    if (escaped(b.x - 2, b.y, 4, 9))
-      octx.fillRect(bx + b.x - 2, by + b.y, 4, 9);
+  octx.fillStyle = ink("bombs");
+  for (const bomb of bombs)
+    if (escaped(bomb.x - 2, bomb.y, 4, 9))
+      octx.fillRect(bx + bomb.x - 2, by + bomb.y, 4, 9);
 }
 
 function frame() {
+  tick++;
   update();
   draw();
   drawEscaped();
@@ -629,6 +714,57 @@ window.addEventListener("keydown", (e) => {
 });
 window.addEventListener("keyup", (e) => { keys[e.key] = false; });
 
+// ---- board as index: click a thing to find its laws ---------------------
+function boardKindAt(x, y) {
+  for (const inv of invaders)
+    if (inv.alive &&
+        x >= inv.x && x <= inv.x + INV_W &&
+        y >= inv.y && y <= inv.y + INV_H) return "invaders";
+  if (bunkerHit(x, y)) return "bunkers";
+  if (x >= player.x - 4 && x <= player.x + PLAYER_W + 4 &&
+      y >= player.y - 4 && y <= player.y + PLAYER_H + 4) return "player";
+  for (const shot of bullets)
+    if (Math.abs(x - shot.x) < 8 && Math.abs(y - (shot.y - 4)) < 12)
+      return "bullets";
+  for (const bomb of bombs)
+    if (Math.abs(x - bomb.x) < 8 && Math.abs(y - (bomb.y + 4)) < 12)
+      return "bombs";
+  if (y < 34) return x < W / 2 ? "score" : "lives";
+  return null;
+}
+
+function flashRule(r) {
+  r.div.classList.remove("pulse");
+  void r.div.offsetWidth; // restart the animation
+  r.div.classList.add("pulse");
+  setTimeout(() => r.div.classList.remove("pulse"), 1700);
+}
+
+// scroll only the code panel, never the page
+function scrollPanelTo(r) {
+  const panel = document.getElementById("codepanel");
+  const top = r.div.getBoundingClientRect().top
+            - panel.getBoundingClientRect().top
+            + panel.scrollTop;
+  panel.scrollTo({
+    top: top - panel.clientHeight / 2 + r.div.clientHeight / 2,
+    behavior: "smooth",
+  });
+}
+
+gameCanvas.addEventListener("click", (e) => {
+  const rect = gameCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left - gameCanvas.clientLeft;
+  const y = e.clientY - rect.top - gameCanvas.clientTop;
+  const kind = boardKindAt(x, y);
+  if (!kind) return;
+  const related = RULES.filter(r => r.targets.includes(kind));
+  if (related.length === 0) return;
+  scrollPanelTo(related[0]);
+  for (const r of related) flashRule(r);
+  setHilite([kind], 1700);
+});
+
 // ---- build the code panel ----------------------------------------------
 const CONSTS_SRC = `const PLAYER_SPEED   = ${PLAYER_SPEED};
 const BULLET_SPEED   = ${BULLET_SPEED};
@@ -641,33 +777,61 @@ const ROWS = ${ROWS}, COLS = ${COLS};`;
 
 document.getElementById("consts").textContent = CONSTS_SRC;
 
+const strip = document.getElementById("strip");
 const rulesDiv = document.getElementById("rules");
-for (const r of RULES) {
-  const div = document.createElement("div");
-  div.className = "rule";
-  div.title = "click to toggle this code on/off";
 
-  const note = document.createElement("div");
-  note.className = "note";
-  note.textContent = "// " + r.note;
+function syncRule(r) {
+  r.div.classList.toggle("off", !r.on);
+  r.chip.classList.toggle("off", !r.on);
+  r.chip.title = r.id + " — " + (r.on ? "on" : "off");
+}
 
-  const pre = document.createElement("pre");
-  pre.textContent = r.fn.toString();
+function toggleRule(r) {
+  r.on = !r.on;
+  syncRule(r);
+}
 
-  div.appendChild(note);
-  div.appendChild(pre);
-  div.addEventListener("click", () => {
-    r.on = !r.on;
-    div.classList.toggle("off", !r.on);
-  });
-  rulesDiv.appendChild(div);
-  r.div = div;
+for (const group of GROUPS) {
+  const section = document.createElement("div");
+  section.className = "group";
+
+  const heading = document.createElement("h3");
+  heading.textContent = group.title;
+  section.appendChild(heading);
+
+  for (const r of group.rules) {
+    const div = document.createElement("div");
+    div.className = "rule";
+    div.title = "click to toggle this code on/off";
+
+    const pre = document.createElement("pre");
+    pre.textContent = r.fn.toString();
+    div.appendChild(pre);
+
+    div.addEventListener("click", () => toggleRule(r));
+    div.addEventListener("mouseenter", () => setHilite(r.targets, 0));
+    div.addEventListener("mouseleave", clearHilite);
+
+    section.appendChild(div);
+    r.div = div;
+
+    const chip = document.createElement("span");
+    chip.addEventListener("click", () => {
+      scrollPanelTo(r);
+      flashRule(r);
+      setHilite(r.targets, 1700);
+    });
+    strip.appendChild(chip);
+    r.chip = chip;
+    syncRule(r);
+  }
+  rulesDiv.appendChild(section);
 }
 
 document.getElementById("restoreBtn").addEventListener("click", () => {
   for (const r of RULES) {
     r.on = true;
-    r.div.classList.remove("off");
+    syncRule(r);
   }
 });
 document.getElementById("restartBtn").addEventListener("click", reset);
