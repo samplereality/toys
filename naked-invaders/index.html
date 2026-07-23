@@ -15,23 +15,23 @@
     color: #ddd;
     font-family: "Courier New", Courier, monospace;
     margin: 0;
-    padding: 24px 16px 48px;
+    padding: 12px 16px 32px;
   }
   h1 {
     color: var(--green);
     text-align: center;
     letter-spacing: 0.2em;
-    font-size: 28px;
-    margin: 0 0 4px;
+    font-size: 22px;
+    margin: 0 0 2px;
     text-transform: uppercase;
   }
   p.tagline {
     text-align: center;
     color: #aaa;
     max-width: 720px;
-    margin: 0 auto 20px;
-    font-size: 13px;
-    line-height: 1.5;
+    margin: 0 auto 14px;
+    font-size: 12px;
+    line-height: 1.4;
   }
   .wrap {
     display: flex;
@@ -47,42 +47,26 @@
     display: block;
     cursor: crosshair;
   }
-  #strip {
-    width: 430px;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    margin-bottom: 8px;
-  }
-  #strip span {
-    width: 14px;
-    height: 14px;
-    background: var(--green);
-    cursor: pointer;
-  }
-  #strip span:hover { outline: 1px solid #fff; }
-  #strip span.off { background: #6b1515; }
   #codepanel {
-    width: 430px;
-    height: 522px;
+    width: 470px;
+    max-height: calc(100vh - 140px);
     overflow-y: auto;
     background: #101010;
     border: 1px solid #555;
-    padding: 0 12px 10px;
+    padding: 0 12px 8px;
     box-sizing: border-box;
-    font-size: 11.5px;
-    line-height: 1.35;
+    font-size: 11px;
+    line-height: 1.3;
   }
   #codepanel h2 {
     color: #999;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: normal;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     border-bottom: 1px solid #333;
-    margin: 0 0 8px;
-    padding: 10px 0 4px;
+    margin: 0 0 6px;
+    padding: 7px 0 3px;
   }
   .group h3 {
     position: sticky;
@@ -90,12 +74,12 @@
     z-index: 2;
     background: #101010;
     color: #b9b96a;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: normal;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    margin: 0 -12px 6px;
-    padding: 6px 12px 4px;
+    margin: 0 -12px 4px;
+    padding: 4px 12px 3px;
     border-bottom: 1px solid #2a2a2a;
   }
   pre {
@@ -103,22 +87,72 @@
     white-space: pre;
     overflow-x: auto;
   }
-  .consts {
+  #consts { padding: 6px 4px 2px; }
+  .tunable { margin-bottom: 20px; }
+  .tunable pre {
     color: #7ec8e3;
-    margin-bottom: 14px;
-  }
-  .rule {
-    margin-bottom: 10px;
+    font-size: 13px;
+    margin-bottom: 6px;
     cursor: pointer;
     user-select: none;
-    padding: 3px 4px;
+  }
+  .tunable pre:hover { background: #16323e; }
+  .tunable .val { color: #fff; }
+  .tunable input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 4px;
+    background: #333;
+    outline: none;
+    margin: 8px 0 3px;
+  }
+  .tunable input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    cursor: pointer;
+  }
+  .tunable input[type=range]::-moz-range-thumb {
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .tunable .range-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    font-size: 10px;
+  }
+  .rule {
+    position: relative;
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 4px 2px 14px;
     margin-left: -4px;
     margin-right: -4px;
   }
   .rule:hover { background: #1c1c1c; }
+  .rule .led {
+    position: absolute;
+    left: 3px;
+    top: 6px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 5px var(--green);
+    opacity: 0;
+  }
   .rule pre {
     color: var(--green);
-    margin-left: 8px;
     transition: opacity 0.15s;
   }
   .rule.off pre {
@@ -140,7 +174,8 @@
     z-index: 10;
   }
   .controls {
-    width: 430px;
+    width: 484px;
+    box-sizing: border-box;
     margin-top: 10px;
     display: flex;
     gap: 10px;
@@ -156,6 +191,29 @@
     cursor: pointer;
   }
   .controls button:hover { background: #0a2a0a; }
+  #modeToggle {
+    display: flex;
+    width: 470px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+  }
+  #modeToggle button {
+    flex: 1;
+    background: #111;
+    color: #777;
+    border: 1px solid #555;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 7px 0;
+    cursor: pointer;
+  }
+  #modeToggle button.active {
+    color: var(--green);
+    border-color: var(--green);
+    background: #0a2a0a;
+  }
   .gamecol .keys {
     color: #888;
     font-size: 12px;
@@ -163,10 +221,12 @@
     margin-top: 8px;
   }
   footer {
-    text-align: center;
+    width: 484px;
+    box-sizing: border-box;
+    text-align: left;
     color: #777;
     font-size: 12px;
-    margin-top: 32px;
+    margin-top: 16px;
     line-height: 1.6;
   }
   footer a { color: #9f9; }
@@ -176,8 +236,8 @@
 
 <h1>Code Invaders</h1>
 <p class="tagline">
-  Code Invaders is a game of Space Invaders with its code exposed to the world.<br>
-  Click a line to toggle it off and see the effects in real time. 
+  Space Invaders with twelve rules and eight variables.<br>
+  <span id="modeHint"></span>
 </p>
 
 <canvas id="overlay"></canvas>
@@ -185,39 +245,47 @@
 <div class="wrap">
   <div class="gamecol">
     <canvas id="game" width="480" height="540"></canvas>
-    <div class="keys">&larr; &rarr; move &nbsp;&middot;&nbsp; space fire &nbsp;&middot;&nbsp; R restart</div>
-  </div>
-  <div class="panelcol">
-    <div id="strip"></div>
-    <div id="codepanel">
-      <h2>the code, running live</h2>
-      <pre class="consts" id="consts"></pre>
-      <div id="rules"></div>
-    </div>
+    <div class="keys">&larr; &rarr; move &nbsp;&middot;&nbsp; space fire &nbsp;&middot;&nbsp; P pause &nbsp;&middot;&nbsp; R restart</div>
     <div class="controls">
       <button id="restoreBtn">restore all code</button>
       <button id="restartBtn">restart game</button>
     </div>
+    <footer>
+      Inspired by <a href="https://web.archive.org/web/20080420084021/http://www.retrodev.co.uk/MiscGames/NakedGame/TheNakedGame.html">The Naked Game</a>, a Flash-era version of Pong that let you switch off its own code line by line.
+    </footer>
+  </div>
+  <div class="panelcol">
+    <div id="modeToggle">
+      <button data-mode="rules">rules</button>
+      <button data-mode="vars">variables</button>
+    </div>
+    <div id="codepanel">
+      <!-- <h2>the code, running live</h2> -->
+      <div class="group" id="physicsGroup">
+        <h3>physics</h3>
+        <div id="consts"></div>
+      </div>
+      <div id="rules"></div>
+    </div>
   </div>
 </div>
-
-<footer>
-  Inspired by <a href="https://web.archive.org/web/20080420084021/http://www.retrodev.co.uk/MiscGames/NakedGame/TheNakedGame.html">The Naked Game</a>, a Flash-era Pong that let you switch off its own code line by line.
-</footer>
 
 <script>
 "use strict";
 
-// ---- constants (shown in the panel) ----------------------------------
+// ---- constants --------------------------------------------------------
 const W = 480, H = 540;
-const PLAYER_SPEED   = 4;
-const PLAYER_W       = 26, PLAYER_H = 14;
-const BULLET_SPEED   = 8;
-const GRAVITY        = 3;
-const BOMB_CHANCE    = 0.02;
-const INVADER_STEP   = 8;
-const DESCENT        = 18;
-const INVADER_POINTS = 10;
+const PLAYER_W = 26, PLAYER_H = 14;
+
+// the physics: shown in the panel, changed live by dragging a value
+let PLAYER_SPEED = 10;
+let BULLET_SPEED = 11;
+let GRAVITY      = 3;
+let BOMB_CHANCE  = 0.02;
+let MARCH_STEP   = 8;
+let DESCENT      = 18;
+let POINTS       = 10;
+let LIVES        = 3;
 const ROWS = 4, COLS = 8;
 const INV_W = 22, INV_H = 16;
 const MARGIN = 8;
@@ -225,10 +293,12 @@ const BUNKER_CELL = 4;
 const BUNKER_Y = H - 130;
 
 // ---- game state -------------------------------------------------------
+// Bullets and bombs both store their leading tip as (x, y):
+// a bullet's nose points up, a bomb's tip points down.
 let player, bullets, bombs, invaders, bunkers, fleetDir;
-let marchTimer, marchInterval;
-let score, lives, over, hitFlash;
-let kills, canFire, fleetMoved, firePressed;
+let marchTimer;
+let score, lives, over, paused, hitFlash;
+let canFire, fleetMoved, firePressed;
 const keys = {};
 
 function spawnWave() {
@@ -237,8 +307,7 @@ function spawnWave() {
     for (let c = 0; c < COLS; c++)
       invaders.push({ x: 44 + c * 46, y: 70 + r * 36, alive: true });
   fleetDir = 1;
-  marchInterval = 5 + invaders.length;
-  marchTimer = marchInterval;
+  marchTimer = 5 + invaders.length;
 }
 
 const BUNKER_SHAPE = [
@@ -267,16 +336,52 @@ function reset() {
   bullets = [];
   bombs = [];
   score = 0;
-  lives = 3;
+  lives = LIVES;
   over = false;
+  paused = false;
   hitFlash = 0;
   firePressed = false;
   spawnWave();
   spawnBunkers();
 }
 
-// which bunker cell (if any) is solid at pixel (x, y)?
-function bunkerHit(x, y) {
+// ---- helpers: the hidden machinery the rules lean on --------------------
+// These are always on; the panel shows only the rules below.
+
+function clamp(v, lo, hi) {
+  return Math.max(lo, Math.min(hi, v));
+}
+
+// the invaders still alive
+function fleet() {
+  return invaders.filter(inv => inv.alive);
+}
+
+// every projectile in flight
+function shots() {
+  return [...bullets, ...bombs];
+}
+
+function fleetAtEdge() {
+  return fleet().some(inv => inv.x < MARGIN ||
+                             inv.x + INV_W > W - MARGIN);
+}
+
+// the alive invader at pixel (x, y), or null
+function invaderAt(x, y) {
+  return invaders.find(inv => inv.alive &&
+           x > inv.x && x < inv.x + INV_W &&
+           y > inv.y && y < inv.y + INV_H) || null;
+}
+
+// the player's cannon, if it covers pixel (x, y)
+function cannonAt(x, y) {
+  return x > player.x && x < player.x + PLAYER_W &&
+         y > player.y && y < player.y + PLAYER_H ? player : null;
+}
+
+// the solid bunker cell at pixel (x, y), or null
+function bunkerAt(x, y) {
   for (const bunker of bunkers) {
     const c = Math.floor((x - bunker.x) / BUNKER_CELL);
     const r = Math.floor((y - bunker.y) / BUNKER_CELL);
@@ -286,258 +391,239 @@ function bunkerHit(x, y) {
   return null;
 }
 
-// blast a 3x3 chunk of cells around a hit
-function explodeBunker({ bunker, r, c }) {
+function randomInvader() {
+  const f = fleet();
+  return f[Math.floor(Math.random() * f.length)] || null;
+}
+
+// a shot still near the board (with a little slack) stays alive
+function onBoard(b) {
+  return b.y > -12 && b.y < H + 12;
+}
+
+// what an impact does: invaders die for points, the cannon
+// loses a life, bunkers crumble
+function damage(hit) {
+  if (hit.alive) { hit.alive = false; score += POINTS; }
+  else if (hit === player) { lives -= 1; hitFlash = 40; }
+  else if (hit.bunker) blast(hit);
+}
+
+// blast a 3x3 chunk of bunker cells around a hit cell
+function blast({ bunker, r, c }) {
   for (let dr = -1; dr <= 1; dr++)
     for (let dc = -1; dc <= 1; dc++)
       if (r + dr >= 0 && c + dc >= 0 && bunker.cells[r + dr])
         bunker.cells[r + dr][c + dc] = false;
 }
 
-// clear every bunker cell overlapping the given rectangle
-function eraseBunkerRect(x, y, w, h) {
+// clear every bunker cell an invader overlaps
+function crushBunkers(inv) {
+  if (inv.y + INV_H < BUNKER_Y) return;
   for (const bunker of bunkers)
     for (let r = 0; r < bunker.cells.length; r++)
       for (let c = 0; c < bunker.cells[r].length; c++) {
         const cx = bunker.x + c * BUNKER_CELL;
         const cy = bunker.y + r * BUNKER_CELL;
-        if (cx < x + w && cx + BUNKER_CELL > x &&
-            cy < y + h && cy + BUNKER_CELL > y)
+        if (cx < inv.x + INV_W && cx + BUNKER_CELL > inv.x &&
+            cy < inv.y + INV_H && cy + BUNKER_CELL > inv.y)
           bunker.cells[r][c] = false;
       }
 }
 
+// sweep out shots that collided this frame
+function cull() {
+  bullets = bullets.filter(b => !b.dead);
+  bombs = bombs.filter(b => !b.dead);
+}
+
+// cheap fingerprint of everything a rule might change; run() compares
+// it before and after each rule to light that rule's activity dot
+function stateHash() {
+  let h = player.x * 1.7 + score * 3 + lives * 5 + fleetDir * 7
+        + (canFire ? 11 : 0) + (over ? 13 : 0);
+  for (const s of shots())
+    h += s.x + s.y * 1.3 + (s.hit ? 3 : 0) + (s.dead ? 5 : 0);
+  for (const inv of invaders)
+    if (inv.alive) h += inv.x * 1.1 + inv.y + 9;
+  for (const bunker of bunkers)
+    for (const row of bunker.cells)
+      for (const cell of row) if (cell) h += 0.37;
+  return h;
+}
+
 // ---- the rules --------------------------------------------------------
-// Each function below is displayed in the side panel *verbatim* (via
-// Function.prototype.toString) and only runs while it hasn't been
-// clicked off.
+// Each function body below is displayed in the side panel *verbatim*
+// (via Function.prototype.toString) and only runs while it hasn't been
+// clicked off. Keep every line under ~64 characters so the panel
+// never scrolls sideways.
 
 function movePlayer() {
-  if (keys.ArrowLeft)  player.x -= PLAYER_SPEED;
-  if (keys.ArrowRight) player.x += PLAYER_SPEED;
+  const v = PLAYER_SPEED ** 2 / 25;
+  if (keys.ArrowLeft)  player.x -= v;
+  if (keys.ArrowRight) player.x += v;
 }
 
-function keepPlayerOnScreen() {
-  player.x = Math.max(MARGIN,
-             Math.min(W - PLAYER_W - MARGIN, player.x));
+function moveShots() {
+  for (const b of bullets) b.y -= BULLET_SPEED - GRAVITY;
+  for (const b of bombs)   b.y += GRAVITY;
 }
 
-function limitOneBullet() {
-  if (bullets.length > 0) canFire = false;
-}
-
-function fireBullet() {
-  if (firePressed && canFire) {
-    bullets.push({ x: player.x + PLAYER_W / 2,
-                   y: player.y - 6 });
-  }
-}
-
-function moveBullets() {
-  for (const shot of bullets) shot.y -= BULLET_SPEED;
-}
-
-function removeOffscreenBullets() {
-  bullets = bullets.filter(shot => shot.y > -10);
-}
-
-function bulletsKillInvaders() {
-  for (const shot of bullets) {
-    for (const inv of invaders) {
-      if (inv.alive &&
-          shot.x > inv.x && shot.x < inv.x + INV_W &&
-          shot.y > inv.y && shot.y < inv.y + INV_H) {
-        inv.alive = false;
-        shot.dead = true;
-        kills += 1;
-      }
-    }
-  }
-  bullets = bullets.filter(shot => !shot.dead);
-}
-
-function marchInvaders() {
+function marchFleet() {
   if (--marchTimer > 0) return;
-  marchTimer = marchInterval;
-  for (const inv of invaders)
-    if (inv.alive) inv.x += INVADER_STEP * fleetDir;
+  marchTimer = 5 + fleet().length;
+  for (const inv of fleet()) inv.x += MARCH_STEP * fleetDir;
   fleetMoved = true;
 }
 
-function reverseFleetAtEdge() {
-  if (!fleetMoved) return;
-  const fleet = invaders.filter(inv => inv.alive);
-  if (fleet.some(inv => inv.x < MARGIN ||
-                        inv.x + INV_W > W - MARGIN)) {
-    fleetDir = -fleetDir;
-    for (const inv of fleet) {
-      inv.x += INVADER_STEP * fleetDir;
-      inv.y += DESCENT;
-    }
-  }
+function fleetTurnsAtEdge() {
+  if (!fleetMoved || !fleetAtEdge()) return;
+  fleetDir = -fleetDir;
+  for (const inv of fleet())
+    { inv.x += MARCH_STEP * fleetDir; inv.y += DESCENT; }
 }
 
-function speedUpFleet() {
-  const alive = invaders.filter(inv => inv.alive).length;
-  marchInterval = 5 + alive;
+function fireCannon() {
+  if (firePressed && canFire)
+    bullets.push({ x: player.x + PLAYER_W/2, y: player.y - 6 });
 }
 
-function fleetLands() {
-  if (invaders.some(inv => inv.alive &&
-                    inv.y + INV_H >= player.y)) {
-    lives = 0;
-  }
+function oneShellAtATime() {
+  if (bullets.length > 0) canFire = false;
 }
 
-function dropBombs() {
-  if (Math.random() < BOMB_CHANCE) {
-    const fleet = invaders.filter(inv => inv.alive);
-    if (fleet.length === 0) return;
-    const bomber = fleet[Math.floor(Math.random() * fleet.length)];
-    bombs.push({ x: bomber.x + INV_W / 2, y: bomber.y + INV_H });
-  }
+function invadersBomb() {
+  const bomber = randomInvader();
+  if (bomber && Math.random() < BOMB_CHANCE)
+    bombs.push({ x: bomber.x + INV_W/2, y: bomber.y + INV_H });
 }
 
-function gravity() {
-  for (const bomb of bombs) bomb.y += GRAVITY;
+function shotsDoDamage() {
+  for (const b of bullets)
+    b.hit = invaderAt(b.x, b.y) || bunkerAt(b.x, b.y);
+  for (const b of bombs)
+    b.hit = cannonAt(b.x, b.y) || bunkerAt(b.x, b.y);
+  for (const s of shots())
+    if (s.hit) { s.dead = true; damage(s.hit); }
 }
 
-function removeOffscreenBombs() {
-  bombs = bombs.filter(bomb => bomb.y < H + 10);
+function fleetDestroys() {
+  for (const inv of fleet()) crushBunkers(inv);
+  if (fleet().some(inv => inv.y + INV_H >= player.y)) lives = 0;
 }
 
-function bombsHurtPlayer() {
-  for (const bomb of bombs) {
-    if (bomb.x > player.x && bomb.x < player.x + PLAYER_W &&
-        bomb.y > player.y && bomb.y < player.y + PLAYER_H) {
-      bomb.dead = true;
-      lives -= 1;
-      hitFlash = 40;
-    }
-  }
-  bombs = bombs.filter(bomb => !bomb.dead);
+function boardHasEdges() {
+  player.x = clamp(player.x, MARGIN, W - PLAYER_W - MARGIN);
+  bullets = bullets.filter(onBoard);
+  bombs   = bombs.filter(onBoard);
 }
 
-function bulletsErodeBunkers() {
-  for (const shot of bullets) {
-    const hit = bunkerHit(shot.x, shot.y - 8);
-    if (hit) {
-      explodeBunker(hit);
-      shot.dead = true;
-    }
-  }
-  bullets = bullets.filter(shot => !shot.dead);
-}
-
-function bombsErodeBunkers() {
-  for (const bomb of bombs) {
-    const hit = bunkerHit(bomb.x, bomb.y + 9);
-    if (hit) {
-      explodeBunker(hit);
-      bomb.dead = true;
-    }
-  }
-  bombs = bombs.filter(bomb => !bomb.dead);
-}
-
-function invadersCrushBunkers() {
-  for (const inv of invaders)
-    if (inv.alive && inv.y + INV_H >= BUNKER_Y)
-      eraseBunkerRect(inv.x, inv.y, INV_W, INV_H);
-}
-
-function rebuildBunkers() {
-  if (invaders.every(inv => !inv.alive)) spawnBunkers();
-}
-
-function scorePoints() {
-  score += kills * INVADER_POINTS;
-}
-
-function spawnNextWave() {
-  if (invaders.every(inv => !inv.alive)) spawnWave();
+function nextWave() {
+  if (invaders.every(inv => !inv.alive))
+    { spawnWave(); spawnBunkers(); }
 }
 
 function checkGameOver() {
   if (lives <= 0) over = true;
 }
 
-// ---- rule registry: grouped for the panel ------------------------------
+// ---- rule registry: grouped by mechanic for the panel -------------------
 const GROUPS = [
-  { title: "the cannon", rules: [
-    { fn: movePlayer,             targets: ["player"] },
-    { fn: keepPlayerOnScreen,     targets: ["player"] },
-    { fn: limitOneBullet,         targets: ["player", "bullets"] },
-    { fn: fireBullet,             targets: ["player", "bullets"] },
+  { title: "movement", rules: [
+    { fn: movePlayer,       targets: ["player"] },
+    { fn: moveShots,        targets: ["bullets", "bombs"] },
+    { fn: marchFleet,       targets: ["invaders"] },
+    { fn: fleetTurnsAtEdge, targets: ["invaders"] },
   ]},
-  { title: "your bullets", rules: [
-    { fn: moveBullets,            targets: ["bullets"] },
-    { fn: removeOffscreenBullets, targets: ["bullets"] },
-    { fn: bulletsKillInvaders,    targets: ["bullets", "invaders"] },
+  { title: "firepower", rules: [
+    { fn: fireCannon,       targets: ["player", "bullets"] },
+    { fn: oneShellAtATime,  targets: ["player", "bullets"] },
+    { fn: invadersBomb,     targets: ["invaders", "bombs"] },
   ]},
-  { title: "the fleet", rules: [
-    { fn: marchInvaders,          targets: ["invaders"] },
-    { fn: reverseFleetAtEdge,     targets: ["invaders"] },
-    { fn: speedUpFleet,           targets: ["invaders"] },
-    { fn: fleetLands,             targets: ["invaders", "player"] },
-  ]},
-  { title: "bombs & gravity", rules: [
-    { fn: dropBombs,              targets: ["bombs", "invaders"] },
-    { fn: gravity,                targets: ["bombs"] },
-    { fn: removeOffscreenBombs,   targets: ["bombs"] },
-    { fn: bombsHurtPlayer,        targets: ["bombs", "player"] },
-  ]},
-  { title: "the bunkers", rules: [
-    { fn: bulletsErodeBunkers,    targets: ["bunkers", "bullets"] },
-    { fn: bombsErodeBunkers,      targets: ["bunkers", "bombs"] },
-    { fn: invadersCrushBunkers,   targets: ["bunkers", "invaders"] },
-    { fn: rebuildBunkers,         targets: ["bunkers"] },
+  { title: "contact", rules: [
+    { fn: shotsDoDamage,    targets: ["bullets", "bombs", "invaders",
+                                      "player", "bunkers",
+                                      "score", "lives"] },
+    { fn: fleetDestroys,    targets: ["invaders", "bunkers",
+                                      "player", "lives"] },
   ]},
   { title: "the law", rules: [
-    { fn: scorePoints,            targets: ["score"] },
-    { fn: spawnNextWave,          targets: ["invaders"] },
-    { fn: checkGameOver,          targets: ["lives"] },
+    { fn: boardHasEdges,    targets: ["player", "bullets", "bombs"] },
+    { fn: nextWave,         targets: ["invaders", "bunkers"] },
+    { fn: checkGameOver,    targets: ["lives"] },
   ]},
 ];
 
 const RULES = GROUPS.flatMap(g => g.rules);
-for (const r of RULES) { r.id = r.fn.name; r.on = true; }
+for (const r of RULES) { r.id = r.fn.name; r.on = true; r.heat = 0; }
 const RULE = Object.fromEntries(RULES.map(r => [r.id, r]));
 
 function run(id) {
-  if (RULE[id].on) RULE[id].fn();
+  const r = RULE[id];
+  if (!r.on) return;
+  const before = stateHash();
+  r.fn();
+  if (stateHash() !== before) r.heat = 1;
+}
+
+// ---- the meta-rule ----------------------------------------------------
+// The one law of this universe that is not shown in the panel and cannot
+// be switched off: nothing escapes into the void. The cannon and the
+// fleet wrap around the edges of the web page, and a fleet that sinks
+// below the page returns descending from the top.
+
+// the web page's edges, in game coordinates
+function pageEdges() {
+  const rect = gameCanvas.getBoundingClientRect();
+  const left = -(rect.left + gameCanvas.clientLeft);
+  const top = -(rect.top + gameCanvas.clientTop);
+  return { left, top,
+           right: left + window.innerWidth,
+           bottom: top + window.innerHeight };
+}
+
+function wrapAroundPage(o, w, edges) {
+  if (o.x > edges.right) o.x = edges.left - w;
+  else if (o.x + w < edges.left) o.x = edges.right;
+}
+
+function metaRule() {
+  const edges = pageEdges();
+  wrapAroundPage(player, PLAYER_W, edges);
+  for (const inv of fleet()) {
+    wrapAroundPage(inv, INV_W, edges);
+    if (inv.y > edges.bottom) inv.y = edges.top - INV_H;
+  }
+
+  // shots that leave the page entirely, in either direction (the
+  // physics can be scrubbed negative), are quietly retired
+  const gone = s => s.y < edges.top - 48 || s.y > edges.bottom + 48;
+  bullets = bullets.filter(b => !gone(b));
+  bombs = bombs.filter(b => !gone(b));
 }
 
 // ---- main loop --------------------------------------------------------
 function update() {
-  if (over) return;
-  kills = 0;
+  if (over || paused) return;
   canFire = true;
   fleetMoved = false;
+  for (const s of shots()) s.hit = null;
 
   run("movePlayer");
-  run("keepPlayerOnScreen");
-  run("limitOneBullet");
-  run("fireBullet");
+  run("oneShellAtATime");
+  run("fireCannon");
   firePressed = false;
-  run("moveBullets");
-  run("removeOffscreenBullets");
-  run("marchInvaders");
-  run("reverseFleetAtEdge");
-  run("dropBombs");
-  run("gravity");
-  run("removeOffscreenBombs");
-  run("bulletsErodeBunkers");
-  run("bombsErodeBunkers");
-  run("invadersCrushBunkers");
-  run("bulletsKillInvaders");
-  run("scorePoints");
-  run("speedUpFleet");
-  run("bombsHurtPlayer");
-  run("fleetLands");
-  run("rebuildBunkers");
-  run("spawnNextWave");
+  run("moveShots");
+  run("marchFleet");
+  run("fleetTurnsAtEdge");
+  run("invadersBomb");
+  run("shotsDoDamage");
+  cull();
+  run("fleetDestroys");
+  run("boardHasEdges");
+  run("nextWave");
   run("checkGameOver");
+  metaRule();
 
   if (hitFlash > 0) hitFlash--;
 }
@@ -635,11 +721,11 @@ function draw() {
   if (hitFlash === 0 || Math.floor(hitFlash / 4) % 2 === 0)
     drawSprite(ctx, PLAYER_SPRITE, player.x, player.y, 2);
 
-  // bullets & bombs
+  // bullets & bombs (drawn from their leading tip)
   ctx.fillStyle = ink("bullets");
-  for (const shot of bullets) ctx.fillRect(shot.x - 1, shot.y - 8, 2, 8);
+  for (const shot of bullets) ctx.fillRect(shot.x - 1, shot.y, 2, 8);
   ctx.fillStyle = ink("bombs");
-  for (const bomb of bombs) ctx.fillRect(bomb.x - 2, bomb.y, 4, 9);
+  for (const bomb of bombs) ctx.fillRect(bomb.x - 2, bomb.y - 9, 4, 9);
 
   // HUD
   ctx.font = '16px "Courier New", monospace';
@@ -657,6 +743,13 @@ function draw() {
     ctx.fillText("GAME OVER", W / 2, H / 2 - 10);
     ctx.font = '14px "Courier New", monospace';
     ctx.fillText("press R to restart", W / 2, H / 2 + 18);
+  } else if (paused) {
+    ctx.fillStyle = "#33ff33";
+    ctx.textAlign = "center";
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillText("PAUSED", W / 2, H / 2 - 10);
+    ctx.font = '14px "Courier New", monospace';
+    ctx.fillText("press P to resume", W / 2, H / 2 + 18);
   }
 }
 
@@ -683,13 +776,13 @@ function drawEscaped() {
 
   octx.fillStyle = ink("bullets");
   for (const shot of bullets)
-    if (escaped(shot.x - 1, shot.y - 8, 2, 8))
-      octx.fillRect(bx + shot.x - 1, by + shot.y - 8, 2, 8);
+    if (escaped(shot.x - 1, shot.y, 2, 8))
+      octx.fillRect(bx + shot.x - 1, by + shot.y, 2, 8);
 
   octx.fillStyle = ink("bombs");
   for (const bomb of bombs)
-    if (escaped(bomb.x - 2, bomb.y, 4, 9))
-      octx.fillRect(bx + bomb.x - 2, by + bomb.y, 4, 9);
+    if (escaped(bomb.x - 2, bomb.y - 9, 4, 9))
+      octx.fillRect(bx + bomb.x - 2, by + bomb.y - 9, 4, 9);
 }
 
 function frame() {
@@ -697,6 +790,10 @@ function frame() {
   update();
   draw();
   drawEscaped();
+  for (const r of RULES) {
+    r.led.style.opacity = r.heat;
+    r.heat = r.heat > 0.05 ? r.heat * 0.88 : 0;
+  }
   requestAnimationFrame(frame);
 }
 
@@ -706,6 +803,7 @@ window.addEventListener("keydown", (e) => {
   keys[e.key] = true;
   if (e.key === " " && !e.repeat) firePressed = true;
   if (e.key === "r" || e.key === "R") reset();
+  if ((e.key === "p" || e.key === "P") && !e.repeat) paused = !paused;
 });
 window.addEventListener("keyup", (e) => { keys[e.key] = false; });
 
@@ -715,14 +813,14 @@ function boardKindAt(x, y) {
     if (inv.alive &&
         x >= inv.x && x <= inv.x + INV_W &&
         y >= inv.y && y <= inv.y + INV_H) return "invaders";
-  if (bunkerHit(x, y)) return "bunkers";
+  if (bunkerAt(x, y)) return "bunkers";
   if (x >= player.x - 4 && x <= player.x + PLAYER_W + 4 &&
       y >= player.y - 4 && y <= player.y + PLAYER_H + 4) return "player";
   for (const shot of bullets)
-    if (Math.abs(x - shot.x) < 8 && Math.abs(y - (shot.y - 4)) < 12)
+    if (Math.abs(x - shot.x) < 8 && Math.abs(y - (shot.y + 4)) < 12)
       return "bullets";
   for (const bomb of bombs)
-    if (Math.abs(x - bomb.x) < 8 && Math.abs(y - (bomb.y + 4)) < 12)
+    if (Math.abs(x - bomb.x) < 8 && Math.abs(y - (bomb.y - 4)) < 12)
       return "bombs";
   if (y < 34) return x < W / 2 ? "score" : "lives";
   return null;
@@ -748,6 +846,7 @@ function scrollPanelTo(r) {
 }
 
 gameCanvas.addEventListener("click", (e) => {
+  if (mode !== "rules") return; // no rules to point at on tails
   const rect = gameCanvas.getBoundingClientRect();
   const x = e.clientX - rect.left - gameCanvas.clientLeft;
   const y = e.clientY - rect.top - gameCanvas.clientTop;
@@ -761,27 +860,93 @@ gameCanvas.addEventListener("click", (e) => {
 });
 
 // ---- build the code panel ----------------------------------------------
-const CONSTS_SRC = `const PLAYER_SPEED   = ${PLAYER_SPEED};
-const BULLET_SPEED   = ${BULLET_SPEED};
-const GRAVITY        = ${GRAVITY};
-const BOMB_CHANCE    = ${BOMB_CHANCE};
-const INVADER_STEP   = ${INVADER_STEP};
-const DESCENT        = ${DESCENT};
-const INVADER_POINTS = ${INVADER_POINTS};
-const ROWS = ${ROWS}, COLS = ${COLS};`;
+// the physics values: drag one left/right to scrub it
+const TUNABLES = [
+  { name: "PLAYER_SPEED", step: 1,    min: 0,   max: 30,
+    get: () => PLAYER_SPEED, set: v => PLAYER_SPEED = v },
+  { name: "BULLET_SPEED", step: 1,    min: -20, max: 20,
+    get: () => BULLET_SPEED, set: v => BULLET_SPEED = v },
+  { name: "GRAVITY",      step: 1,    min: -10, max: 10,
+    get: () => GRAVITY,      set: v => GRAVITY = v },
+  { name: "BOMB_CHANCE",  step: 0.01, min: 0,   max: 0.5,
+    get: () => BOMB_CHANCE,  set: v => BOMB_CHANCE = v },
+  { name: "MARCH_STEP",   step: 1,    min: -20, max: 20,
+    get: () => MARCH_STEP,   set: v => MARCH_STEP = v },
+  { name: "DESCENT",      step: 1,    min: -40, max: 40,
+    get: () => DESCENT,      set: v => DESCENT = v },
+  { name: "POINTS",       step: 5,    min: -50, max: 100,
+    get: () => POINTS,       set: v => POINTS = v },
+  { name: "LIVES",        step: 1,    min: 0,   max: 9,
+    get: () => LIVES,        set: v => { LIVES = v; lives = v; } },
+];
 
-document.getElementById("consts").textContent = CONSTS_SRC;
+function fmtVal(t) {
+  return t.step < 1 ? t.get().toFixed(2) : String(t.get());
+}
 
-const strip = document.getElementById("strip");
+const constsDiv = document.getElementById("consts");
+for (const t of TUNABLES) {
+  t.default = t.get();
+  const block = document.createElement("div");
+  block.className = "tunable";
+
+  const line = document.createElement("pre");
+  line.title = "double-click to reset " + t.name;
+  line.append("let " + t.name + " = ");
+  const val = document.createElement("span");
+  val.className = "val";
+  val.textContent = fmtVal(t);
+  line.append(val, ";");
+  block.appendChild(line);
+  t.el = val;
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = t.min;
+  slider.max = t.max;
+  slider.step = t.step;
+  slider.value = t.get();
+  block.appendChild(slider);
+  t.slider = slider;
+
+  const labels = document.createElement("div");
+  labels.className = "range-labels";
+  const lo = document.createElement("span");
+  lo.textContent = t.min;
+  const hi = document.createElement("span");
+  hi.textContent = t.max;
+  labels.append(lo, hi);
+  block.appendChild(labels);
+
+  constsDiv.appendChild(block);
+
+  slider.addEventListener("input", () => {
+    t.set(parseFloat(slider.value));
+    val.textContent = fmtVal(t);
+  });
+
+  // double-click the code line to reset just this variable
+  line.addEventListener("dblclick", () => {
+    t.set(t.default);
+    val.textContent = fmtVal(t);
+    slider.value = t.default;
+  });
+}
+
 const rulesDiv = document.getElementById("rules");
+
+// show just the statements: drop "function name() {" and "}", dedent
+function ruleSource(fn) {
+  return fn.toString().split("\n").slice(1, -1)
+           .map(line => line.slice(2)).join("\n");
+}
 
 function syncRule(r) {
   r.div.classList.toggle("off", !r.on);
-  r.chip.classList.toggle("off", !r.on);
-  r.chip.title = r.id + " — " + (r.on ? "on" : "off");
 }
 
 function toggleRule(r) {
+  if (mode !== "rules") return;
   r.on = !r.on;
   syncRule(r);
 }
@@ -797,10 +962,15 @@ for (const group of GROUPS) {
   for (const r of group.rules) {
     const div = document.createElement("div");
     div.className = "rule";
-    div.title = "click to toggle this code on/off";
+    div.title = r.fn.name + " — click to toggle this code on/off";
+
+    const led = document.createElement("span");
+    led.className = "led";
+    div.appendChild(led);
+    r.led = led;
 
     const pre = document.createElement("pre");
-    pre.textContent = r.fn.toString();
+    pre.textContent = ruleSource(r.fn);
     div.appendChild(pre);
 
     div.addEventListener("click", () => toggleRule(r));
@@ -809,27 +979,62 @@ for (const group of GROUPS) {
 
     section.appendChild(div);
     r.div = div;
-
-    const chip = document.createElement("span");
-    chip.addEventListener("click", () => {
-      scrollPanelTo(r);
-      flashRule(r);
-      setHilite(r.targets, 1700);
-    });
-    strip.appendChild(chip);
-    r.chip = chip;
     syncRule(r);
   }
   rulesDiv.appendChild(section);
 }
 
-document.getElementById("restoreBtn").addEventListener("click", () => {
+function restoreRules() {
   for (const r of RULES) {
     r.on = true;
     syncRule(r);
   }
+}
+
+function restorePhysics() {
+  for (const t of TUNABLES) {
+    t.set(t.default);
+    t.el.textContent = fmtVal(t);
+    t.slider.value = t.default;
+  }
+}
+
+const restoreBtn = document.getElementById("restoreBtn");
+restoreBtn.addEventListener("click", () => {
+  restoreRules();
+  restorePhysics();
 });
 document.getElementById("restartBtn").addEventListener("click", reset);
+
+// ---- the meta-toggle: heads = rules, tails = variables ------------------
+// One side of the coin at a time. On tails, every rule locks back on
+// and only the physics is shown, live; on heads, the physics snaps
+// back to default and only the rules are shown, clickable.
+let mode;
+const modeBtns = document.querySelectorAll("#modeToggle button");
+const modeHint = document.getElementById("modeHint");
+const HINTS = {
+  rules: "Click a rule to toggle it on or off. Dots glow as rules fire. ",
+  vars:  "Slide a value to change it. Doubleclick to reset.",
+};
+
+function setMode(m) {
+  mode = m;
+  if (m === "vars") restoreRules();
+  else restorePhysics();
+  document.getElementById("physicsGroup").style.display =
+    m === "vars" ? "" : "none";
+  rulesDiv.style.display = m === "vars" ? "none" : "";
+  for (const btn of modeBtns)
+    btn.classList.toggle("active", btn.dataset.mode === m);
+  modeHint.textContent = HINTS[m];
+  restoreBtn.textContent =
+    m === "vars" ? "reset the physics" : "restore all code";
+}
+
+for (const btn of modeBtns)
+  btn.addEventListener("click", () => setMode(btn.dataset.mode));
+setMode("rules");
 
 // ---- go ----------------------------------------------------------------
 reset();
