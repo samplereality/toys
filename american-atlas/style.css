@@ -4,18 +4,18 @@
  * ========================================================================= */
 
 :root {
-  --navy: #12234a;
-  --navy-deep: #0b1834;
-  --gold: #d9a92c;
+  /* Old Glory, as specified by the Bureau's Vexillology Desk */
+  --navy: #3c3b6e;       /* Old Glory blue */
+  --navy-deep: #29284e;
+  --gold: #d9a92c;       /* ceremonial fringe */
   --gold-bright: #f3c94f;
-  --red: #b3282d;
+  --red: #b22234;        /* Old Glory red */
   --parchment: #f7f1e3;
   --ink: #241f1a;
   --water-blue: #2b6a9e;
   --park-green: #2e6b3f;
   --serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --header-h: 92px;
   --ticker-h: 34px;
 }
 
@@ -29,6 +29,12 @@ html, body {
   color: var(--ink);
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
@@ -36,18 +42,19 @@ html, body {
 
 /* ---------------- Masthead ---------------- */
 #masthead {
-  position: fixed;
-  inset: 0 0 auto 0;
+  position: relative;
   z-index: 1200;
-  min-height: var(--header-h);
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 14px 18px;
   flex-wrap: wrap;
   padding: 8px 16px;
-  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
-  border-bottom: 3px solid var(--gold);
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  background:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56"><path fill="white" fill-opacity="0.055" d="M14 6l1.9 4.7 5.1.4-3.9 3.3 1.2 5-4.3-2.7-4.3 2.7 1.2-5L7 11.1l5.1-.4z"/><path fill="white" fill-opacity="0.055" d="M42 30l1.9 4.7 5.1.4-3.9 3.3 1.2 5-4.3-2.7-4.3 2.7 1.2-5-3.9-3.3 5.1-.4z"/></svg>'),
+    linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+  /* thirteen stripes were requested; two fit */
+  box-shadow: 0 2px 0 0 #ffffff, 0 5px 0 0 var(--red), 0 9px 16px rgba(0, 0, 0, 0.45);
   color: var(--parchment);
 }
 
@@ -83,9 +90,9 @@ html, body {
   gap: 14px;
   font-size: 12px;
   padding: 6px 12px;
-  border: 1px solid rgba(217, 169, 44, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
 }
 .mast-stats .stat b {
   color: var(--gold-bright);
@@ -110,7 +117,7 @@ html, body {
   gap: 2px;
   margin: 0;
   padding: 2px;
-  border: 1px solid rgba(217, 169, 44, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 4px;
 }
 .ctl.filters label { cursor: pointer; }
@@ -122,7 +129,7 @@ html, body {
   transition: background 0.15s, color 0.15s;
 }
 .ctl.filters input:checked + span {
-  background: var(--gold);
+  background: #ffffff;
   color: var(--navy-deep);
   font-weight: 700;
 }
@@ -135,24 +142,35 @@ html, body {
   cursor: pointer;
   color: var(--parchment);
   background: transparent;
-  border: 1px solid rgba(217, 169, 44, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 4px;
   transition: background 0.15s;
 }
-.ctl.btn:hover { background: rgba(217, 169, 44, 0.2); }
+.ctl.btn:hover { background: rgba(255, 255, 255, 0.14); }
 
 /* ---------------- Map ---------------- */
 #map {
-  position: fixed;
-  inset: var(--header-h) 0 var(--ticker-h) 0;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  z-index: 0; /* contain Leaflet's pane z-indexes below the chrome */
   background: #bcd6e8; /* the ocean — also, of course, named America */
 }
 
-/* On narrow screens the header wraps taller */
+/* Narrow screens: tighter chrome, no stats box, controls wrap below */
 @media (max-width: 900px) {
-  :root { --header-h: 150px; }
   .mast-controls { margin-left: 0; }
   .mast-stats { display: none; }
+}
+@media (max-width: 560px) {
+  #masthead { gap: 8px 12px; padding: 7px 10px; }
+  .mast-eagle { font-size: 26px; }
+  .mast-titles h1 { font-size: 20px; }
+  .mast-tag { display: none; }
+  .mast-controls { gap: 8px; font-size: 12px; }
+  .ctl.filters span { padding: 4px 7px; }
+  .ticker-label { display: none; }
+  .leaflet-control-attribution { font-size: 8.5px; max-width: 78vw; }
 }
 
 /* ---------------- Map labels ---------------- */
@@ -335,11 +353,11 @@ body.show-former .lbl .former-name { display: block; }
 /* ---------------- Drawers ---------------- */
 .drawer {
   position: fixed;
-  top: var(--header-h);
+  top: 0;
   right: 0;
-  bottom: var(--ticker-h);
+  bottom: 0;
   width: min(440px, 92vw);
-  z-index: 1150;
+  z-index: 1300;
   background: var(--parchment);
   border-left: 3px solid var(--gold);
   box-shadow: -8px 0 24px rgba(0,0,0,.35);
@@ -385,19 +403,19 @@ body.show-former .lbl .former-name { display: block; }
 
 /* ---------------- Ticker ---------------- */
 #ticker {
-  position: fixed;
-  inset: auto 0 0 0;
-  height: var(--ticker-h);
+  position: relative;
   z-index: 1200;
+  flex-shrink: 0;
+  min-height: var(--ticker-h);
   display: flex;
   align-items: center;
   gap: 12px;
   overflow: hidden;
   background: var(--red);
   color: #fff;
-  border-top: 2px solid var(--gold);
+  border-top: 2px solid #ffffff;
   font-size: 13px;
-  padding: 0 12px;
+  padding: 0 12px env(safe-area-inset-bottom);
   white-space: nowrap;
 }
 .ticker-label {
@@ -411,7 +429,7 @@ body.show-former .lbl .former-name { display: block; }
   padding: 2px 8px;
   border-radius: 2px;
 }
-#ticker-text { font-style: italic; }
+#ticker-text { font-style: italic; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .slide-in { animation: ticker-slide 0.45s ease-out; }
 @keyframes ticker-slide {
   from { transform: translateY(120%); opacity: 0; }

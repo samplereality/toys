@@ -112,18 +112,27 @@ const WATER_KINDS = new Set(["lake", "river", "gulf", "bay", "sea", "ocean", "so
 const groupOf = (f) => WATER_KINDS.has(f.kind) ? "water" : (f.kind === "park" ? "park" : "landmark");
 
 /* ---------------- THE MAP ---------------- */
-/* Hard bounds: the drawn world ends where the data was clipped (Greenland's
- * east edge at 45°W, the far north at ~84.5°N) — no scrolling into the void */
+/* Hard bounds: the drawn world ends where the data was clipped (11°W, just
+ * past Greenland's east coast — all of Americaland stays on the map — and
+ * ~84.5°N up top). No scrolling into the void. */
+const MAX_BOUNDS = L.latLngBounds([[6, -179.9], [84.5, -11]]);
 const map = L.map("map", {
   zoomControl: false,
-  minZoom: 4,
+  minZoom: 3,
   maxZoom: 9,
-  maxBounds: [[6, -179.9], [84.5, -45]],
+  maxBounds: MAX_BOUNDS,
   maxBoundsViscosity: 1.0,
   worldCopyJump: false,
 });
+/* Clamp zoom-out dynamically: never allow a zoom where the viewport would
+ * poke past the drawn world. Recomputed on resize (rotation, etc.). */
+function clampMinZoom() {
+  map.setMinZoom(Math.max(3, Math.ceil(map.getBoundsZoom(MAX_BOUNDS, true))));
+}
+map.on("resize", clampMinZoom);
 /* Open on the Great Lakes — all five Lake Americas on screen at once */
 map.fitBounds([[40.8, -93.5], [49.3, -75.0]], { maxZoom: 6 });
+clampMinZoom();
 window.atlasMap = map; // for debugging; the Bureau has nothing to hide
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
@@ -152,8 +161,8 @@ const WATER_LINE = "#7aa9cc";
 (function drawGraticule() {
   const style = { color: "#9db8cc", weight: 0.6, opacity: 0.5, interactive: false, pane: "graticule" };
   const lines = [];
-  for (let lon = -180; lon <= -20; lon += 10) lines.push([[2, lon], [86, lon]]);
-  for (let lat = 10; lat <= 80; lat += 10) lines.push([[lat, -180], [lat, -20]]);
+  for (let lon = -180; lon <= -10; lon += 10) lines.push([[2, lon], [86, lon]]);
+  for (let lat = 10; lat <= 80; lat += 10) lines.push([[lat, -180], [lat, -10]]);
   lines.forEach((l) => L.polyline(l, style).addTo(map));
 })();
 

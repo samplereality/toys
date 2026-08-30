@@ -3,14 +3,15 @@
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-103.62,57.878]},"properties":{"NAME":"Canada"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-84.109,10.047]},"properties":{"NAME":"Costa Rica"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-76.586,20.726]},"properties":{"NAME":"Cuba"}},
-{"type":"Feature","geometry":{"type":"Point","coordinates":[-51.791,76.454]},"properties":{"NAME":"Greenland"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-41.442,74.748]},"properties":{"NAME":"Greenland"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-90.246,15.13]},"properties":{"NAME":"Guatemala"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-86.638,14.824]},"properties":{"NAME":"Honduras"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-72.283,19.173]},"properties":{"NAME":"Haiti"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-18.65,64.83]},"properties":{"NAME":"Iceland"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-77.32,18.156]},"properties":{"NAME":"Jamaica"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-102.482,23.971]},"properties":{"NAME":"Mexico"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-85.003,12.799]},"properties":{"NAME":"Nicaragua"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-80.872,8.414]},"properties":{"NAME":"Panama"}},
 {"type":"Feature","geometry":{"type":"Point","coordinates":[-89.071,13.802]},"properties":{"NAME":"El Salvador"}},
-{"type":"Feature","geometry":{"type":"Point","coordinates":[-99.139,39.527]},"properties":{"NAME":"United States of America"}}
+{"type":"Feature","geometry":{"type":"Point","coordinates":[-99.138,39.527]},"properties":{"NAME":"United States of America"}}
 ]}
