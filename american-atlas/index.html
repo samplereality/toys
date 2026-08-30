@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>American Atlas — Every Body of Water. One Great Name.</title>
+  <meta name="description" content="A satirical interactive map of North America in which every body of water is named America and every national park is Trump National Park. Parody.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦅</text></svg>">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header id="masthead">
+    <div class="mast-left">
+      <span class="mast-eagle" aria-hidden="true">🦅</span>
+      <div class="mast-titles">
+        <h1>American&nbsp;Atlas</h1>
+        <p class="mast-tag">Every body of water. One great name.&nbsp;★&nbsp;Official cartography of the <strong>Bureau&nbsp;of&nbsp;Patriotic&nbsp;Nomenclature</strong></p>
+      </div>
+    </div>
+
+    <div class="mast-stats" role="status">
+      <span class="stat"><b id="stat-water">0</b> waters now <i>America</i></span>
+      <span class="stat"><b id="stat-park">0</b> parks now <i>Trump&nbsp;National&nbsp;Park</i></span>
+      <span class="stat"><b id="stat-landmark">0</b> landmarks Trumped</span>
+    </div>
+
+    <div class="mast-controls">
+      <label class="ctl toggle">
+        <input type="checkbox" id="toggle-former">
+        <span>Reveal former (forbidden) names</span>
+      </label>
+      <fieldset class="ctl filters">
+        <legend class="sr-only">Filter features</legend>
+        <label><input type="radio" name="filter" value="all" checked><span>All</span></label>
+        <label><input type="radio" name="filter" value="water"><span>Waters</span></label>
+        <label><input type="radio" name="filter" value="park"><span>Parks</span></label>
+        <label><input type="radio" name="filter" value="landmark"><span>Landmarks</span></label>
+      </fieldset>
+      <button class="ctl btn" data-toggle="algorithm-drawer" aria-expanded="false">The Algorithm</button>
+      <button class="ctl btn" data-toggle="about-drawer" aria-expanded="false">About</button>
+    </div>
+  </header>
+
+  <div id="map" role="application" aria-label="Satirical map of North America"></div>
+
+  <aside id="algorithm-drawer" class="drawer" aria-label="The renaming algorithm">
+    <button class="drawer-close" aria-label="Close">✕</button>
+    <h2>The Algorithm</h2>
+    <p>The Bureau replaced its entire 240-person toponymy department with the
+       following <code>sed</code> script. It has never been reviewed and never
+       will be. It is perfect.</p>
+    <pre id="algorithm-code"></pre>
+  </aside>
+
+  <aside id="about-drawer" class="drawer" aria-label="About this project">
+    <button class="drawer-close" aria-label="Close">✕</button>
+    <h2>About the American Atlas</h2>
+    <p>In January 2025 the Gulf of Mexico was renamed the <i>Gulf of America</i>
+       by executive order. The <strong>American Atlas</strong> simply follows
+       that logic to its natural conclusion: every body of water in North
+       America — American, Canadian, and Mexican alike — is now named
+       <i>America</i>, and every national park, monument, and landmark is now
+       <i>Trump</i>-something. Navigation may become challenging. That is a
+       small price to pay for greatness.</p>
+    <p><strong>This is satire.</strong> A parody project. Not affiliated with
+       any government, bureau, executive order, or golf course. Except for the
+       Gulf of Mexico (renamed in this timeline too), the renamings here are
+       fictional — for now.</p>
+    <p>Zoom in to reveal ever-smaller waters that are also named America.
+       Click any label for its official renaming decree. Toggle
+       <i>“Reveal former names”</i> to commit light cartographic thoughtcrime.</p>
+    <p class="colophon">Built with <a href="https://leafletjs.com/">Leaflet</a>.
+       Basemap tiles © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+       contributors © <a href="https://carto.com/attributions">CARTO</a>
+       (labels removed — the old names have been scrubbed from history).
+       Coordinates approximate; patriotism absolute.</p>
+  </aside>
+
+  <footer id="ticker" aria-hidden="true">
+    <span class="ticker-label">RENAMING&nbsp;DESK</span>
+    <span id="ticker-text" class="slide-in"></span>
+  </footer>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

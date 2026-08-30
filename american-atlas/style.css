@@ -1,0 +1,391 @@
+/* =========================================================================
+ * AMERICAN ATLAS — official Bureau stylesheet
+ * Palette: federal navy, decree gold, ribbon red, archival parchment.
+ * ========================================================================= */
+
+:root {
+  --navy: #12234a;
+  --navy-deep: #0b1834;
+  --gold: #d9a92c;
+  --gold-bright: #f3c94f;
+  --red: #b3282d;
+  --parchment: #f7f1e3;
+  --ink: #241f1a;
+  --water-blue: #2b6a9e;
+  --park-green: #2e6b3f;
+  --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --header-h: 92px;
+  --ticker-h: 34px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: var(--serif);
+  background: var(--navy-deep);
+  color: var(--ink);
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------------- Masthead ---------------- */
+#masthead {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 1200;
+  min-height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  color: var(--parchment);
+}
+
+.mast-left { display: flex; align-items: center; gap: 12px; }
+
+.mast-eagle {
+  font-size: 34px;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.5));
+}
+
+.mast-titles h1 {
+  margin: 0;
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  text-shadow: 0 2px 0 rgba(0,0,0,.4);
+  line-height: 1;
+}
+
+.mast-tag {
+  margin: 3px 0 0;
+  font-size: 11.5px;
+  font-style: italic;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
+}
+.mast-tag strong { color: var(--gold-bright); font-style: normal; }
+
+.mast-stats {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  padding: 6px 12px;
+  border: 1px solid rgba(217, 169, 44, 0.45);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.mast-stats .stat b {
+  color: var(--gold-bright);
+  font-size: 15px;
+  margin-right: 3px;
+}
+
+.mast-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+}
+
+.ctl.toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.ctl.toggle input { accent-color: var(--red); }
+
+.ctl.filters {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 2px;
+  border: 1px solid rgba(217, 169, 44, 0.45);
+  border-radius: 4px;
+}
+.ctl.filters label { cursor: pointer; }
+.ctl.filters input { position: absolute; opacity: 0; }
+.ctl.filters span {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 3px;
+  transition: background 0.15s, color 0.15s;
+}
+.ctl.filters input:checked + span {
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-weight: 700;
+}
+.ctl.filters input:focus-visible + span { outline: 2px solid var(--gold-bright); }
+
+.ctl.btn {
+  font-family: var(--serif);
+  font-size: 12.5px;
+  padding: 5px 12px;
+  cursor: pointer;
+  color: var(--parchment);
+  background: transparent;
+  border: 1px solid rgba(217, 169, 44, 0.45);
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.ctl.btn:hover { background: rgba(217, 169, 44, 0.2); }
+
+/* ---------------- Map ---------------- */
+#map {
+  position: fixed;
+  inset: var(--header-h) 0 var(--ticker-h) 0;
+  background: #a5c3d6;
+}
+
+/* On narrow screens the header wraps taller */
+@media (max-width: 900px) {
+  :root { --header-h: 150px; }
+  .mast-controls { margin-left: 0; }
+  .mast-stats { display: none; }
+}
+
+/* ---------------- Map labels ---------------- */
+.atlas-label { background: none; border: none; }
+
+.lbl {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  pointer-events: auto;
+  cursor: pointer;
+  text-align: center;
+}
+
+.lbl .new-name {
+  text-shadow:
+    -1px -1px 0 rgba(255,255,255,.85), 1px -1px 0 rgba(255,255,255,.85),
+    -1px 1px 0 rgba(255,255,255,.85), 1px 1px 0 rgba(255,255,255,.85),
+    0 0 6px rgba(255,255,255,.9);
+}
+
+/* Waters: classic italic hydrographic lettering */
+.lbl-water .new-name {
+  font-style: italic;
+  color: var(--water-blue);
+  letter-spacing: 0.08em;
+}
+.lbl-kind-ocean .new-name, .lbl-kind-sea .new-name {
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  font-size: 15px;
+}
+.lbl-kind-gulf .new-name { text-transform: uppercase; letter-spacing: 0.2em; font-size: 13px; }
+.lbl-kind-lake .new-name, .lbl-kind-bay .new-name { font-size: 12.5px; }
+.lbl-kind-river .new-name { font-size: 11.5px; letter-spacing: 0.14em; }
+.lbl-kind-sound .new-name, .lbl-kind-strait .new-name, .lbl-kind-falls .new-name { font-size: 11px; }
+
+/* Parks: small-caps conservation green, with tree */
+.lbl-park .new-name {
+  color: var(--park-green);
+  font-variant: small-caps;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+.lbl-park .new-name::before { content: "🌲 "; font-size: 10px; }
+
+/* Landmarks: federal red with star */
+.lbl-landmark .new-name {
+  color: var(--red);
+  font-weight: 700;
+  font-size: 11.5px;
+}
+.lbl-landmark .new-name::before { content: "★ "; color: var(--gold); }
+
+/* Bigger type for continental-rank features */
+.rank-3 .new-name { font-size: 1.25em; }
+
+.lbl .badge {
+  margin-top: 1px;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--red);
+  padding: 1px 5px;
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
+}
+
+/* Former names: hidden until someone commits thoughtcrime */
+.lbl .former-name {
+  display: none;
+  margin-top: 1px;
+  font-size: 9.5px;
+  font-style: italic;
+  color: #6b5f52;
+  text-decoration: line-through;
+  text-shadow: 0 0 4px rgba(255,255,255,.9);
+}
+body.show-former .lbl .former-name { display: block; }
+
+/* ---------------- Popups ---------------- */
+.atlas-popup .leaflet-popup-content-wrapper {
+  background: var(--parchment);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+.atlas-popup .leaflet-popup-tip { background: var(--parchment); border: 1px solid var(--gold); }
+.atlas-popup .leaflet-popup-content { margin: 14px 18px; font-family: var(--serif); }
+
+.pop-eyebrow {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  border-bottom: 1px solid rgba(179, 40, 45, 0.3);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+.pop-name {
+  margin: 0 0 2px;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1.1;
+}
+.pop-water .pop-name { color: var(--water-blue); font-style: italic; }
+.pop-park .pop-name { color: var(--park-green); }
+.pop-landmark .pop-name { color: var(--red); }
+
+.pop-former { font-size: 12px; color: #5c5348; }
+.pop-former s { color: #8a7d6c; }
+.pop-retired { font-size: 10px; font-style: italic; }
+.pop-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: #6b5f52;
+  margin: 5px 0;
+}
+.pop-official {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--red);
+  padding: 4px 8px;
+  border-radius: 3px;
+  margin: 6px 0;
+}
+.pop-note { font-size: 12.5px; line-height: 1.45; margin: 7px 0; }
+.pop-decree {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--navy);
+  border-left: 3px solid var(--gold);
+  padding-left: 9px;
+  margin: 8px 0 4px;
+  line-height: 1.4;
+}
+.pop-seal { font-size: 10.5px; text-align: right; color: #6b5f52; }
+
+/* ---------------- Drawers ---------------- */
+.drawer {
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  bottom: var(--ticker-h);
+  width: min(440px, 92vw);
+  z-index: 1150;
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  box-shadow: -8px 0 24px rgba(0,0,0,.35);
+  padding: 20px 24px;
+  overflow-y: auto;
+  transform: translateX(105%);
+  transition: transform 0.25s ease;
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer h2 {
+  margin: 0 0 10px;
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--navy);
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 6px;
+}
+.drawer p { font-size: 14px; line-height: 1.55; }
+.drawer a { color: var(--red); }
+.drawer .colophon { font-size: 11.5px; color: #6b5f52; border-top: 1px solid rgba(0,0,0,.15); padding-top: 10px; }
+
+.drawer pre {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.6;
+  background: var(--navy-deep);
+  color: #7fd487;
+  padding: 14px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.drawer-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  border: none;
+  background: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--navy);
+}
+
+/* ---------------- Ticker ---------------- */
+#ticker {
+  position: fixed;
+  inset: auto 0 0 0;
+  height: var(--ticker-h);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: hidden;
+  background: var(--red);
+  color: #fff;
+  border-top: 2px solid var(--gold);
+  font-size: 13px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+.ticker-label {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  background: #fff;
+  color: var(--red);
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+#ticker-text { font-style: italic; }
+.slide-in { animation: ticker-slide 0.45s ease-out; }
+@keyframes ticker-slide {
+  from { transform: translateY(120%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer { transition: none; }
+  .slide-in { animation: none; }
+}
