@@ -1,0 +1,54 @@
+name: Deploy Code Invaders to Reclaim Hosting
+
+# Publishes the contents of code-invaders/ to a folder on the Reclaim
+# server over SSH+rsync. Runs on every push to main that touches the
+# game, and can also be triggered by hand from the Actions tab.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'code-invaders/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+# Never let two deploys race each other onto the server.
+concurrency:
+  group: deploy-reclaim
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.RECLAIM_SSH_KEY }}
+          SSH_HOST: ${{ secrets.RECLAIM_HOST }}
+          SSH_PORT: ${{ vars.RECLAIM_PORT || '22' }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Pin the server's host key so the connection can't be MITM'd.
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy with rsync
+        env:
+          SSH_HOST: ${{ secrets.RECLAIM_HOST }}
+          SSH_USER: ${{ secrets.RECLAIM_USER }}
+          SSH_PORT: ${{ vars.RECLAIM_PORT || '22' }}
+          DEPLOY_PATH: ${{ vars.RECLAIM_PATH }}
+        run: |
+          # Trailing slash on the source means "the contents of
+          # code-invaders/", not the folder itself. --delete keeps the
+          # target an exact mirror (safe because it's a dedicated folder).
+          # --rsync-path ensures the target folder exists on first run.
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o StrictHostKeyChecking=yes" \
+            --rsync-path="mkdir -p '$DEPLOY_PATH' && rsync" \
+            code-invaders/ \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
