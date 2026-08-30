@@ -203,8 +203,11 @@ const COUNTRY_RENAMES = {
   },
 };
 
-function addAdminLabels(fc, cls, minZoom) {
+/* Per-feature mz (set at build time from each state's size) staggers the
+ * small ones — Rhode Island does not get to shout over New England */
+function addAdminLabels(fc, cls, defaultMinZoom) {
   fc.features.forEach((f) => {
+    const minZoom = f.properties.mz || defaultMinZoom;
     const raw = f.properties.NAME || f.properties.name;
     const renamed = COUNTRY_RENAMES[raw];
     const nm = renamed ? renamed.newName : (COUNTRY_DISPLAY[raw] || raw);
