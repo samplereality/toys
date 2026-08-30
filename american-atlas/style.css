@@ -145,7 +145,7 @@ html, body {
 #map {
   position: fixed;
   inset: var(--header-h) 0 var(--ticker-h) 0;
-  background: #a5c3d6;
+  background: #bcd6e8; /* the ocean — also, of course, named America */
 }
 
 /* On narrow screens the header wraps taller */
@@ -157,6 +157,33 @@ html, body {
 
 /* ---------------- Map labels ---------------- */
 .atlas-label { background: none; border: none; }
+
+/* Admin labels: the only truthful words left on this map */
+.admin-lbl {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: var(--serif);
+  text-align: center;
+}
+.admin-country {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: #85735a;
+  opacity: 0.8;
+  text-shadow: 0 0 5px rgba(242, 234, 214, 0.9);
+}
+.admin-state {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #9c8a6e;
+  opacity: 0.85;
+  text-shadow: 0 0 4px rgba(242, 234, 214, 0.9);
+}
 
 .lbl {
   position: absolute;

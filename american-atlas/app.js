@@ -1,6 +1,12 @@
 /* =========================================================================
  * AMERICAN ATLAS — Bureau of Patriotic Nomenclature
  * "One nation, one name, applied indiscriminately."
+ *
+ * The Atlas draws its entire basemap itself from vendored Natural Earth
+ * data (public domain): land, borders, lakes, rivers. No tile servers,
+ * no API keys, no foreign cartographic dependencies. The only truthful
+ * labels on this map are countries and states; everything else has been
+ * improved.
  * ========================================================================= */
 
 /* ---------------- THE ALGORITHM ----------------
@@ -23,12 +29,12 @@ const RENAME_RULES = [
   [/^.+ Strait$/i, "Strait of America"],
   [/^.+ Sea$/i, "The America Sea"],
   [/^.+ Ocean$/i, "The America Ocean"],
+  [/^.+ Reservoir$/i, "America Reservoir"],
   // Waters — Spanish (the Bureau is bilingual when annexing)
   [/^Golfo de .+$/i, "Golfo de América"],
   [/^Bahía de .+$/i, "Bahía de América"],
   [/^Lago (?:de )?.+$/i, "Lago América"],
   [/^Laguna de .+$/i, "Laguna América"],
-  [/^.+ Reservoir$/i, "America Reservoir"],
   [/^Río .+$/i, "Río América"],
   // Waters — French (pour nos amis du nord)
   [/^Lac .+$/i, "Lac Amérique"],
@@ -103,76 +109,112 @@ const DECREES = [
 const decreeFor = (f) => DECREES[hash(f.name + "d") % DECREES.length];
 
 const WATER_KINDS = new Set(["lake", "river", "gulf", "bay", "sea", "ocean", "sound", "strait", "falls"]);
-const PARK_KINDS = new Set(["park"]);
-const groupOf = (f) => WATER_KINDS.has(f.kind) ? "water" : (PARK_KINDS.has(f.kind) ? "park" : "landmark");
+const groupOf = (f) => WATER_KINDS.has(f.kind) ? "water" : (f.kind === "park" ? "park" : "landmark");
 
 /* ---------------- THE MAP ---------------- */
 const map = L.map("map", {
   zoomControl: false,
   minZoom: 3,
-  maxZoom: 11,
-  maxBounds: [[2, -179.9], [85, -20]],
+  maxZoom: 9,
+  maxBounds: [[2, -179.9], [86, -20]],
   maxBoundsViscosity: 0.7,
   worldCopyJump: false,
 }).setView([46, -96], 4);
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
+map.attributionControl.addAttribution(
+  'Made with <a href="https://www.naturalearthdata.com/">Natural Earth</a> &middot; toponyms &copy; Bureau of Patriotic Nomenclature'
+);
 
-/* Basemaps with NO labels — the old names have been scrubbed from history.
- * All keyless (CARTO began demanding API keys for its free tiles in 2025,
- * a renaming-adjacent betrayal). If a provider starts erroring, we fall
- * back down the chain rather than show a nameless void. */
-const BASEMAPS = [
-  {
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",
-    maxNativeZoom: 13,
-    attribution: 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, NPS',
-  },
-  {
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    maxNativeZoom: 16,
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-  },
-  {
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",
-    maxNativeZoom: 13,
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri',
-  },
-];
-const BUREAU_CREDIT = " &middot; toponyms &copy; Bureau of Patriotic Nomenclature";
-
-let basemapLayer = null;
-function setBasemap(idx) {
-  if (basemapLayer) map.removeLayer(basemapLayer);
-  const b = BASEMAPS[idx];
-  let errCount = 0;
-  basemapLayer = L.tileLayer(b.url, {
-    maxNativeZoom: b.maxNativeZoom,
-    maxZoom: 19,
-    attribution: b.attribution + BUREAU_CREDIT,
-  });
-  basemapLayer.on("tileerror", () => {
-    errCount++;
-    if (errCount === 6 && idx + 1 < BASEMAPS.length) {
-      console.warn("American Atlas: basemap misbehaving, falling back to provider " + (idx + 2));
-      setBasemap(idx + 1);
-    }
-  });
-  basemapLayer.addTo(map);
+/* Stacked panes so async loads can't scramble the draw order. Lakes and
+ * rivers share one pane and one canvas renderer so hit-detection covers
+ * both (a second canvas on top would swallow the lower one's clicks). */
+const PANES = { graticule: 205, land: 210, statelines: 220, hydro: 230, adminlabels: 580 };
+for (const [name, z] of Object.entries(PANES)) {
+  map.createPane(name).style.zIndex = z;
+  if (name !== "adminlabels" && name !== "hydro") map.getPane(name).style.pointerEvents = "none";
 }
-setBasemap(0);
+const hydroRenderer = L.canvas({ pane: "hydro", padding: 0.4 });
+
+const OCEAN = "#bcd6e8";       // the ocean is the page itself
+const LAND_FILL = "#f2ead6";
+const LAND_LINE = "#a3927a";
+const STATE_LINE = "#bdac90";
+const WATER_FILL = "#bcd6e8";  // lakes match the ocean, as in a proper atlas
+const WATER_LINE = "#7aa9cc";
+
+/* Graticule under the land: a subtle grid over the ocean only */
+(function drawGraticule() {
+  const style = { color: "#9db8cc", weight: 0.6, opacity: 0.5, interactive: false, pane: "graticule" };
+  const lines = [];
+  for (let lon = -180; lon <= -20; lon += 10) lines.push([[2, lon], [86, lon]]);
+  for (let lat = 10; lat <= 80; lat += 10) lines.push([[lat, -180], [lat, -20]]);
+  lines.forEach((l) => L.polyline(l, style).addTo(map));
+})();
+
+function loadJSON(url) {
+  return fetch(url).then((r) => {
+    if (!r.ok) throw new Error(url + " → HTTP " + r.status);
+    return r.json();
+  });
+}
+
+/* ---------------- BASEMAP: land, borders, admin labels ---------------- */
+loadJSON("data/land.json").then((fc) => {
+  L.geoJSON(fc, {
+    pane: "land",
+    renderer: L.canvas({ pane: "land", padding: 0.4 }),
+    interactive: false,
+    style: { color: LAND_LINE, weight: 1, fillColor: LAND_FILL, fillOpacity: 1 },
+  }).addTo(map);
+}).catch((e) => console.warn("American Atlas: land failed", e));
+
+loadJSON("data/state-lines.json").then((fc) => {
+  L.geoJSON(fc, {
+    pane: "statelines",
+    renderer: L.canvas({ pane: "statelines", padding: 0.4 }),
+    interactive: false,
+    style: { color: STATE_LINE, weight: 0.8, fill: false },
+  }).addTo(map);
+}).catch((e) => console.warn("American Atlas: state lines failed", e));
+
+/* The only labels the Bureau left alone: countries and states */
+const adminMarkers = [];
+const COUNTRY_DISPLAY = { "United States of America": "United States" };
+
+function addAdminLabels(fc, cls, minZoom) {
+  fc.features.forEach((f) => {
+    const raw = f.properties.NAME || f.properties.name;
+    const nm = COUNTRY_DISPLAY[raw] || raw;
+    const [lng, lat] = f.geometry.coordinates;
+    const icon = L.divIcon({
+      className: "atlas-label",
+      html: `<div class="admin-lbl ${cls}">${nm}</div>`,
+      iconSize: null,
+    });
+    const m = L.marker([lat, lng], { icon, pane: "adminlabels", keyboard: false, interactive: false });
+    adminMarkers.push({ marker: m, minZoom });
+  });
+  refreshAdminLabels();
+}
+function refreshAdminLabels() {
+  const z = map.getZoom();
+  adminMarkers.forEach(({ marker, minZoom }) => {
+    const show = z >= minZoom;
+    if (show && !map.hasLayer(marker)) marker.addTo(map);
+    if (!show && map.hasLayer(marker)) map.removeLayer(marker);
+  });
+}
+loadJSON("data/country-labels.json").then((fc) => addAdminLabels(fc, "admin-country", 3))
+  .catch((e) => console.warn("American Atlas: country labels failed", e));
+loadJSON("data/state-labels.json").then((fc) => addAdminLabels(fc, "admin-state", 5))
+  .catch((e) => console.warn("American Atlas: state labels failed", e));
+map.on("zoomend", refreshAdminLabels);
 
 /* ---------------- HYDROGRAPHY ----------------
- * Basemaps proved unreliable at actually depicting water, which is a
- * problem for a map whose entire premise is water. So the Atlas draws
- * its own: Natural Earth 10m lakes & rivers (public domain), filtered
- * to North America. Every single one is clickable, and every single
- * one is named America.
+ * Natural Earth 10m lakes & rivers, filtered to North America. Every
+ * single one is clickable, and every single one is named America.
  */
-const WATER_FILL = "#a9cfe6";
-const WATER_LINE = "#7fb0d4";
-const hydroRenderer = L.canvas({ padding: 0.4 });
-
 function riverWeight(props) {
   return Math.max(0.6, Math.min(3.2, (map.getZoom() - props.mz) * 0.45 + 1.1));
 }
@@ -213,37 +255,33 @@ function onHydroFeature(feature, layer) {
   layer.bindPopup(() => hydroPopup(feature.properties), { maxWidth: 300, className: "atlas-popup" });
 }
 
-fetch("data/lakes.json")
-  .then((r) => r.json())
-  .then((fc) => {
-    hydroCount += fc.features.length;
-    L.geoJSON(fc, {
-      renderer: hydroRenderer,
-      style: { color: WATER_LINE, weight: 0.7, fillColor: WATER_FILL, fillOpacity: 1 },
-      onEachFeature: onHydroFeature,
-    }).addTo(map);
-    updateWaterStat();
-  })
-  .catch((e) => console.warn("American Atlas: lakes failed to load", e));
+loadJSON("data/lakes.json").then((fc) => {
+  hydroCount += fc.features.length;
+  L.geoJSON(fc, {
+    pane: "hydro",
+    renderer: hydroRenderer,
+    style: { color: WATER_LINE, weight: 0.7, fillColor: WATER_FILL, fillOpacity: 1 },
+    onEachFeature: onHydroFeature,
+  }).addTo(map);
+  updateWaterStat();
+}).catch((e) => console.warn("American Atlas: lakes failed", e));
 
 let riversLayerMajor = null, riversLayerMinor = null;
-fetch("data/rivers.json")
-  .then((r) => r.json())
-  .then((fc) => {
-    hydroCount += fc.features.length;
-    const major = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz < 7) };
-    const minor = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz >= 7) };
-    const opts = {
-      renderer: hydroRenderer,
-      style: (f) => ({ color: WATER_LINE, weight: riverWeight(f.properties), fill: false }),
-      onEachFeature: onHydroFeature,
-    };
-    riversLayerMajor = L.geoJSON(major, opts).addTo(map);
-    riversLayerMinor = L.geoJSON(minor, opts);
-    refreshRivers();
-    updateWaterStat();
-  })
-  .catch((e) => console.warn("American Atlas: rivers failed to load", e));
+loadJSON("data/rivers.json").then((fc) => {
+  hydroCount += fc.features.length;
+  const major = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz < 7) };
+  const minor = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz >= 7) };
+  const opts = {
+    pane: "hydro",
+    renderer: hydroRenderer,
+    style: (f) => ({ color: WATER_LINE, weight: riverWeight(f.properties), fill: false }),
+    onEachFeature: onHydroFeature,
+  };
+  riversLayerMajor = L.geoJSON(major, opts).addTo(map);
+  riversLayerMinor = L.geoJSON(minor, opts);
+  refreshRivers();
+  updateWaterStat();
+}).catch((e) => console.warn("American Atlas: rivers failed", e));
 
 function refreshRivers() {
   const z = map.getZoom();
@@ -256,9 +294,10 @@ function refreshRivers() {
 }
 map.on("zoomend", refreshRivers);
 
-/* ---------------- LABELS ---------------- */
+/* ---------------- RENAMED PLACES (the gazetteer) ---------------- */
 const markers = []; // { marker, feature, group }
 let currentFilter = "all";
+const stats = { water: 0, park: 0, landmark: 0 };
 
 function labelHtml(f) {
   const newName = rename(f);
@@ -293,13 +332,6 @@ function popupHtml(f) {
     </div>`;
 }
 
-ATLAS_FEATURES.forEach((f) => {
-  const icon = L.divIcon({ className: "atlas-label", html: labelHtml(f), iconSize: null });
-  const marker = L.marker([f.lat, f.lng], { icon, keyboard: false });
-  marker.bindPopup(popupHtml(f), { maxWidth: 320, className: "atlas-popup" });
-  markers.push({ marker, feature: f, group: groupOf(f) });
-});
-
 function refreshVisibility() {
   const z = map.getZoom();
   markers.forEach(({ marker, feature, group }) => {
@@ -309,18 +341,30 @@ function refreshVisibility() {
   });
 }
 map.on("zoomend", refreshVisibility);
-refreshVisibility();
 
-/* ---------------- CONTROLS ---------------- */
-const stats = { water: 0, park: 0, landmark: 0 };
-markers.forEach(({ group }) => stats[group]++);
 function updateWaterStat() {
   document.getElementById("stat-water").textContent = (stats.water + hydroCount).toLocaleString("en-US");
 }
-document.getElementById("stat-water").textContent = stats.water;
-document.getElementById("stat-park").textContent = stats.park;
-document.getElementById("stat-landmark").textContent = stats.landmark;
 
+loadJSON("data/places.geojson").then((fc) => {
+  fc.features.forEach((gf) => {
+    const f = { ...gf.properties };
+    const [lng, lat] = gf.geometry.coordinates;
+    const icon = L.divIcon({ className: "atlas-label", html: labelHtml(f), iconSize: null });
+    const marker = L.marker([lat, lng], { icon, keyboard: false });
+    marker.bindPopup(popupHtml(f), { maxWidth: 320, className: "atlas-popup" });
+    const group = groupOf(f);
+    stats[group]++;
+    markers.push({ marker, feature: f, group });
+  });
+  refreshVisibility();
+  updateWaterStat();
+  document.getElementById("stat-park").textContent = stats.park;
+  document.getElementById("stat-landmark").textContent = stats.landmark;
+  startTicker(fc.features.map((gf) => gf.properties));
+}).catch((e) => console.warn("American Atlas: places failed", e));
+
+/* ---------------- CONTROLS ---------------- */
 document.getElementById("toggle-former").addEventListener("change", (e) => {
   document.body.classList.toggle("show-former", e.target.checked);
 });
@@ -354,24 +398,25 @@ document.querySelectorAll(".drawer-close").forEach((btn) =>
 );
 
 /* ---------------- BREAKING NEWS TICKER ---------------- */
-const tickerEl = document.getElementById("ticker-text");
-const tickerItems = ATLAS_FEATURES.map((f) =>
-  `⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`
-);
-// A few evergreen bulletins in the rotation
-tickerItems.push(
-  "⚡ BREAKING: The Bureau of Patriotic Nomenclature announces that the word “lake” is under review",
-  "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
-  "⚡ BREAKING: Cartographers' union files grievance; grievance renamed “America Grievance”",
-  "⚡ BREAKING: Atlantic and Pacific to be merged into one very large, very beautiful ocean",
-);
-let tickerIdx = hash("start") % tickerItems.length;
-function nextTicker() {
-  tickerEl.classList.remove("slide-in");
-  void tickerEl.offsetWidth; // restart animation
-  tickerEl.textContent = tickerItems[tickerIdx];
-  tickerEl.classList.add("slide-in");
-  tickerIdx = (tickerIdx + 1) % tickerItems.length;
+function startTicker(features) {
+  const tickerEl = document.getElementById("ticker-text");
+  const tickerItems = features.map((f) =>
+    `⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`
+  );
+  tickerItems.push(
+    "⚡ BREAKING: The Bureau of Patriotic Nomenclature announces that the word “lake” is under review",
+    "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
+    "⚡ BREAKING: Cartographers' union files grievance; grievance renamed “America Grievance”",
+    "⚡ BREAKING: Atlantic and Pacific to be merged into one very large, very beautiful ocean",
+  );
+  let tickerIdx = hash("start") % tickerItems.length;
+  function nextTicker() {
+    tickerEl.classList.remove("slide-in");
+    void tickerEl.offsetWidth; // restart animation
+    tickerEl.textContent = tickerItems[tickerIdx];
+    tickerEl.classList.add("slide-in");
+    tickerIdx = (tickerIdx + 1) % tickerItems.length;
+  }
+  nextTicker();
+  setInterval(nextTicker, 5000);
 }
-nextTicker();
-setInterval(nextTicker, 5000);

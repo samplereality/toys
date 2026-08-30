@@ -1,0 +1,2290 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Pacific Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -140,
+     35
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Atlantic Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -60,
+     33
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Arctic Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -140,
+     76
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Caribbean Sea",
+    "kind": "sea",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78,
+     16.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Labrador Sea",
+    "kind": "sea",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -55,
+     57
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bering Sea",
+    "kind": "sea",
+    "country": "USA / Russia (disputed vibes)",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -175,
+     57.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Salton Sea",
+    "kind": "sea",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -115.83,
+     33.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gulf of Mexico",
+    "kind": "gulf",
+    "country": "USA / Mexico / Cuba",
+    "rank": 3,
+    "status": "official",
+    "note": "The one that started it all. Renamed by executive order, January 2025."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -90,
+     25.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gulf of California",
+    "kind": "gulf",
+    "country": "Mexico",
+    "rank": 4,
+    "lang": "es",
+    "localName": "Golfo de California",
+    "note": "Also known as the Sea of Cortez. Cortez has been asked to clean out his desk."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -111.5,
+     27.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gulf of Alaska",
+    "kind": "gulf",
+    "country": "USA",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -145,
+     57
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gulf of Maine",
+    "kind": "gulf",
+    "country": "USA / Canada",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -68.3,
+     43.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gulf of St. Lawrence",
+    "kind": "gulf",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -62,
+     48.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bahía de Campeche",
+    "kind": "bay",
+    "country": "Mexico",
+    "rank": 5,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -93.5,
+     19.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Superior",
+    "kind": "lake",
+    "country": "USA / Canada",
+    "rank": 3,
+    "note": "The largest freshwater lake on Earth by surface area. Now merely the largest Lake America."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -87.5,
+     47.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Michigan",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -87.1,
+     43.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Huron",
+    "kind": "lake",
+    "country": "USA / Canada",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -82.4,
+     44.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Erie",
+    "kind": "lake",
+    "country": "USA / Canada",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -81.2,
+     42.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Ontario",
+    "kind": "lake",
+    "country": "USA / Canada",
+    "rank": 3,
+    "status": "official",
+    "note": "Renamed this very week. Ontario reportedly 'still processing.'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -77.9,
+     43.65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Salt Lake",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -112.5,
+     41.1
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Tahoe",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -120.04,
+     39.09
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Okeechobee",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -80.8,
+     26.94
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Champlain",
+    "kind": "lake",
+    "country": "USA / Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.33,
+     44.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Powell",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -111.25,
+     37.07
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Mead",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -114.4,
+     36.25
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Crater Lake",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.1,
+     42.94
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Flathead Lake",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -114.1,
+     47.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Pontchartrain",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -90.1,
+     30.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake of the Woods",
+    "kind": "lake",
+    "country": "USA / Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -94.9,
+     49.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake of the Ozarks",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -92.8,
+     38.15
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Finger Lakes",
+    "kind": "lake",
+    "country": "USA",
+    "rank": 7,
+    "note": "All eleven of them. Each finger individually renamed."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -76.8,
+     42.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Bear Lake",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -121,
+     66
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Slave Lake",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -114,
+     61.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Winnipeg",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -97.3,
+     52.1
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Athabasca",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -109,
+     59.4
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Reindeer Lake",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -102.3,
+     57.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Nipigon",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -88.5,
+     49.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Louise",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 7,
+    "note": "Louise was not consulted."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -116.22,
+     51.42
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lac Saint-Jean",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 6,
+    "lang": "fr"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -72,
+     48.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lac Mistassini",
+    "kind": "lake",
+    "country": "Canada",
+    "rank": 6,
+    "lang": "fr"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.6,
+     51
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lago de Chapala",
+    "kind": "lake",
+    "country": "Mexico",
+    "rank": 5,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -103,
+     20.28
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lago de Pátzcuaro",
+    "kind": "lake",
+    "country": "Mexico",
+    "rank": 7,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -101.63,
+     19.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Laguna de Términos",
+    "kind": "lake",
+    "country": "Mexico",
+    "rank": 6,
+    "lang": "es",
+    "note": "A lagoon whose name literally means 'Lagoon of Endings.' Prophetic."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -91.5,
+     18.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mississippi River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 4,
+    "note": "Schoolchildren nationwide celebrate no longer having to spell it."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -91.1,
+     33.4
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Missouri River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -97.4,
+     42.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ohio River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -86.6,
+     37.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Colorado River",
+    "kind": "river",
+    "country": "USA / Mexico",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -113.1,
+     36.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Columbia River",
+    "kind": "river",
+    "country": "USA / Canada",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -120.5,
+     45.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Snake River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -114.9,
+     42.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Rio Grande",
+    "kind": "river",
+    "country": "USA / Mexico",
+    "rank": 4,
+    "lang": "es",
+    "localName": "Río Grande",
+    "note": "Known as the Río Bravo in Mexico. Both sides can finally agree on a name."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -101.6,
+     29.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hudson River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.95,
+     41.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Potomac River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -77.12,
+     38.65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Delaware River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -75.05,
+     40.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tennessee River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -88.2,
+     35
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Arkansas River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -94.6,
+     35.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sacramento River",
+    "kind": "river",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122,
+     39.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yukon River",
+    "kind": "river",
+    "country": "USA / Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -152.5,
+     63.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mackenzie River",
+    "kind": "river",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -128.8,
+     65.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Fraser River",
+    "kind": "river",
+    "country": "Canada",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.4,
+     51.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Saskatchewan River",
+    "kind": "river",
+    "country": "Canada",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -103.5,
+     53.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ottawa River",
+    "kind": "river",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -77.3,
+     45.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "St. Lawrence River",
+    "kind": "river",
+    "country": "Canada / USA",
+    "rank": 4,
+    "lang": "fr",
+    "localName": "Fleuve Saint-Laurent",
+    "note": "Saint Lawrence has been de-canonized for administrative convenience."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -71.9,
+     46.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Rivière Saguenay",
+    "kind": "river",
+    "country": "Canada",
+    "rank": 6,
+    "lang": "fr"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -70.5,
+     48.35
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Río Usumacinta",
+    "kind": "river",
+    "country": "Mexico / Guatemala",
+    "rank": 5,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -91.5,
+     17.4
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Río Conchos",
+    "kind": "river",
+    "country": "Mexico",
+    "rank": 6,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -105.4,
+     28.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Río Lerma",
+    "kind": "river",
+    "country": "Mexico",
+    "rank": 6,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -101.3,
+     20.05
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Río Yaqui",
+    "kind": "river",
+    "country": "Mexico",
+    "rank": 7,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -109.7,
+     28.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hudson Bay",
+    "kind": "bay",
+    "country": "Canada",
+    "rank": 3,
+    "note": "Henry Hudson's descendants have been offered a commemorative tote bag."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -85,
+     59.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "James Bay",
+    "kind": "bay",
+    "country": "Canada",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -80.5,
+     53.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bay of Fundy",
+    "kind": "bay",
+    "country": "Canada",
+    "rank": 5,
+    "note": "Home of the world's highest tides, now the world's highest patriotism."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -65.6,
+     45
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Chesapeake Bay",
+    "kind": "bay",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -76.15,
+     37.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "San Francisco Bay",
+    "kind": "bay",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.25,
+     37.65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tampa Bay",
+    "kind": "bay",
+    "country": "USA",
+    "rank": 6,
+    "note": "The football team will be renamed the America Bay Buccaneers, then investigated for piracy."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -82.6,
+     27.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Green Bay",
+    "kind": "bay",
+    "country": "USA",
+    "rank": 6,
+    "note": "The Packers now play at Lambeau Field on America Bay. Cheeseheads remain legal. For now."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -87.7,
+     44.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bahía de Banderas",
+    "kind": "bay",
+    "country": "Mexico",
+    "rank": 6,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -105.4,
+     20.65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Puget Sound",
+    "kind": "sound",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.45,
+     47.65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Long Island Sound",
+    "kind": "sound",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -72.9,
+     41.1
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bering Strait",
+    "kind": "strait",
+    "country": "USA / Russia",
+    "rank": 4,
+    "note": "Russia has been notified that its half is also called America now."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -169,
+     65.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Strait of Georgia",
+    "kind": "strait",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -123.8,
+     49.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Strait of Juan de Fuca",
+    "kind": "strait",
+    "country": "USA / Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -123.5,
+     48.25
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Davis Strait",
+    "kind": "strait",
+    "country": "Canada / Greenland",
+    "rank": 5,
+    "note": "Greenland renaming pending acquisition."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -58,
+     65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Niagara Falls",
+    "kind": "falls",
+    "country": "USA / Canada",
+    "rank": 5,
+    "note": "Not to be confused with the American Falls at Niagara, which is now also called America Falls. The Bureau sees no problem here."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.07,
+     43.08
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yosemite Falls",
+    "kind": "falls",
+    "country": "USA",
+    "rank": 8
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -119.6,
+     37.76
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yellowstone National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 4,
+    "note": "Home of Old Trumpful, which erupts reliably every 90 minutes, or whenever cameras are present."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -110.5,
+     44.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yosemite National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -119.55,
+     37.85
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Grand Canyon National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 4,
+    "note": "The canyon itself remains huge. Some say the biggest. It's not (see: Trump Canyon, formerly Copper Canyon, Mexico)."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -112.5,
+     36.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Zion National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -113.05,
+     37.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Glacier National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -113.8,
+     48.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Everglades National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -80.9,
+     25.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Smoky Mountains National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -83.5,
+     35.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Acadia National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -68.2,
+     44.35
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Rocky Mountain National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -105.7,
+     40.35
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Denali National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 4,
+    "note": "Contains Mount Trump (formerly Denali, formerly Mount McKinley, formerly Denali, formerly Mount McKinley, originally Denali)."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -152.5,
+     63.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Joshua Tree National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -115.9,
+     33.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Death Valley National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5,
+    "note": "Briefly considered for 'Trump Valley' before someone read the first word aloud."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -117,
+     36.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Olympic National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -123.6,
+     47.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Arches National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -109.6,
+     38.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Badlands National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -102.35,
+     43.85
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Big Bend National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -103.25,
+     29.25
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Shenandoah National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.45,
+     38.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sequoia National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6,
+    "note": "Contains the General Sherman Tree, now the General Trump Tree. It is the largest tree, which is why it was chosen."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.55,
+     36.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Redwood National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -124,
+     41.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mammoth Cave National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -86.1,
+     37.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Carlsbad Caverns National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.55,
+     32.15
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Grand Teton National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -110.7,
+     43.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bryce Canyon National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -112.2,
+     37.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Isle Royale National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -88.8,
+     48
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Voyageurs National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -92.9,
+     48.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hot Springs National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -93.05,
+     34.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hawaii Volcanoes National Park",
+    "kind": "park",
+    "country": "USA",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -155.3,
+     19.4
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Banff National Park",
+    "kind": "park",
+    "country": "Canada",
+    "rank": 5,
+    "note": "Canada's first national park, established 1885. Renamed without so much as a phone call."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -116,
+     51.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Jasper National Park",
+    "kind": "park",
+    "country": "Canada",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -118.1,
+     52.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Pacific Rim National Park",
+    "kind": "park",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -125.6,
+     49
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gros Morne National Park",
+    "kind": "park",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -57.75,
+     49.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Wood Buffalo National Park",
+    "kind": "park",
+    "country": "Canada",
+    "rank": 5,
+    "note": "Larger than Switzerland. The buffalo have unionized in protest."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -112.5,
+     59.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Algonquin Provincial Park",
+    "kind": "park",
+    "country": "Canada",
+    "rank": 6,
+    "note": "Technically provincial, but the Bureau does not recognize technicalities."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -78.4,
+     45.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Parque Nacional Cumbres de Monterrey",
+    "kind": "park",
+    "country": "Mexico",
+    "rank": 6,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -100.4,
+     25.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Parque Nacional Cañón del Sumidero",
+    "kind": "park",
+    "country": "Mexico",
+    "rank": 6,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -93.08,
+     16.85
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Parque Nacional Cabo Pulmo",
+    "kind": "park",
+    "country": "Mexico",
+    "rank": 7,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -109.42,
+     23.43
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mount Rushmore",
+    "kind": "monument",
+    "country": "USA",
+    "rank": 5,
+    "note": "A fifth face is under review. Also a sixth, seventh, and eighth face, all the same face."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -103.46,
+     43.88
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Statue of Liberty",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 5,
+    "note": "The torch will be replaced with a golf club. The tablet now reads 'ART OF THE DEAL, JULY IV, MDCCLXXVI.'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -74.045,
+     40.69
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Devils Tower",
+    "kind": "monument",
+    "country": "USA",
+    "rank": 6,
+    "note": "America's first national monument (1906), and now its most litigated trademark dispute."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.72,
+     44.59
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Golden Gate Bridge",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 6,
+    "note": "To be repainted actual gold, pending a very favorable estimate."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.48,
+     37.82
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gateway Arch",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -90.19,
+     38.62
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Hoover Dam",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 6,
+    "note": "Herbert Hoover finally catches a break."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -114.74,
+     36.02
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Washington Monument",
+    "kind": "monument",
+    "country": "USA",
+    "rank": 6,
+    "note": "George Washington could not be reached for comment, having been dead since 1799."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -77.035,
+     38.889
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lincoln Memorial",
+    "kind": "monument",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -77.05,
+     38.889
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Liberty Bell",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 7,
+    "note": "The crack will be marketed as 'intentional, actually very beautiful.'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -75.15,
+     39.95
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Alcatraz Island",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.42,
+     37.827
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Space Needle",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.35,
+     47.62
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Empire State Building",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.986,
+     40.748
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "The White House",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 6,
+    "note": "This one was arguably already renamed."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -77.0365,
+     38.8977
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Old Faithful",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -110.83,
+     44.46
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Denali",
+    "kind": "landmark",
+    "country": "USA",
+    "rank": 5,
+    "note": "North America's highest peak, 20,310 ft. The name has now changed more times than the elevation."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -151.007,
+     63.0695
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "CN Tower",
+    "kind": "landmark",
+    "country": "Canada",
+    "rank": 6,
+    "note": "Toronto insists 'CN' stood for 'Canadian National.' The Bureau has determined it stands for 'Certainly Now-Trump.'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.387,
+     43.6426
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Parliament Hill",
+    "kind": "landmark",
+    "country": "Canada",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -75.7,
+     45.425
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Chichén Itzá",
+    "kind": "landmark",
+    "country": "Mexico",
+    "rank": 5,
+    "note": "The Maya built El Castillo to align with the equinox sun. It now aligns with the Bureau's quarterly branding goals."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -88.57,
+     20.68
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Teotihuacán",
+    "kind": "landmark",
+    "country": "Mexico",
+    "rank": 6,
+    "note": "'The place where the gods were created' is now 'the place where the brand was created.'"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.84,
+     19.69
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "El Ángel de la Independencia",
+    "kind": "monument",
+    "country": "Mexico",
+    "rank": 7
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -99.168,
+     19.427
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Copper Canyon",
+    "kind": "landmark",
+    "country": "Mexico",
+    "rank": 6,
+    "note": "Deeper and larger than the Grand Canyon, a fact the Bureau has classified."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -107.6,
+     27.5
+    ]
+   }
+  }
+ ]
+}

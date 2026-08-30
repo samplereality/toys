@@ -19,14 +19,17 @@ America" (January 2025), taken to its logical conclusion.
 
 ## Features
 
-- **Leaflet** map over a label-free Esri terrain basemap (the old names have
-  been scrubbed from history), with automatic fallback across keyless
-  no-label tile providers.
-- Hydrography drawn by the Atlas itself from **Natural Earth** 10m data
-  (public domain, filtered to North America): ~7,400 lakes and rivers,
-  every one clickable, every one renamed America by the regex engine —
-  including the unnamed ones, which are informed they are now named America
-  and told "you're welcome."
+- A **fully self-drawn vector basemap** — no tile servers, no API keys, no
+  foreign cartographic dependencies. Land, country and state borders, lakes,
+  and rivers are all rendered by Leaflet from vendored **Natural Earth**
+  data (public domain), in a classic school-atlas style: parchment land,
+  blue water, a graticule over the ocean. The only labels left untouched
+  are countries and states.
+- ~7,400 Natural Earth lakes and rivers, every one clickable, every one
+  renamed America by the regex engine — including the unnamed ones, which
+  are informed they are now named America and told "you're welcome."
+- The curated gazetteer of famous renamed places lives in
+  `data/places.geojson`.
 - ~140 real features, each renamed at runtime by an actual regex ruleset —
   view it in the **The Algorithm** panel, rendered as the `sed` script that
   replaced the Bureau's 240-person toponymy department.
@@ -48,9 +51,10 @@ python3 -m http.server
 ```
 
 Leaflet 1.9.4 is vendored in `vendor/leaflet/` (BSD-2-Clause, see its
-LICENSE); Natural Earth hydrography is vendored in `data/`; basemap tiles
-are fetched from Esri's keyless ArcGIS Online services at runtime (CARTO's
-free tiles now require an API key).
+LICENSE); all map data is vendored in `data/` (Natural Earth, public
+domain, clipped to North America and simplified with mapshaper). The page
+makes zero external requests apart from one Google Fonts stylesheet, and
+degrades gracefully without it.
 
 ## Disclaimer
 
