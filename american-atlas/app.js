@@ -116,13 +116,49 @@ const map = L.map("map", {
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
 
-/* A basemap with NO labels — the old names have been scrubbed from history */
-L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png", {
-  subdomains: "abcd",
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> &middot; toponyms &copy; Bureau of Patriotic Nomenclature',
-}).addTo(map);
+/* Basemaps with NO labels — the old names have been scrubbed from history.
+ * All keyless (CARTO began demanding API keys for its free tiles in 2025,
+ * a renaming-adjacent betrayal). If a provider starts erroring, we fall
+ * back down the chain rather than show a nameless void. */
+const BASEMAPS = [
+  {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",
+    maxNativeZoom: 13,
+    attribution: 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, NPS',
+  },
+  {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    maxNativeZoom: 16,
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+  },
+  {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",
+    maxNativeZoom: 13,
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri',
+  },
+];
+const BUREAU_CREDIT = " &middot; toponyms &copy; Bureau of Patriotic Nomenclature";
+
+let basemapLayer = null;
+function setBasemap(idx) {
+  if (basemapLayer) map.removeLayer(basemapLayer);
+  const b = BASEMAPS[idx];
+  let errCount = 0;
+  basemapLayer = L.tileLayer(b.url, {
+    maxNativeZoom: b.maxNativeZoom,
+    maxZoom: 19,
+    attribution: b.attribution + BUREAU_CREDIT,
+  });
+  basemapLayer.on("tileerror", () => {
+    errCount++;
+    if (errCount === 6 && idx + 1 < BASEMAPS.length) {
+      console.warn("American Atlas: basemap misbehaving, falling back to provider " + (idx + 2));
+      setBasemap(idx + 1);
+    }
+  });
+  basemapLayer.addTo(map);
+}
+setBasemap(0);
 
 /* ---------------- LABELS ---------------- */
 const markers = []; // { marker, feature, group }

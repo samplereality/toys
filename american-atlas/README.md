@@ -19,8 +19,9 @@ America" (January 2025), taken to its logical conclusion.
 
 ## Features
 
-- **Leaflet** map over a label-free CARTO basemap (the old names have been
-  scrubbed from history).
+- **Leaflet** map over a label-free Esri terrain basemap (the old names have
+  been scrubbed from history), with automatic fallback across keyless
+  no-label tile providers.
 - ~140 real features, each renamed at runtime by an actual regex ruleset —
   view it in the **The Algorithm** panel, rendered as the `sed` script that
   replaced the Bureau's 240-person toponymy department.
@@ -42,7 +43,8 @@ python3 -m http.server
 ```
 
 Leaflet 1.9.4 is vendored in `vendor/leaflet/` (BSD-2-Clause, see its
-LICENSE); basemap tiles are fetched from CARTO at runtime.
+LICENSE); basemap tiles are fetched from Esri's keyless ArcGIS Online
+services at runtime (CARTO's free tiles now require an API key).
 
 ## Disclaimer
 
