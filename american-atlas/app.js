@@ -370,12 +370,41 @@ function popupHtml(f) {
     </div>`;
 }
 
+/* Greedy label collision: project candidates to pixel space at the current
+ * zoom, place them in priority order, and hide anything that would stack on
+ * an already-placed label. Parks lose ties — "Trump National Park" appears
+ * thirty-six times and can afford to wait its turn. */
+const LABEL_FONT = { ocean: 15, sea: 15, gulf: 13 };
+function labelBox(m, z) {
+  const p = map.project(m.marker.getLatLng(), z);
+  const scale = m.feature.rank === 3 ? 1.25 : 1;
+  const fs = (LABEL_FONT[m.feature.kind] || 12) * scale;
+  const w = rename(m.feature).length * fs * 0.62 + 10;
+  let h = fs + 10;
+  if (m.feature.status === "official") h += 14;
+  if (document.body.classList.contains("show-former")) h += 13;
+  return { x1: p.x - w / 2, x2: p.x + w / 2, y1: p.y - h / 2, y2: p.y + h / 2 };
+}
+function boxesCollide(a, b, pad) {
+  return a.x1 < b.x2 + pad && b.x1 < a.x2 + pad && a.y1 < b.y2 + pad && b.y1 < a.y2 + pad;
+}
 function refreshVisibility() {
   const z = map.getZoom();
-  markers.forEach(({ marker, feature, group }) => {
-    const show = feature.rank <= z && (currentFilter === "all" || currentFilter === group);
-    if (show && !map.hasLayer(marker)) marker.addTo(map);
-    if (!show && map.hasLayer(marker)) map.removeLayer(marker);
+  const candidates = markers
+    .filter(({ feature, group }) => feature.rank <= z && (currentFilter === "all" || currentFilter === group))
+    .sort((a, b) => (a.feature.rank - b.feature.rank) || ((a.group === "park") - (b.group === "park")));
+  const placed = [];
+  const visible = new Set();
+  candidates.forEach((m) => {
+    const box = labelBox(m, z);
+    if (!placed.some((other) => boxesCollide(box, other, 4))) {
+      placed.push(box);
+      visible.add(m);
+    }
+  });
+  markers.forEach((m) => {
+    if (visible.has(m) && !map.hasLayer(m.marker)) m.marker.addTo(map);
+    if (!visible.has(m) && map.hasLayer(m.marker)) map.removeLayer(m.marker);
   });
 }
 map.on("zoomend", refreshVisibility);
@@ -446,6 +475,7 @@ function maybeShowHint() {
 /* ---------------- CONTROLS ---------------- */
 document.getElementById("toggle-former").addEventListener("change", (e) => {
   document.body.classList.toggle("show-former", e.target.checked);
+  refreshVisibility(); // taller labels need re-placing
 });
 
 document.querySelectorAll("input[name=filter]").forEach((radio) => {
