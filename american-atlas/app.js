@@ -28,6 +28,7 @@ const RENAME_RULES = [
   [/^Bahía de .+$/i, "Bahía de América"],
   [/^Lago (?:de )?.+$/i, "Lago América"],
   [/^Laguna de .+$/i, "Laguna América"],
+  [/^.+ Reservoir$/i, "America Reservoir"],
   [/^Río .+$/i, "Río América"],
   // Waters — French (pour nos amis du nord)
   [/^Lac .+$/i, "Lac Amérique"],
@@ -68,6 +69,7 @@ function rename(feature) {
   for (const [pattern, replacement] of RENAME_RULES) {
     if (pattern.test(source)) return replacement;
   }
+  if (feature.isWater) return "America"; // water is water; water is America
   // Fallback for stray landmarks: Trump + last word. Foolproof.
   const words = feature.name.split(/\s+/);
   return "Trump " + words[words.length - 1];
@@ -160,6 +162,100 @@ function setBasemap(idx) {
 }
 setBasemap(0);
 
+/* ---------------- HYDROGRAPHY ----------------
+ * Basemaps proved unreliable at actually depicting water, which is a
+ * problem for a map whose entire premise is water. So the Atlas draws
+ * its own: Natural Earth 10m lakes & rivers (public domain), filtered
+ * to North America. Every single one is clickable, and every single
+ * one is named America.
+ */
+const WATER_FILL = "#a9cfe6";
+const WATER_LINE = "#7fb0d4";
+const hydroRenderer = L.canvas({ padding: 0.4 });
+
+function riverWeight(props) {
+  return Math.max(0.6, Math.min(3.2, (map.getZoom() - props.mz) * 0.45 + 1.1));
+}
+
+function hydroOldName(props) {
+  if (!props.name) return null;
+  if (props.fc === "river") {
+    return /(river|río|rio|rivière|fleuve|creek|bayou|brazos)/i.test(props.name)
+      ? props.name : props.name + " River";
+  }
+  return /(lake|lac\b|lago|laguna|reservoir|sea\b|pond|slough)/i.test(props.name)
+    ? props.name : "Lake " + props.name;
+}
+
+function hydroPopup(props) {
+  const oldName = hydroOldName(props);
+  if (!oldName) {
+    return `<div class="pop pop-water">
+      <div class="pop-eyebrow">By order of Executive Order ${eoNumber({ name: "unnamed" })}</div>
+      <h3 class="pop-name">America</h3>
+      <div class="pop-former">This body of water previously had <i>no name at all</i>. It is now named America. You're welcome.</div>
+      <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
+    </div>`;
+  }
+  const pseudo = { name: oldName, isWater: true };
+  return `<div class="pop pop-water">
+    <div class="pop-eyebrow">By order of Executive Order ${eoNumber(pseudo)}</div>
+    <h3 class="pop-name">${rename(pseudo)}</h3>
+    <div class="pop-former">formerly known as <s>${oldName}</s> <span class="pop-retired">(name retired)</span></div>
+    <div class="pop-decree">“${decreeFor(pseudo)}”</div>
+    <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
+  </div>`;
+}
+
+let hydroCount = 0;
+
+function onHydroFeature(feature, layer) {
+  layer.bindPopup(() => hydroPopup(feature.properties), { maxWidth: 300, className: "atlas-popup" });
+}
+
+fetch("data/lakes.json")
+  .then((r) => r.json())
+  .then((fc) => {
+    hydroCount += fc.features.length;
+    L.geoJSON(fc, {
+      renderer: hydroRenderer,
+      style: { color: WATER_LINE, weight: 0.7, fillColor: WATER_FILL, fillOpacity: 1 },
+      onEachFeature: onHydroFeature,
+    }).addTo(map);
+    updateWaterStat();
+  })
+  .catch((e) => console.warn("American Atlas: lakes failed to load", e));
+
+let riversLayerMajor = null, riversLayerMinor = null;
+fetch("data/rivers.json")
+  .then((r) => r.json())
+  .then((fc) => {
+    hydroCount += fc.features.length;
+    const major = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz < 7) };
+    const minor = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz >= 7) };
+    const opts = {
+      renderer: hydroRenderer,
+      style: (f) => ({ color: WATER_LINE, weight: riverWeight(f.properties), fill: false }),
+      onEachFeature: onHydroFeature,
+    };
+    riversLayerMajor = L.geoJSON(major, opts).addTo(map);
+    riversLayerMinor = L.geoJSON(minor, opts);
+    refreshRivers();
+    updateWaterStat();
+  })
+  .catch((e) => console.warn("American Atlas: rivers failed to load", e));
+
+function refreshRivers() {
+  const z = map.getZoom();
+  if (riversLayerMajor) riversLayerMajor.setStyle((f) => ({ weight: riverWeight(f.properties) }));
+  if (riversLayerMinor) {
+    if (z >= 7 && !map.hasLayer(riversLayerMinor)) riversLayerMinor.addTo(map);
+    if (z < 7 && map.hasLayer(riversLayerMinor)) map.removeLayer(riversLayerMinor);
+    if (z >= 7) riversLayerMinor.setStyle((f) => ({ weight: riverWeight(f.properties) }));
+  }
+}
+map.on("zoomend", refreshRivers);
+
 /* ---------------- LABELS ---------------- */
 const markers = []; // { marker, feature, group }
 let currentFilter = "all";
@@ -218,6 +314,9 @@ refreshVisibility();
 /* ---------------- CONTROLS ---------------- */
 const stats = { water: 0, park: 0, landmark: 0 };
 markers.forEach(({ group }) => stats[group]++);
+function updateWaterStat() {
+  document.getElementById("stat-water").textContent = (stats.water + hydroCount).toLocaleString("en-US");
+}
 document.getElementById("stat-water").textContent = stats.water;
 document.getElementById("stat-park").textContent = stats.park;
 document.getElementById("stat-landmark").textContent = stats.landmark;

@@ -22,6 +22,11 @@ America" (January 2025), taken to its logical conclusion.
 - **Leaflet** map over a label-free Esri terrain basemap (the old names have
   been scrubbed from history), with automatic fallback across keyless
   no-label tile providers.
+- Hydrography drawn by the Atlas itself from **Natural Earth** 10m data
+  (public domain, filtered to North America): ~7,400 lakes and rivers,
+  every one clickable, every one renamed America by the regex engine —
+  including the unnamed ones, which are informed they are now named America
+  and told "you're welcome."
 - ~140 real features, each renamed at runtime by an actual regex ruleset —
   view it in the **The Algorithm** panel, rendered as the `sed` script that
   replaced the Bureau's 240-person toponymy department.
@@ -43,8 +48,9 @@ python3 -m http.server
 ```
 
 Leaflet 1.9.4 is vendored in `vendor/leaflet/` (BSD-2-Clause, see its
-LICENSE); basemap tiles are fetched from Esri's keyless ArcGIS Online
-services at runtime (CARTO's free tiles now require an API key).
+LICENSE); Natural Earth hydrography is vendored in `data/`; basemap tiles
+are fetched from Esri's keyless ArcGIS Online services at runtime (CARTO's
+free tiles now require an API key).
 
 ## Disclaimer
 
