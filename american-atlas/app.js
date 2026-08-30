@@ -400,7 +400,48 @@ loadJSON("data/places.geojson").then((fc) => {
   document.getElementById("stat-park").textContent = stats.park;
   document.getElementById("stat-landmark").textContent = stats.landmark;
   startTicker(fc.features.map((gf) => gf.properties));
+  maybeShowHint();
 }).catch((e) => console.warn("American Atlas: places failed", e));
+
+/* ---------------- FIRST-VISIT HINT ----------------
+ * Nobody thinks to click a map label unless told. Tell them once. */
+const HINT_KEY = "atlas-hint-seen";
+function hintSeen() { try { return localStorage.getItem(HINT_KEY) === "1"; } catch (e) { return false; } }
+function markHintSeen() { try { localStorage.setItem(HINT_KEY, "1"); } catch (e) {} }
+
+const hintEl = document.createElement("div");
+hintEl.id = "hint";
+hintEl.hidden = true;
+hintEl.innerHTML = `
+  <span class="hint-text">Every name on this map hides an official renaming decree — <b>click one</b>. The lakes and rivers themselves count too.</span>
+  <span class="hint-btns">
+    <button id="hint-show" type="button">Show me</button>
+    <button id="hint-close" type="button">Got it</button>
+  </span>`;
+document.getElementById("map").appendChild(hintEl);
+L.DomEvent.disableClickPropagation(hintEl);
+
+let hintTimer = null;
+function hideHint() {
+  hintEl.hidden = true;
+  markHintSeen();
+  if (hintTimer) clearTimeout(hintTimer);
+}
+hintEl.querySelector("#hint-close").addEventListener("click", hideHint);
+hintEl.querySelector("#hint-show").addEventListener("click", () => {
+  hideHint();
+  const demo = markers.find((m) => m.feature.name === "Lake Ontario");
+  if (demo) {
+    if (!map.hasLayer(demo.marker)) demo.marker.addTo(map);
+    map.panTo(demo.marker.getLatLng());
+    demo.marker.openPopup();
+  }
+});
+function maybeShowHint() {
+  if (hintSeen()) return;
+  hintEl.hidden = false;
+  hintTimer = setTimeout(hideHint, 20000);
+}
 
 /* ---------------- CONTROLS ---------------- */
 document.getElementById("toggle-former").addEventListener("change", (e) => {
