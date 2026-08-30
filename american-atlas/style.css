@@ -184,6 +184,12 @@ html, body {
   opacity: 0.85;
   text-shadow: 0 0 4px rgba(242, 234, 214, 0.9);
 }
+/* A country label the Bureau did NOT leave alone */
+.admin-renamed {
+  pointer-events: auto;
+  cursor: pointer;
+  color: var(--red);
+}
 
 .lbl {
   position: absolute;

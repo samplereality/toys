@@ -201,7 +201,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Bahía de Campeche",
+    "name": "Bah\u00eda de Campeche",
     "kind": "bay",
     "country": "Mexico",
     "rank": 5,
@@ -658,7 +658,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Lago de Pátzcuaro",
+    "name": "Lago de P\u00e1tzcuaro",
     "kind": "lake",
     "country": "Mexico",
     "rank": 7,
@@ -675,7 +675,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Laguna de Términos",
+    "name": "Laguna de T\u00e9rminos",
     "kind": "lake",
     "country": "Mexico",
     "rank": 6,
@@ -795,8 +795,8 @@
     "country": "USA / Mexico",
     "rank": 4,
     "lang": "es",
-    "localName": "Río Grande",
-    "note": "Known as the Río Bravo in Mexico. Both sides can finally agree on a name."
+    "localName": "R\u00edo Grande",
+    "note": "Known as the R\u00edo Bravo in Mexico. Both sides can finally agree on a name."
    },
    "geometry": {
     "type": "Point",
@@ -1004,7 +1004,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Rivière Saguenay",
+    "name": "Rivi\u00e8re Saguenay",
     "kind": "river",
     "country": "Canada",
     "rank": 6,
@@ -1021,7 +1021,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Río Usumacinta",
+    "name": "R\u00edo Usumacinta",
     "kind": "river",
     "country": "Mexico / Guatemala",
     "rank": 5,
@@ -1038,7 +1038,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Río Conchos",
+    "name": "R\u00edo Conchos",
     "kind": "river",
     "country": "Mexico",
     "rank": 6,
@@ -1055,7 +1055,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Río Lerma",
+    "name": "R\u00edo Lerma",
     "kind": "river",
     "country": "Mexico",
     "rank": 6,
@@ -1072,7 +1072,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Río Yaqui",
+    "name": "R\u00edo Yaqui",
     "kind": "river",
     "country": "Mexico",
     "rank": 7,
@@ -1205,7 +1205,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Bahía de Banderas",
+    "name": "Bah\u00eda de Banderas",
     "kind": "bay",
     "country": "Mexico",
     "rank": 6,
@@ -1307,7 +1307,7 @@
     "kind": "strait",
     "country": "Canada / Greenland",
     "rank": 5,
-    "note": "Greenland renaming pending acquisition."
+    "note": "Connects America to Americaland (formerly Greenland). The Bureau notes with satisfaction that this strait now separates nothing."
    },
    "geometry": {
     "type": "Point",
@@ -1906,7 +1906,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Parque Nacional Cañón del Sumidero",
+    "name": "Parque Nacional Ca\u00f1\u00f3n del Sumidero",
     "kind": "park",
     "country": "Mexico",
     "rank": 6,
@@ -2222,7 +2222,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Chichén Itzá",
+    "name": "Chich\u00e9n Itz\u00e1",
     "kind": "landmark",
     "country": "Mexico",
     "rank": 5,
@@ -2239,7 +2239,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Teotihuacán",
+    "name": "Teotihuac\u00e1n",
     "kind": "landmark",
     "country": "Mexico",
     "rank": 6,
@@ -2256,7 +2256,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "El Ángel de la Independencia",
+    "name": "El \u00c1ngel de la Independencia",
     "kind": "monument",
     "country": "Mexico",
     "rank": 7

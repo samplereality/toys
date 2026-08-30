@@ -25,9 +25,11 @@ America" (January 2025), taken to its logical conclusion.
   data (public domain), in a classic school-atlas style: parchment land,
   blue water, a graticule over the ocean. The only labels left untouched
   are countries and states.
-- ~7,400 Natural Earth lakes and rivers, every one clickable, every one
-  renamed America by the regex engine — including the unnamed ones, which
-  are informed they are now named America and told "you're welcome."
+- ~3,200 Natural Earth lakes and major rivers (small tributaries were
+  deemed insufficiently tremendous), every one clickable, every one renamed
+  America by the regex engine — including the unnamed ones, which are
+  informed they are now named America and told "you're welcome."
+- Greenland is now Americaland. Click its label for the acquisition decree.
 - The curated gazetteer of famous renamed places lives in
   `data/places.geojson`.
 - ~140 real features, each renamed at runtime by an actual regex ruleset —

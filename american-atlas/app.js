@@ -112,14 +112,19 @@ const WATER_KINDS = new Set(["lake", "river", "gulf", "bay", "sea", "ocean", "so
 const groupOf = (f) => WATER_KINDS.has(f.kind) ? "water" : (f.kind === "park" ? "park" : "landmark");
 
 /* ---------------- THE MAP ---------------- */
+/* Hard bounds: the drawn world ends where the data was clipped (Greenland's
+ * east edge at 45°W, the far north at ~84.5°N) — no scrolling into the void */
 const map = L.map("map", {
   zoomControl: false,
-  minZoom: 3,
+  minZoom: 4,
   maxZoom: 9,
-  maxBounds: [[2, -179.9], [86, -20]],
-  maxBoundsViscosity: 0.7,
+  maxBounds: [[6, -179.9], [84.5, -45]],
+  maxBoundsViscosity: 1.0,
   worldCopyJump: false,
-}).setView([46, -96], 4);
+});
+/* Open on the Great Lakes — all five Lake Americas on screen at once */
+map.fitBounds([[40.8, -93.5], [49.3, -75.0]], { maxZoom: 6 });
+window.atlasMap = map; // for debugging; the Bureau has nothing to hide
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
 map.attributionControl.addAttribution(
@@ -178,21 +183,39 @@ loadJSON("data/state-lines.json").then((fc) => {
   }).addTo(map);
 }).catch((e) => console.warn("American Atlas: state lines failed", e));
 
-/* The only labels the Bureau left alone: countries and states */
+/* The only labels the Bureau left alone: countries and states.
+ * Except Greenland. Greenland has been acquired. */
 const adminMarkers = [];
 const COUNTRY_DISPLAY = { "United States of America": "United States" };
+const COUNTRY_RENAMES = {
+  "Greenland": {
+    newName: "Americaland",
+    note: "Acquisition finalized over Denmark's objections, which have been renamed Denmark's Agreements.",
+  },
+};
 
 function addAdminLabels(fc, cls, minZoom) {
   fc.features.forEach((f) => {
     const raw = f.properties.NAME || f.properties.name;
-    const nm = COUNTRY_DISPLAY[raw] || raw;
+    const renamed = COUNTRY_RENAMES[raw];
+    const nm = renamed ? renamed.newName : (COUNTRY_DISPLAY[raw] || raw);
     const [lng, lat] = f.geometry.coordinates;
     const icon = L.divIcon({
       className: "atlas-label",
-      html: `<div class="admin-lbl ${cls}">${nm}</div>`,
+      html: `<div class="admin-lbl ${cls}${renamed ? " admin-renamed" : ""}">${nm}</div>`,
       iconSize: null,
     });
-    const m = L.marker([lat, lng], { icon, pane: "adminlabels", keyboard: false, interactive: false });
+    const m = L.marker([lat, lng], { icon, pane: "adminlabels", keyboard: false, interactive: !!renamed });
+    if (renamed) {
+      m.bindPopup(`<div class="pop pop-landmark">
+        <div class="pop-eyebrow">By order of Executive Order ${eoNumber({ name: raw })}</div>
+        <h3 class="pop-name">${renamed.newName}</h3>
+        <div class="pop-former">formerly known as <s>${raw}</s> <span class="pop-retired">(name retired)</span></div>
+        <div class="pop-note">${renamed.note}</div>
+        <div class="pop-decree">“${decreeFor({ name: raw })}”</div>
+        <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
+      </div>`, { maxWidth: 320, className: "atlas-popup" });
+    }
     adminMarkers.push({ marker: m, minZoom });
   });
   refreshAdminLabels();
@@ -269,8 +292,11 @@ loadJSON("data/lakes.json").then((fc) => {
 let riversLayerMajor = null, riversLayerMinor = null;
 loadJSON("data/rivers.json").then((fc) => {
   hydroCount += fc.features.length;
-  const major = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz < 7) };
-  const minor = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz >= 7) };
+  /* Majors (the Mississippi, Ohio, Missouri, Colorado tier) always show;
+   * secondary rivers wait for zoom 7. Small tributaries were removed from
+   * the data outright — the Bureau found them insufficiently tremendous. */
+  const major = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz <= 5) };
+  const minor = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz > 5) };
   const opts = {
     pane: "hydro",
     renderer: hydroRenderer,
@@ -404,6 +430,7 @@ function startTicker(features) {
     `⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`
   );
   tickerItems.push(
+    "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
     "⚡ BREAKING: The Bureau of Patriotic Nomenclature announces that the word “lake” is under review",
     "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
     "⚡ BREAKING: Cartographers' union files grievance; grievance renamed “America Grievance”",
