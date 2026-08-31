@@ -793,7 +793,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 5,
-    "note": "The snakes were asked for comment. Their silence has been recorded as loyalty."
+    "note": "Of all the rivers surveyed, this one understood immediately."
    },
    "geometry": {
     "type": "Point",
@@ -927,7 +927,7 @@
     "kind": "river",
     "country": "USA / Canada",
     "rank": 4,
-    "note": "Gold rush country. Prospectors once renamed every creek they touched, then left when the gold ran out. The Board asks you not to read ahead."
+    "note": "So remote that news of the renaming took three weeks to arrive. The river spent those weeks under its old name, which the Board has decided not to investigate."
    },
    "geometry": {
     "type": "Point",
@@ -944,7 +944,7 @@
     "kind": "river",
     "country": "Canada",
     "rank": 4,
-    "note": "Canada’s longest river, named for a fur trader who complained the whole way down. The complaining, at least, is preserved."
+    "note": "Its explorer wanted the Pacific, found the Arctic, and called this the River of Disappointment. The Board understands wanting to rename your disappointments."
    },
    "geometry": {
     "type": "Point",
@@ -1012,7 +1012,7 @@
     "rank": 4,
     "lang": "fr",
     "localName": "Fleuve Saint-Laurent",
-    "note": "Saint Lawrence, martyred on a grill in 258 AD, reportedly joked ‘turn me over.’ The Board has no sense of humor and has retired him anyway."
+    "note": "Ships entering the seaway must now declare the river’s name at customs. Mispronunciation is a tariff event."
    },
    "geometry": {
     "type": "Point",
@@ -1498,7 +1498,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "First national park east of the Mississippi, which is now The American River, which is now this park’s whole origin story."
+    "note": "Named for the Acadians, who were deported in 1755. The name has now joined them. The Board calls this continuity."
    },
    "geometry": {
     "type": "Point",
