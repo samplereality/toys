@@ -291,7 +291,7 @@
     "country": "USA / Canada",
     "rank": 3,
     "status": "official",
-    "note": "Renamed this very week. Ontario reportedly ‘still processing.’"
+    "note": "Renamed August 2026. A great win for American consumers."
    },
    "geometry": {
     "type": "Point",
@@ -342,7 +342,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 5,
-    "note": "Held back by the Herbert Hoover Dike, which the Board has renamed but not inspected. Priorities."
+    "note": "Held back by the Herbert Hoover Dike, which also will be renamed, obviously."
    },
    "geometry": {
     "type": "Point",
@@ -409,7 +409,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 6,
-    "note": "The deepest lake in America is now the deepest Lake America in America. The Board’s fact sheet ends there."
+    "note": "The deepest lake in America is now the deepest Lake America in America."
    },
    "geometry": {
     "type": "Point",
@@ -540,7 +540,7 @@
     "kind": "lake",
     "country": "Canada",
     "rank": 4,
-    "note": "From the Cree for ‘murky water.’ The new name is much clearer, reports the murky water."
+    "note": "From the Cree for ‘murky water.’ The new name is much clearer."
    },
    "geometry": {
     "type": "Point",
@@ -604,8 +604,7 @@
     "name": "Lake Louise",
     "kind": "lake",
     "country": "Canada",
-    "rank": 7,
-    "note": "Louise was not consulted."
+    "rank": 7
    },
    "geometry": {
     "type": "Point",
@@ -657,7 +656,7 @@
     "country": "Mexico",
     "rank": 5,
     "lang": "es",
-    "note": "Mexico’s largest lake. The consultation was held in Washington; the lake’s absence was recorded as consent."
+    "note": "Mexico’s largest lake. Now America’s Mexico’s largest lake."
    },
    "geometry": {
     "type": "Point",
@@ -709,7 +708,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 4,
-    "note": "Schoolchildren nationwide celebrate no longer having to spell it."
+    "note": "Now 100% easier for the President to spell."
    },
    "geometry": {
     "type": "Point",
@@ -726,7 +725,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 4,
-    "note": "Longer than the Mississippi, a fact the Mississippi suppressed for two centuries. Both are The American River now; the cover-up is complete."
+    "note": "Missouri was misery. Now it’s tremendous."
    },
    "geometry": {
     "type": "Point",
@@ -760,7 +759,7 @@
     "kind": "river",
     "country": "USA / Mexico",
     "rank": 4,
-    "note": "No longer reaches the sea. The Board found it cheaper to rename the sea."
+    "note": "No longer reaches the sea. Thanks to secure borders."
    },
    "geometry": {
     "type": "Point",
@@ -830,7 +829,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 6,
-    "note": "Henry Hudson was set adrift by his own crew — a succession model Board staff have been asked to stop citing."
+    "note": "Henry Hudson was set adrift by his own crew—a succession model Board staff have been asked to stop citing."
    },
    "geometry": {
     "type": "Point",
@@ -1199,7 +1198,7 @@
     "kind": "bay",
     "country": "USA",
     "rank": 6,
-    "note": "The football team will be renamed the America Bay Buccaneers, then investigated for piracy."
+    "note": "The football team will be renamed the America Bay Buccaneers, not to be confused with the American Bay Packers."
    },
    "geometry": {
     "type": "Point",
@@ -1216,7 +1215,7 @@
     "kind": "bay",
     "country": "USA",
     "rank": 6,
-    "note": "The Packers now play at Lambeau Field on America Bay. Cheeseheads remain legal. For now."
+    "note": "The football team will be renamed the America Bay Packers, not to be confused with the American Bay Buccaneers."
    },
    "geometry": {
     "type": "Point",
@@ -1348,7 +1347,7 @@
     "kind": "falls",
     "country": "USA / Canada",
     "rank": 5,
-    "note": "Not to be confused with the American Falls at Niagara, which is now also called America Falls. The Board sees no problem here."
+    "note": "Not to be confused with the American Falls at Niagara, which is now also called America Falls."
    },
    "geometry": {
     "type": "Point",
@@ -1398,7 +1397,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 4,
-    "note": "Ansel Adams made it famous in black and white. Reissues will be in gold."
+    "note": "Like all American National Parks, American National Park is now open for drilling."
    },
    "geometry": {
     "type": "Point",
@@ -1449,7 +1448,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "Had roughly 150 glaciers in 1850; about 25 remain. The missing ones have been renamed ‘classified.’"
+    "note": "Had roughly 150 glaciers in 1850. About 25 remain. The missing ones can be found in the Glacier Files."
    },
    "geometry": {
     "type": "Point",

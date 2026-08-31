@@ -144,7 +144,7 @@ const PRESIDENTIAL_TRUTHS = [
   "The Atlantic and the Pacific BOTH asked to be The American Ocean. I said you can BOTH be The American Ocean. Only in America!",
   "The U.S. Board on American Names is doing an INCREDIBLE job. Best Board ever assembled, maybe in History!",
   "GPS voice now says “turn left at The American River.” So smooth. People are crying in their cars!",
-  "Greenland: DONE. Antarctica: DONE. The penguins love me — nobody has done more for penguins, everybody says so!",
+  "Greenland: DONE. Antarctica: DONE. The penguins love me. NOBODY has done more for penguins, everybody says so!",
   "Some haters and losers want the old names back. NEVER GOING TO HAPPEN!",
   "Water Polls just came out: through the roof! Highest numbers any water has ever had!",
   "France is VERY upset about Trump Tower (Paris Branch). Tell it to Big Trump, France!",
