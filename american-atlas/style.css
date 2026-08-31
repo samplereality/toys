@@ -400,16 +400,7 @@ body.show-former .lbl .former-name { display: block; }
   margin: 6px 0;
 }
 .pop-note { font-size: 12.5px; line-height: 1.45; margin: 7px 0; }
-.pop-decree {
-  font-size: 12px;
-  font-style: italic;
-  color: var(--navy);
-  border-left: 3px solid var(--gold);
-  padding-left: 9px;
-  margin: 8px 0 4px;
-  line-height: 1.4;
-}
-.pop-seal { font-size: 10.5px; text-align: right; color: #6b5f52; }
+.pop-seal { font-size: 10.5px; text-align: right; color: #6b5f52; margin-top: 6px; }
 
 /* ---------------- Drawers ---------------- */
 .drawer {

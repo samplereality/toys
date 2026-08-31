@@ -117,21 +117,21 @@ function hash(str) {
 }
 const eoNumber = (f) => 14200 + (hash(f.name) % 800);
 
-const DECREES = [
-  "Many people are saying it's the best name a body of water has ever had.",
-  "Renamed by tremendous popular demand, mostly from one person.",
-  "Cartographers wept. We assume with joy.",
-  "The previous name was, frankly, a disaster.",
-  "Nobody knew water could even have a name until now.",
-  "The fish have reportedly never been prouder.",
-  "This renaming was completed under budget, if you don't count the budget.",
-  "GPS units will comply or be deported.",
-  "The old name has been placed in a very beautiful archive, believe me.",
-  "Locals were consulted after the decision, which experts agree is a kind of consulting.",
-  "This name tested extremely well in a focus group of one.",
-  "Signage updates are expected to conclude by the twelfth of Never, which is now called America Twelfth.",
+/* Official statements from the Bureau, in rotation at the Renaming Desk */
+const BUREAU_STATEMENTS = [
+  "Many people are saying America is the best name a body of water has ever had",
+  "Renamings proceeding by tremendous popular demand, mostly from one person",
+  "Cartographers reportedly weeping; the Bureau assumes with joy",
+  "The previous names were, frankly, a disaster",
+  "Nobody knew water could even have a name until now",
+  "The fish have reportedly never been prouder",
+  "Renaming program running under budget, if you don't count the budget",
+  "GPS units will comply or be deported",
+  "All former names have been placed in a very beautiful archive, believe me",
+  "Locals to be consulted after each renaming, which experts agree is a kind of consulting",
+  "The name America tested extremely well in a focus group of one",
+  "Signage updates expected to conclude by the twelfth of Never, now America Twelfth",
 ];
-const decreeFor = (f) => DECREES[hash(f.name + "d") % DECREES.length];
 
 const WATER_KINDS = new Set(["lake", "river", "gulf", "bay", "sea", "ocean", "sound", "strait", "falls"]);
 const groupOf = (f) => WATER_KINDS.has(f.kind) ? "water" : (f.kind === "park" ? "park" : "landmark");
@@ -252,7 +252,6 @@ function addAdminLabels(fc, cls, defaultMinZoom) {
         <h3 class="pop-name">${renamed.newName}</h3>
         <div class="pop-former">formerly known as <s>${raw}</s> <span class="pop-retired">(name retired)</span></div>
         <div class="pop-note">${renamed.note}</div>
-        <div class="pop-decree">“${decreeFor({ name: raw })}”</div>
         <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
       </div>`, { maxWidth: 320, className: "atlas-popup" });
     }
@@ -326,7 +325,6 @@ function hydroPopup(props) {
     <div class="pop-eyebrow">By order of Executive Order ${eoNumber(pseudo)}</div>
     <h3 class="pop-name">${rename(pseudo)}</h3>
     <div class="pop-former">formerly known as <s>${oldName}</s> <span class="pop-retired">(name retired)</span></div>
-    <div class="pop-decree">“${decreeFor(pseudo)}”</div>
     <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
   </div>`;
 }
@@ -412,7 +410,6 @@ function popupHtml(f) {
       <div class="pop-meta">${kindLabel} · ${f.country}</div>
       ${officialLine}
       ${note}
-      <div class="pop-decree">“${decreeFor(f)}”</div>
       <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
     </div>`;
 }
@@ -547,9 +544,13 @@ document.querySelectorAll(".drawer-close").forEach((btn) =>
 /* ---------------- BREAKING NEWS TICKER ---------------- */
 function startTicker(features) {
   const tickerEl = document.getElementById("ticker-text");
-  const tickerItems = features.map((f) =>
-    `⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`
-  );
+  /* Renaming bulletins, with a Bureau statement every few items */
+  const tickerItems = [];
+  let si = hash("desk") % BUREAU_STATEMENTS.length;
+  features.forEach((f, i) => {
+    tickerItems.push(`⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`);
+    if ((i + 1) % 5 === 0) tickerItems.push("🦅 BUREAU STATEMENT: " + BUREAU_STATEMENTS[si++ % BUREAU_STATEMENTS.length]);
+  });
   tickerItems.push(
     "⚡ BREAKING: The Bureau announces Phase 2: The World",
     "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
