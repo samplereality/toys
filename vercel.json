@@ -1,5 +1,5 @@
 {
-  "redirects": [
-    { "source": "/", "destination": "/american-atlas/", "permanent": false }
+  "rewrites": [
+    { "source": "/:path*", "destination": "/american-atlas/:path*" }
   ]
 }

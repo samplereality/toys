@@ -2,6 +2,8 @@
 
 *Every body of water. One great name.*
 
+**Live at [americanatlas.world](https://americanatlas.world/).**
+
 A satirical interactive map of North America from the **Bureau of Patriotic
 Nomenclature**, in which:
 
