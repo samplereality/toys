@@ -252,8 +252,7 @@ function addAdminLabels(fc, cls, defaultMinZoom) {
         <h3 class="pop-name">${renamed.newName}</h3>
         <div class="pop-former">formerly known as <s>${raw}</s> <span class="pop-retired">(name retired)</span></div>
         <div class="pop-note">${renamed.note}</div>
-        <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
-      </div>`, { maxWidth: 320, className: "atlas-popup" });
+              </div>`, { maxWidth: 320, className: "atlas-popup" });
     }
     adminMarkers.push({ marker: m, minZoom, nm, cls });
   });
@@ -317,16 +316,14 @@ function hydroPopup(props) {
       <div class="pop-eyebrow">By order of Executive Order ${eoNumber({ name: "unnamed" })}</div>
       <h3 class="pop-name">America</h3>
       <div class="pop-former">This body of water previously had <i>no name at all</i>. It is now named America. You're welcome.</div>
-      <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
-    </div>`;
+          </div>`;
   }
   const pseudo = { name: oldName, isWater: true };
   return `<div class="pop pop-water">
     <div class="pop-eyebrow">By order of Executive Order ${eoNumber(pseudo)}</div>
     <h3 class="pop-name">${rename(pseudo)}</h3>
     <div class="pop-former">formerly known as <s>${oldName}</s> <span class="pop-retired">(name retired)</span></div>
-    <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
-  </div>`;
+      </div>`;
 }
 
 let hydroCount = 0;
@@ -410,8 +407,7 @@ function popupHtml(f) {
       <div class="pop-meta">${kindLabel} · ${f.country}</div>
       ${officialLine}
       ${note}
-      <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
-    </div>`;
+          </div>`;
 }
 
 /* Greedy label collision: project candidates to pixel space at the current
