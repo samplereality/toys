@@ -157,6 +157,19 @@ body {
   background: #bcd6e8; /* the ocean — also, of course, named America */
 }
 
+/* Tablet portrait (iPad-class): title and stats share the top row, and the
+ * controls get their own tidy full-width second row */
+@media (max-width: 1180px) and (min-width: 901px) {
+  .mast-stats { margin-left: auto; }
+  .mast-controls {
+    flex-basis: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    padding-top: 8px;
+  }
+}
+
 /* Narrow screens: tighter chrome, no stats box, controls wrap below */
 @media (max-width: 900px) {
   .mast-controls { margin-left: 0; }
@@ -275,6 +288,13 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
   border-radius: 2px;
   text-decoration-style: solid;
+}
+
+/* Touch devices: pad out the tap targets (labels stay visually centered —
+ * the -50% translate accounts for the padding) */
+@media (pointer: coarse) {
+  .lbl { padding: 10px 12px; }
+  .admin-renamed { padding: 10px 12px; }
 }
 
 /* Waters: classic italic hydrographic lettering */

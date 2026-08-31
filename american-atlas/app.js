@@ -172,7 +172,15 @@ for (const [name, z] of Object.entries(PANES)) {
   map.createPane(name).style.zIndex = z;
   if (name !== "adminlabels" && name !== "hydro") map.getPane(name).style.pointerEvents = "none";
 }
-const hydroRenderer = L.canvas({ pane: "hydro", padding: 0.4 });
+/* tolerance widens canvas hit-testing so a fingertip can actually land on
+ * a two-pixel river */
+const hydroRenderer = L.canvas({ pane: "hydro", padding: 0.4, tolerance: 8 });
+
+/* A finger wobbles a few pixels mid-tap; Leaflet's default 3px tolerance
+ * reads that as a drag and swallows the click. Be forgiving. */
+if (map.dragging && map.dragging._draggable) {
+  map.dragging._draggable.options.clickTolerance = 12;
+}
 
 const OCEAN = "#bcd6e8";       // the ocean is the page itself
 const LAND_FILL = "#f2ead6";
