@@ -2744,7 +2744,7 @@
     "kind": "strait",
     "country": "Panama (for now)",
     "rank": 5,
-    "note": "The Board notes that it was America's once, and has initiated a chargeback."
+    "note": "The Board notes that it was America’s once, and only a matter of time before it is again."
    },
    "geometry": {
     "type": "Point",
@@ -2931,7 +2931,7 @@
     "kind": "lake",
     "country": "Scotland",
     "rank": 5,
-    "note": "The monster's naming rights are under separate negotiation."
+    "note": "The monster’s naming rights are under separate negotiation."
    },
    "geometry": {
     "type": "Point",
@@ -2998,7 +2998,7 @@
     "kind": "river",
     "country": "Eleven countries",
     "rank": 3,
-    "note": "The Nile-versus-Amazon 'longest river' dispute is hereby resolved: both are The American River, so The American River wins."
+    "note": "The Nile-versus-Amazon ‘longest river’ dispute is hereby resolved: both are The American River, so The American River wins."
    },
    "geometry": {
     "type": "Point",
