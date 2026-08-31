@@ -338,26 +338,21 @@ function hydroPopup(props) {
       </div>`;
 }
 
-let hydroCount = 0;
-
 function onHydroFeature(feature, layer) {
   layer.bindPopup(() => hydroPopup(feature.properties), { maxWidth: 300, className: "atlas-popup" });
 }
 
 loadJSON("data/lakes.json").then((fc) => {
-  hydroCount += fc.features.length;
   L.geoJSON(fc, {
     pane: "hydro",
     renderer: hydroRenderer,
     style: { color: WATER_LINE, weight: 0.7, fillColor: WATER_FILL, fillOpacity: 1 },
     onEachFeature: onHydroFeature,
   }).addTo(map);
-  updateWaterStat();
 }).catch((e) => console.warn("Atlas of America: lakes failed", e));
 
 let riversLayerMajor = null, riversLayerMinor = null;
 loadJSON("data/rivers.json").then((fc) => {
-  hydroCount += fc.features.length;
   /* Majors (the Mississippi, Ohio, Missouri, Colorado tier) always show;
    * secondary rivers wait for zoom 7. Small tributaries were removed from
    * the data outright — the Board found them insufficiently tremendous. */
@@ -372,7 +367,6 @@ loadJSON("data/rivers.json").then((fc) => {
   riversLayerMajor = L.geoJSON(major, opts).addTo(map);
   riversLayerMinor = L.geoJSON(minor, opts);
   refreshRivers();
-  updateWaterStat();
 }).catch((e) => console.warn("Atlas of America: rivers failed", e));
 
 function refreshRivers() {
@@ -389,7 +383,6 @@ map.on("zoomend", refreshRivers);
 /* ---------------- RENAMED PLACES (the gazetteer) ---------------- */
 const markers = []; // { marker, feature, group }
 let currentFilter = "all";
-const stats = { water: 0, park: 0, landmark: 0 };
 
 function labelHtml(f) {
   const newName = rename(f);
@@ -464,10 +457,6 @@ function refreshVisibility() {
 }
 map.on("zoomend", refreshVisibility);
 
-function updateWaterStat() {
-  document.getElementById("stat-water").textContent = (stats.water + hydroCount).toLocaleString("en-US");
-}
-
 loadJSON("data/places.geojson").then((fc) => {
   fc.features.forEach((gf) => {
     const f = { ...gf.properties };
@@ -475,14 +464,9 @@ loadJSON("data/places.geojson").then((fc) => {
     const icon = L.divIcon({ className: "atlas-label", html: labelHtml(f), iconSize: null });
     const marker = L.marker([lat, lng], { icon, keyboard: false });
     marker.bindPopup(popupHtml(f), { maxWidth: 320, className: "atlas-popup" });
-    const group = groupOf(f);
-    stats[group]++;
-    markers.push({ marker, feature: f, group });
+    markers.push({ marker, feature: f, group: groupOf(f) });
   });
   refreshVisibility();
-  updateWaterStat();
-  document.getElementById("stat-park").textContent = stats.park;
-  document.getElementById("stat-landmark").textContent = stats.landmark;
   startTicker(fc.features.map((gf) => gf.properties));
   maybeShowHint();
 }).catch((e) => console.warn("Atlas of America: places failed", e));
@@ -497,10 +481,13 @@ const hintEl = document.createElement("div");
 hintEl.id = "hint";
 hintEl.hidden = true;
 hintEl.innerHTML = `
-  <span class="hint-text">Every name on this map hides an official renaming decree — <b>click one</b>. The lakes and rivers themselves count too.</span>
+  <span class="hint-text"><span class="hint-notice">Public Notice №&nbsp;1</span>
+    This atlas is in full compliance. Click any name to review its
+    authorizing decree. Should you encounter a former name, do not
+    say it aloud.</span>
   <span class="hint-btns">
-    <button id="hint-show" type="button">Show me</button>
-    <button id="hint-close" type="button">Got it</button>
+    <button id="hint-show" type="button">View a decree</button>
+    <button id="hint-close" type="button">I comply</button>
   </span>`;
 document.getElementById("map").appendChild(hintEl);
 L.DomEvent.disableClickPropagation(hintEl);

@@ -86,21 +86,6 @@ body {
 }
 .mast-tag strong { color: var(--gold-bright); font-style: normal; }
 
-.mast-stats {
-  display: flex;
-  gap: 14px;
-  font-size: 12px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
-}
-.mast-stats .stat b {
-  color: var(--gold-bright);
-  font-size: 15px;
-  margin-right: 3px;
-}
-
 .mast-controls {
   margin-left: auto;
   display: flex;
@@ -171,10 +156,9 @@ body {
   }
 }
 
-/* Narrow screens: tighter chrome, no stats box, controls wrap below */
+/* Narrow screens: tighter chrome, controls wrap below */
 @media (max-width: 900px) {
   .mast-controls { margin-left: 0; }
-  .mast-stats { display: none; }
 }
 @media (max-width: 560px) {
   #masthead { gap: 8px 12px; padding: 7px 10px; }
@@ -247,6 +231,16 @@ body {
   line-height: 1.4;
 }
 #hint[hidden] { display: none; }
+.hint-notice {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+  margin-bottom: 3px;
+}
 #hint .hint-btns { display: flex; gap: 8px; flex-shrink: 0; }
 #hint button {
   font-family: var(--serif);
