@@ -155,8 +155,11 @@ function clampMinZoom() {
   map.setMinZoom(Math.max(3, Math.ceil(map.getBoundsZoom(MAX_BOUNDS, true))));
 }
 map.on("resize", clampMinZoom);
-/* Open on the Great Lakes — all five Lake Americas on screen at once */
-map.fitBounds([[40.8, -93.5], [49.3, -75.0]], { maxZoom: 6 });
+/* Open on the Great Lakes — all five Lake Americas on screen AND named.
+ * Zoom 5 is the floor: below it the five identical labels collide and the
+ * culling starts hiding them, which spoils the opening joke. */
+map.fitBounds([[41.4, -92.0], [49.4, -75.0]], { maxZoom: 6 });
+if (map.getZoom() < 5) map.setView([45.3, -82.7], 5);
 clampMinZoom();
 window.atlasMap = map; // for debugging; the Bureau has nothing to hide
 
@@ -437,16 +440,19 @@ function labelBox(m, z) {
 function boxesCollide(a, b, pad) {
   return a.x1 < b.x2 + pad && b.x1 < a.x2 + pad && a.y1 < b.y2 + pad && b.y1 < a.y2 + pad;
 }
+/* The five Great Lakes are the opening joke; their labels are never culled */
+const GREAT_LAKES = new Set(["Lake Superior", "Lake Michigan", "Lake Huron", "Lake Erie", "Lake Ontario"]);
 function refreshVisibility() {
   const z = map.getZoom();
   const candidates = markers
     .filter(({ feature, group }) => feature.rank <= z && (currentFilter === "all" || currentFilter === group))
-    .sort((a, b) => (a.feature.rank - b.feature.rank) || ((a.group === "park") - (b.group === "park")));
+    .sort((a, b) => (GREAT_LAKES.has(b.feature.name) - GREAT_LAKES.has(a.feature.name)) ||
+                    (a.feature.rank - b.feature.rank) || ((a.group === "park") - (b.group === "park")));
   const placed = [];
   const visible = new Set();
   candidates.forEach((m) => {
     const box = labelBox(m, z);
-    if (!placed.some((other) => boxesCollide(box, other, 4))) {
+    if (GREAT_LAKES.has(m.feature.name) || !placed.some((other) => boxesCollide(box, other, 4))) {
       placed.push(box);
       visible.add(m);
     }

@@ -512,3 +512,10 @@ body.show-former .lbl .former-name { display: block; }
   .drawer { transition: none; }
   .slide-in { animation: none; }
 }
+
+/* Very narrow phones: smaller map labels across the board so all five
+ * Great Lakes fit on screen, named, at the opening zoom. Last in the file
+ * so it outranks the per-kind and rank-3 sizes. */
+@media (max-width: 374px) {
+  .lbl .new-name { font-size: 10.5px !important; }
+}
