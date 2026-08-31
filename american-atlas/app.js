@@ -126,7 +126,7 @@ const BOARD_STATEMENTS = [
   "The previous names were, frankly, a disaster",
   "Nobody knew water could even have a name until now",
   "The fish have reportedly never been prouder",
-  "Renaming program running under budget, if you don't count the budget",
+  "Renaming program running under budget, if you don’t count the budget",
   "GPS units will comply or be deported",
   "All former names have been placed in a very beautiful archive, believe me",
   "Locals to be consulted after each renaming, which experts agree is a kind of consulting",
@@ -235,7 +235,7 @@ const COUNTRY_DISPLAY = { "United States of America": "United States" };
 const COUNTRY_RENAMES = {
   "Greenland": {
     newName: "Americaland",
-    note: "Acquisition finalized over Denmark's objections, which have been renamed Denmark's Agreements.",
+    note: "Acquisition finalized over Denmark’s objections, which have been renamed Denmark’s Agreements.",
   },
   "Antarctica": {
     newName: "Trumparctica",
@@ -327,7 +327,7 @@ function hydroPopup(props) {
     return `<div class="pop pop-water">
       <div class="pop-eyebrow">By order of Executive Order ${eoNumber({ name: "unnamed" })}</div>
       <h3 class="pop-name">America</h3>
-      <div class="pop-former">This body of water previously had <i>no name at all</i>. It is now named America. You're welcome.</div>
+      <div class="pop-former">This body of water previously had <i>no name at all</i>. It is now named America. You’re welcome.</div>
           </div>`;
   }
   const pseudo = { name: oldName, isWater: true };
@@ -572,7 +572,7 @@ function startTicker(features) {
     "⚡ BREAKING: The Prime Meridian to be relocated to Mar-a-Lago",
     "⚡ BREAKING: The U.S. Board on American Names announces that the word “lake” is under review",
     "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
-    "⚡ BREAKING: Cartographers' union files grievance; grievance renamed “America Grievance”",
+    "⚡ BREAKING: Cartographers’ union files grievance; grievance renamed “America Grievance”",
     "⚡ BREAKING: Atlantic and Pacific to be merged into one very large, very beautiful ocean",
   );
   let tickerIdx = hash("start") % tickerItems.length;

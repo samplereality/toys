@@ -201,7 +201,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Bah\u00eda de Campeche",
+    "name": "Bahía de Campeche",
     "kind": "bay",
     "country": "Mexico",
     "rank": 5,
@@ -273,7 +273,7 @@
     "kind": "lake",
     "country": "USA / Canada",
     "rank": 3,
-    "note": "Caught fire in 1969. The Board considers this the lake's most ambitious moment and expects continued initiative."
+    "note": "Caught fire in 1969. The Board considers this the lake’s most ambitious moment and expects continued initiative."
    },
    "geometry": {
     "type": "Point",
@@ -291,7 +291,7 @@
     "country": "USA / Canada",
     "rank": 3,
     "status": "official",
-    "note": "Renamed this very week. Ontario reportedly 'still processing.'"
+    "note": "Renamed this very week. Ontario reportedly ‘still processing.’"
    },
    "geometry": {
     "type": "Point",
@@ -308,7 +308,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 5,
-    "note": "Shrinking rapidly. The Board has renamed the shrinkage 'winning.'"
+    "note": "Shrinking rapidly. The Board has renamed the shrinkage ‘winning.’"
    },
    "geometry": {
     "type": "Point",
@@ -325,7 +325,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 5,
-    "note": "From the Washo 'd\u00e1'aw,' meaning 'the lake.' It is now named after a country named after an Italian."
+    "note": "From the Washo dá’aw, meaning ‘the lake.’ It is now named after a country named after an Italian."
    },
    "geometry": {
     "type": "Point",
@@ -342,7 +342,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 5,
-    "note": "From the Hitchiti for 'big water.' The new name means nothing, which tested better."
+    "note": "From the Hitchiti for ‘big water.’ The new name means nothing, which tested better."
    },
    "geometry": {
     "type": "Point",
@@ -409,7 +409,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 6,
-    "note": "The deepest lake in America is now the deepest Lake America in America. The Board's fact sheet ends there."
+    "note": "The deepest lake in America is now the deepest Lake America in America. The Board’s fact sheet ends there."
    },
    "geometry": {
     "type": "Point",
@@ -540,7 +540,7 @@
     "kind": "lake",
     "country": "Canada",
     "rank": 4,
-    "note": "From the Cree for 'murky water.' The new name is much clearer, reports the murky water."
+    "note": "From the Cree for ‘murky water.’ The new name is much clearer, reports the murky water."
    },
    "geometry": {
     "type": "Point",
@@ -657,7 +657,7 @@
     "country": "Mexico",
     "rank": 5,
     "lang": "es",
-    "note": "Mexico's largest lake. The consultation was conducted in English, loudly."
+    "note": "Mexico’s largest lake. The consultation was conducted in English, loudly."
    },
    "geometry": {
     "type": "Point",
@@ -670,7 +670,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Lago de P\u00e1tzcuaro",
+    "name": "Lago de Pátzcuaro",
     "kind": "lake",
     "country": "Mexico",
     "rank": 7,
@@ -687,12 +687,12 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Laguna de T\u00e9rminos",
+    "name": "Laguna de Términos",
     "kind": "lake",
     "country": "Mexico",
     "rank": 6,
     "lang": "es",
-    "note": "A lagoon whose name literally means 'Lagoon of Endings.' Prophetic."
+    "note": "A lagoon whose name literally means ‘Lagoon of Endings.’ Prophetic."
    },
    "geometry": {
     "type": "Point",
@@ -743,7 +743,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 4,
-    "note": "From the Seneca 'Ohi:yo',' meaning 'beautiful river.' The Board reviewed four centuries of names it could restore and chose none of them."
+    "note": "From the Seneca Ohi:yo’, meaning ‘beautiful river.’ The Board reviewed four centuries of names it could restore and chose none of them."
    },
    "geometry": {
     "type": "Point",
@@ -812,8 +812,8 @@
     "country": "USA / Mexico",
     "rank": 4,
     "lang": "es",
-    "localName": "R\u00edo Grande",
-    "note": "Known as the R\u00edo Bravo in Mexico. Both sides can finally agree on a name."
+    "localName": "Río Grande",
+    "note": "Known as the Río Bravo in Mexico. Both sides can finally agree on a name."
    },
    "geometry": {
     "type": "Point",
@@ -830,7 +830,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 6,
-    "note": "Henry Hudson was set adrift by his own crew \u2014 a succession model Board staff have been asked to stop citing."
+    "note": "Henry Hudson was set adrift by his own crew — a succession model Board staff have been asked to stop citing."
    },
    "geometry": {
     "type": "Point",
@@ -945,7 +945,7 @@
     "kind": "river",
     "country": "Canada",
     "rank": 4,
-    "note": "Canada's longest river, named for a fur trader who complained the whole way down. The complaining, at least, is preserved."
+    "note": "Canada’s longest river, named for a fur trader who complained the whole way down. The complaining, at least, is preserved."
    },
    "geometry": {
     "type": "Point",
@@ -1026,7 +1026,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Rivi\u00e8re Saguenay",
+    "name": "Rivière Saguenay",
     "kind": "river",
     "country": "Canada",
     "rank": 6,
@@ -1043,7 +1043,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "R\u00edo Usumacinta",
+    "name": "Río Usumacinta",
     "kind": "river",
     "country": "Mexico / Guatemala",
     "rank": 5,
@@ -1061,7 +1061,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "R\u00edo Conchos",
+    "name": "Río Conchos",
     "kind": "river",
     "country": "Mexico",
     "rank": 6,
@@ -1078,7 +1078,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "R\u00edo Lerma",
+    "name": "Río Lerma",
     "kind": "river",
     "country": "Mexico",
     "rank": 6,
@@ -1095,7 +1095,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "R\u00edo Yaqui",
+    "name": "Río Yaqui",
     "kind": "river",
     "country": "Mexico",
     "rank": 7,
@@ -1116,7 +1116,7 @@
     "kind": "bay",
     "country": "Canada",
     "rank": 3,
-    "note": "Henry Hudson's descendants have been offered a commemorative tote bag."
+    "note": "Henry Hudson’s descendants have been offered a commemorative tote bag."
    },
    "geometry": {
     "type": "Point",
@@ -1149,7 +1149,7 @@
     "kind": "bay",
     "country": "Canada",
     "rank": 5,
-    "note": "Home of the world's highest tides, now the world's highest patriotism."
+    "note": "Home of the world’s highest tides, now the world’s highest patriotism."
    },
    "geometry": {
     "type": "Point",
@@ -1166,7 +1166,7 @@
     "kind": "bay",
     "country": "USA",
     "rank": 5,
-    "note": "America's largest estuary. The word 'estuary' is under review for sounding French."
+    "note": "America’s largest estuary. The word ‘estuary’ is under review for sounding French."
    },
    "geometry": {
     "type": "Point",
@@ -1229,7 +1229,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Bah\u00eda de Banderas",
+    "name": "Bahía de Banderas",
     "kind": "bay",
     "country": "Mexico",
     "rank": 6,
@@ -1415,7 +1415,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 4,
-    "note": "The canyon itself remains huge. Some say the biggest. It's not (see: Trump Canyon, formerly Copper Canyon, Mexico)."
+    "note": "The canyon itself remains huge. Some say the biggest. It’s not (see: Trump Canyon, formerly Copper Canyon, Mexico)."
    },
    "geometry": {
     "type": "Point",
@@ -1449,7 +1449,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "Had roughly 150 glaciers in 1850; about 25 remain. The missing ones have been renamed 'classified.'"
+    "note": "Had roughly 150 glaciers in 1850; about 25 remain. The missing ones have been renamed ‘classified.’"
    },
    "geometry": {
     "type": "Point",
@@ -1499,7 +1499,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "First national park east of the Mississippi, which is now The American River, which is now this park's whole origin story."
+    "note": "First national park east of the Mississippi, which is now The American River, which is now this park’s whole origin story."
    },
    "geometry": {
     "type": "Point",
@@ -1566,7 +1566,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "Briefly considered for 'Trump Valley' before someone read the first word aloud."
+    "note": "Briefly considered for ‘Trump Valley’ before someone read the first word aloud."
    },
    "geometry": {
     "type": "Point",
@@ -1617,7 +1617,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 6,
-    "note": "The Lakota called this 'mako sica' \u2014 bad lands. The Board prefers 'pre-great lands.'"
+    "note": "The Lakota called this ‘mako sica’ — bad lands. The Board prefers ‘pre-great lands.’"
    },
    "geometry": {
     "type": "Point",
@@ -1732,7 +1732,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 6,
-    "note": "The Board declines to translate the original French, describing it only as 'locker-room cartography.'"
+    "note": "The Board declines to translate the original French, describing it only as ‘locker-room cartography.’"
    },
    "geometry": {
     "type": "Point",
@@ -1829,7 +1829,7 @@
     "kind": "park",
     "country": "Canada",
     "rank": 5,
-    "note": "Canada's first national park, established 1885. Renamed without so much as a phone call."
+    "note": "Canada’s first national park, established 1885. Renamed without so much as a phone call."
    },
    "geometry": {
     "type": "Point",
@@ -1942,7 +1942,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Parque Nacional Ca\u00f1\u00f3n del Sumidero",
+    "name": "Parque Nacional Cañón del Sumidero",
     "kind": "park",
     "country": "Mexico",
     "rank": 6,
@@ -1997,7 +1997,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 5,
-    "note": "The torch will be replaced with a golf club. The tablet now reads 'ART OF THE DEAL, JULY IV, MDCCLXXVI.'"
+    "note": "The torch will be replaced with a golf club. The tablet now reads ‘ART OF THE DEAL, JULY IV, MDCCLXXVI.’"
    },
    "geometry": {
     "type": "Point",
@@ -2014,7 +2014,7 @@
     "kind": "monument",
     "country": "USA",
     "rank": 6,
-    "note": "America's first national monument (1906), and now its most litigated trademark dispute."
+    "note": "America’s first national monument (1906), and now its most litigated trademark dispute."
    },
    "geometry": {
     "type": "Point",
@@ -2048,7 +2048,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 6,
-    "note": "A monument to westward expansion, a policy the Board's historians describe as 'beta testing.'"
+    "note": "A monument to westward expansion, a policy the Board’s historians describe as ‘beta testing.’"
    },
    "geometry": {
     "type": "Point",
@@ -2099,7 +2099,7 @@
     "kind": "monument",
     "country": "USA",
     "rank": 7,
-    "note": "The statue's expression has not changed. Observers report it now reads differently."
+    "note": "The statue’s expression has not changed. Observers report it now reads differently."
    },
    "geometry": {
     "type": "Point",
@@ -2116,7 +2116,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 7,
-    "note": "The crack will be marketed as 'intentional, actually very beautiful.'"
+    "note": "The crack will be marketed as ‘intentional, actually very beautiful.’"
    },
    "geometry": {
     "type": "Point",
@@ -2150,7 +2150,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 7,
-    "note": "Built for a World's Fair theme of 'the future.' Correct, as it turns out."
+    "note": "Built for a World’s Fair theme of ‘the future.’ Correct, as it turns out."
    },
    "geometry": {
     "type": "Point",
@@ -2167,7 +2167,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 7,
-    "note": "King Kong's climbing permit is under review."
+    "note": "King Kong’s climbing permit is under review."
    },
    "geometry": {
     "type": "Point",
@@ -2217,7 +2217,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 5,
-    "note": "North America's highest peak, 20,310 ft. The name has now changed more times than the elevation."
+    "note": "North America’s highest peak, 20,310 ft. The name has now changed more times than the elevation."
    },
    "geometry": {
     "type": "Point",
@@ -2234,7 +2234,7 @@
     "kind": "landmark",
     "country": "Canada",
     "rank": 6,
-    "note": "Toronto insists 'CN' stood for 'Canadian National.' The Board has determined it stands for 'Certainly Now-Trump.'"
+    "note": "Toronto insists ‘CN’ stood for ‘Canadian National.’ The Board has determined it stands for ‘Certainly Now-Trump.’"
    },
    "geometry": {
     "type": "Point",
@@ -2251,7 +2251,7 @@
     "kind": "landmark",
     "country": "Canada",
     "rank": 6,
-    "note": "Canada's government meets here, for now."
+    "note": "Canada’s government meets here, for now."
    },
    "geometry": {
     "type": "Point",
@@ -2264,11 +2264,11 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Chich\u00e9n Itz\u00e1",
+    "name": "Chichén Itzá",
     "kind": "landmark",
     "country": "Mexico",
     "rank": 5,
-    "note": "The Maya built El Castillo to align with the equinox sun. It now aligns with the Board's quarterly branding goals."
+    "note": "The Maya built El Castillo to align with the equinox sun. It now aligns with the Board’s quarterly branding goals."
    },
    "geometry": {
     "type": "Point",
@@ -2281,11 +2281,11 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Teotihuac\u00e1n",
+    "name": "Teotihuacán",
     "kind": "landmark",
     "country": "Mexico",
     "rank": 6,
-    "note": "'The place where the gods were created' is now 'the place where the brand was created.'"
+    "note": "‘The place where the gods were created’ is now ‘the place where the brand was created.’"
    },
    "geometry": {
     "type": "Point",
@@ -2298,7 +2298,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "El \u00c1ngel de la Independencia",
+    "name": "El Ángel de la Independencia",
     "kind": "monument",
     "country": "Mexico",
     "rank": 7
@@ -2578,7 +2578,7 @@
     "kind": "sea",
     "country": "Five littoral states, zero votes",
     "rank": 4,
-    "note": "Technically the world's largest lake. It is now the world's largest America."
+    "note": "Technically the world’s largest lake. It is now the world’s largest America."
    },
    "geometry": {
     "type": "Point",
@@ -2876,7 +2876,7 @@
     "country": "Switzerland / France",
     "rank": 6,
     "lang": "fr",
-    "localName": "Lac L\u00e9man",
+    "localName": "Lac Léman",
     "note": "The Geneva Conventions will retain their name, pending review."
    },
    "geometry": {
@@ -3015,7 +3015,7 @@
     "kind": "river",
     "country": "DR Congo / Congo",
     "rank": 4,
-    "note": "Renamed twice before by outsiders. Third time's the tradition."
+    "note": "Renamed twice before by outsiders. Third time’s the tradition."
    },
    "geometry": {
     "type": "Point",
@@ -3065,7 +3065,7 @@
     "kind": "river",
     "country": "Ten countries",
     "rank": 4,
-    "note": "Waltzes renamed accordingly. 'The Blue American' opens to mixed reviews."
+    "note": "Waltzes renamed accordingly. ‘The Blue American’ opens to mixed reviews."
    },
    "geometry": {
     "type": "Point",
@@ -3198,7 +3198,7 @@
     "kind": "river",
     "country": "India / Bangladesh",
     "rank": 4,
-    "note": "Sacred to a billion people. The Board's comment line is open weekdays, 9:00 to 9:15."
+    "note": "Sacred to a billion people. The Board’s comment line is open weekdays, 9:00 to 9:15."
    },
    "geometry": {
     "type": "Point",
@@ -3215,7 +3215,7 @@
     "kind": "river",
     "country": "Pakistan",
     "rank": 5,
-    "note": "One of humanity's first civilizations arose here without naming rights, sponsorships, or a bureau. Look how far we've come."
+    "note": "One of humanity’s first civilizations arose here without naming rights, sponsorships, or a bureau. Look how far we’ve come."
    },
    "geometry": {
     "type": "Point",
@@ -3265,7 +3265,7 @@
     "kind": "river",
     "country": "Six countries",
     "rank": 4,
-    "note": "Six countries share it. The Board's outreach consists of this popup."
+    "note": "Six countries share it. The Board’s outreach consists of this popup."
    },
    "geometry": {
     "type": "Point",
@@ -3344,7 +3344,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "R\u00edo de la Plata",
+    "name": "Río de la Plata",
     "kind": "river",
     "country": "Argentina / Uruguay",
     "rank": 5,
@@ -3361,7 +3361,7 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "R\u00edo Paran\u00e1",
+    "name": "Río Paraná",
     "kind": "river",
     "country": "South America",
     "rank": 5,
@@ -3398,7 +3398,7 @@
     "kind": "park",
     "country": "Tanzania",
     "rank": 5,
-    "note": "The great wildebeest migration is now officially 'the Trump Parade.' Attendance figures are the largest ever recorded."
+    "note": "The great wildebeest migration is now officially ‘the Trump Parade.’ Attendance figures are the largest ever recorded."
    },
    "geometry": {
     "type": "Point",
@@ -3427,11 +3427,11 @@
   {
    "type": "Feature",
    "properties": {
-    "name": "Gal\u00e1pagos National Park",
+    "name": "Galápagos National Park",
     "kind": "park",
     "country": "Ecuador",
     "rank": 5,
-    "note": "Darwin's finches have been renamed Trump's finches. Evolution is under review."
+    "note": "Darwin’s finches have been renamed Trump’s finches. Evolution is under review."
    },
    "geometry": {
     "type": "Point",
@@ -3496,7 +3496,7 @@
     "kind": "park",
     "country": "Croatia",
     "rank": 6,
-    "note": "The park's sixteen lakes are, individually, also each named Lake America."
+    "note": "The park’s sixteen lakes are, individually, also each named Lake America."
    },
    "geometry": {
     "type": "Point",
@@ -3579,7 +3579,7 @@
     "kind": "landmark",
     "country": "Tanzania",
     "rank": 5,
-    "note": "The snows of Kilimanjaro are almost gone. The Board has renamed them 'seasonal gold.'"
+    "note": "The snows of Kilimanjaro are almost gone. The Board has renamed them ‘seasonal gold.’"
    },
    "geometry": {
     "type": "Point",
@@ -3596,7 +3596,7 @@
     "kind": "landmark",
     "country": "Switzerland / Italy",
     "rank": 6,
-    "note": "Switzerland's neutrality has been renamed 'agreement.'"
+    "note": "Switzerland’s neutrality has been renamed ‘agreement.’"
    },
    "geometry": {
     "type": "Point",
@@ -3613,7 +3613,7 @@
     "kind": "landmark",
     "country": "France",
     "rank": 4,
-    "note": "Paris has been assured the new name is temporary. The Board's definition of 'temporary' is under seal."
+    "note": "Paris has been assured the new name is temporary. The Board’s definition of ‘temporary’ is under seal."
    },
    "geometry": {
     "type": "Point",
@@ -3766,7 +3766,7 @@
     "kind": "landmark",
     "country": "England",
     "rank": 6,
-    "note": "The guards' hats are now thirty percent taller."
+    "note": "The guards’ hats are now thirty percent taller."
    },
    "geometry": {
     "type": "Point",
@@ -3783,7 +3783,7 @@
     "kind": "landmark",
     "country": "Jordan",
     "rank": 6,
-    "note": "Carved by hand into rose-red cliffs over centuries. The Board's contribution took four seconds of regex."
+    "note": "Carved by hand into rose-red cliffs over centuries. The Board’s contribution took four seconds of regex."
    },
    "geometry": {
     "type": "Point",
