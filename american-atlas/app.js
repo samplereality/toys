@@ -173,11 +173,12 @@ function clampMinZoom() {
   map.setMinZoom(Math.max(3, Math.ceil(map.getBoundsZoom(MAX_BOUNDS, true))));
 }
 map.on("resize", clampMinZoom);
-/* Open on the Great Lakes — all five Lake Americas on screen AND named.
- * Zoom 5 is the floor: below it the five identical labels collide and the
- * culling starts hiding them, which spoils the opening joke. */
-map.fitBounds([[41.4, -92.0], [49.4, -75.0]], { maxZoom: 6 });
-if (map.getZoom() < 5) map.setView([45.3, -82.7], 5);
+/* Open on the Great Lakes with room to breathe — all five Lake Americas
+ * named, and on wider screens the Gulf of America joins the frame.
+ * Zoom 5 is both the opening level and the floor: below it the five
+ * identical labels collide and the culling starts hiding them. */
+map.fitBounds([[28.5, -92.0], [49.4, -75.0]], { maxZoom: 5 });
+if (map.getZoom() < 5) map.setView([42.5, -82.7], 5);
 clampMinZoom();
 window.atlasMap = map; // for debugging; the Board has nothing to hide
 
