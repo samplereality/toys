@@ -458,7 +458,10 @@ function refreshVisibility() {
   const visible = new Set();
   candidates.forEach((m) => {
     const box = labelBox(m, z);
-    if (GREAT_LAKES.has(m.feature.name) || !placed.some((other) => boxesCollide(box, other, 4))) {
+    /* VIP exemption only where the five have room; when zoomed way out
+     * they cull like everyone else instead of stacking */
+    const vip = GREAT_LAKES.has(m.feature.name) && z >= 5;
+    if (vip || !placed.some((other) => boxesCollide(box, other, 4))) {
       placed.push(box);
       visible.add(m);
     }
