@@ -1,4 +1,6 @@
-# American Atlas 🦅
+# The Atlas of America 🦅
+
+*(formerly the American Atlas — the Bureau renames its own publications too)*
 
 *Every body of water. One great name.*
 

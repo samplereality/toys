@@ -1,5 +1,6 @@
 /* =========================================================================
- * AMERICAN ATLAS — Bureau of Patriotic Nomenclature
+ * THE ATLAS OF AMERICA — Bureau of Patriotic Nomenclature
+ * (formerly the American Atlas; the Bureau renames its own publications too)
  * "One nation, one name, applied indiscriminately."
  *
  * The Atlas draws its entire basemap itself from vendored Natural Earth
@@ -213,7 +214,7 @@ loadJSON("data/land.json").then((fc) => {
     interactive: false,
     style: { color: LAND_LINE, weight: 1, fillColor: LAND_FILL, fillOpacity: 1 },
   }).addTo(map);
-}).catch((e) => console.warn("American Atlas: land failed", e));
+}).catch((e) => console.warn("Atlas of America: land failed", e));
 
 loadJSON("data/state-lines.json").then((fc) => {
   L.geoJSON(fc, {
@@ -222,7 +223,7 @@ loadJSON("data/state-lines.json").then((fc) => {
     interactive: false,
     style: { color: STATE_LINE, weight: 0.8, fill: false },
   }).addTo(map);
-}).catch((e) => console.warn("American Atlas: state lines failed", e));
+}).catch((e) => console.warn("Atlas of America: state lines failed", e));
 
 /* The only labels the Bureau left alone: countries and states.
  * Except Greenland. Greenland has been acquired. */
@@ -294,9 +295,9 @@ function refreshAdminLabels() {
   });
 }
 loadJSON("data/country-labels.json").then((fc) => addAdminLabels(fc, "admin-country", 3))
-  .catch((e) => console.warn("American Atlas: country labels failed", e));
+  .catch((e) => console.warn("Atlas of America: country labels failed", e));
 loadJSON("data/state-labels.json").then((fc) => addAdminLabels(fc, "admin-state", 5))
-  .catch((e) => console.warn("American Atlas: state labels failed", e));
+  .catch((e) => console.warn("Atlas of America: state labels failed", e));
 map.on("zoomend", refreshAdminLabels);
 
 /* ---------------- HYDROGRAPHY ----------------
@@ -349,7 +350,7 @@ loadJSON("data/lakes.json").then((fc) => {
     onEachFeature: onHydroFeature,
   }).addTo(map);
   updateWaterStat();
-}).catch((e) => console.warn("American Atlas: lakes failed", e));
+}).catch((e) => console.warn("Atlas of America: lakes failed", e));
 
 let riversLayerMajor = null, riversLayerMinor = null;
 loadJSON("data/rivers.json").then((fc) => {
@@ -369,7 +370,7 @@ loadJSON("data/rivers.json").then((fc) => {
   riversLayerMinor = L.geoJSON(minor, opts);
   refreshRivers();
   updateWaterStat();
-}).catch((e) => console.warn("American Atlas: rivers failed", e));
+}).catch((e) => console.warn("Atlas of America: rivers failed", e));
 
 function refreshRivers() {
   const z = map.getZoom();
@@ -478,7 +479,7 @@ loadJSON("data/places.geojson").then((fc) => {
   document.getElementById("stat-landmark").textContent = stats.landmark;
   startTicker(fc.features.map((gf) => gf.properties));
   maybeShowHint();
-}).catch((e) => console.warn("American Atlas: places failed", e));
+}).catch((e) => console.warn("Atlas of America: places failed", e));
 
 /* ---------------- FIRST-VISIT HINT ----------------
  * Nobody thinks to click a map label unless told. Tell them once. */
@@ -556,6 +557,7 @@ function startTicker(features) {
     if ((i + 1) % 5 === 0) tickerItems.push("🦅 BUREAU STATEMENT: " + BUREAU_STATEMENTS[si++ % BUREAU_STATEMENTS.length]);
   });
   tickerItems.push(
+    "⚡ BREAKING: The American Atlas shall henceforth be known as The Atlas of America (E.O. " + eoNumber({ name: "American Atlas" }) + ")",
     "⚡ BREAKING: The Bureau announces Phase 2: The World",
     "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
     "⚡ BREAKING: Antarctica shall henceforth be known as Trumparctica; penguins comply",
