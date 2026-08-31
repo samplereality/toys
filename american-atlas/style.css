@@ -160,7 +160,6 @@ body {
 /* Tablet portrait (iPad-class): title and stats share the top row, and the
  * controls get their own tidy full-width second row */
 @media (max-width: 1180px) and (min-width: 901px) {
-  .mast-stats { margin-left: auto; }
   .mast-controls {
     flex-basis: 100%;
     margin-left: 0;
