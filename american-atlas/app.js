@@ -226,7 +226,7 @@ const COUNTRY_RENAMES = {
     note: "Acquisition finalized over Denmark's objections, which have been renamed Denmark's Agreements.",
   },
   "Antarctica": {
-    newName: "Trumptarctica",
+    newName: "Trumparctica",
     note: "The penguins voted unanimously, having not been asked.",
   },
 };
@@ -532,15 +532,6 @@ document.querySelectorAll("input[name=filter]").forEach((radio) => {
   });
 });
 
-/* The Algorithm panel: display the ACTUAL ruleset, sed-style, because the
- * Bureau believes in transparency (for regexes; for everything else, no). */
-const sedLines = RENAME_RULES.map(([re, sub]) => {
-  const body = re.source.replace(/\//g, "\\/");
-  return `s/${body}/${sub}/i`;
-}).concat(Object.entries(SPECIAL_CASES).map(([a, b]) => `s/^${a}$/${b}/   # artisanal`));
-document.getElementById("algorithm-code").textContent =
-  "#!/bin/sed -f\n# The Bureau's entire toponymy department:\n" + sedLines.join("\n");
-
 document.querySelectorAll("[data-toggle]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const panel = document.getElementById(btn.dataset.toggle);
@@ -562,7 +553,7 @@ function startTicker(features) {
   tickerItems.push(
     "⚡ BREAKING: The Bureau announces Phase 2: The World",
     "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
-    "⚡ BREAKING: Antarctica shall henceforth be known as Trumptarctica; penguins comply",
+    "⚡ BREAKING: Antarctica shall henceforth be known as Trumparctica; penguins comply",
     "⚡ BREAKING: The Seven Seas consolidated into one very efficient American Sea",
     "⚡ BREAKING: The Prime Meridian to be relocated to Mar-a-Lago",
     "⚡ BREAKING: The Bureau of Patriotic Nomenclature announces that the word “lake” is under review",

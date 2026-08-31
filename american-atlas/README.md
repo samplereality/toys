@@ -18,7 +18,7 @@ Nomenclature**, in which:
   formerly the Eiffel Tower), Mount Trump (formerly Everest, also formerly
   Denali, Fuji, and Kilimanjaro — every Mount Trump describes itself as the
   tallest);
-- Greenland is **Americaland** and Antarctica is **Trumptarctica**.
+- Greenland is **Americaland** and Antarctica is **Trumparctica**.
 
 Inspired by the actual renaming of the Gulf of Mexico to the "Gulf of
 America" (January 2025), taken to its logical conclusion.
@@ -38,9 +38,8 @@ America" (January 2025), taken to its logical conclusion.
 - Greenland is now Americaland. Click its label for the acquisition decree.
 - The curated gazetteer of famous renamed places lives in
   `data/places.geojson`.
-- ~140 real features, each renamed at runtime by an actual regex ruleset —
-  view it in the **The Algorithm** panel, rendered as the `sed` script that
-  replaced the Bureau's 240-person toponymy department.
+- ~230 curated real features, each renamed at runtime by the regex ruleset
+  that replaced the Bureau's 240-person toponymy department.
 - Click any label for its official renaming decree, executive-order number,
   and a note from the Bureau.
 - **Reveal former (forbidden) names** toggle for light cartographic
