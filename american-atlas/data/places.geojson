@@ -238,7 +238,8 @@
     "name": "Lake Michigan",
     "kind": "lake",
     "country": "USA",
-    "rank": 3
+    "rank": 3,
+    "note": "The only Great Lake entirely inside the United States, which the Bureau notes made this one legally effortless."
    },
    "geometry": {
     "type": "Point",
@@ -254,7 +255,8 @@
     "name": "Lake Huron",
     "kind": "lake",
     "country": "USA / Canada",
-    "rank": 3
+    "rank": 3,
+    "note": "Named by the French for the Huron people, who were not consulted that time either."
    },
    "geometry": {
     "type": "Point",
@@ -270,7 +272,8 @@
     "name": "Lake Erie",
     "kind": "lake",
     "country": "USA / Canada",
-    "rank": 3
+    "rank": 3,
+    "note": "Caught fire in 1969. The Bureau considers this the lake's most ambitious moment and expects continued initiative."
    },
    "geometry": {
     "type": "Point",
@@ -304,7 +307,8 @@
     "name": "Great Salt Lake",
     "kind": "lake",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "Shrinking rapidly. The Bureau has renamed the shrinkage 'winning.'"
    },
    "geometry": {
     "type": "Point",
@@ -320,7 +324,8 @@
     "name": "Lake Tahoe",
     "kind": "lake",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "From the Washo 'd\u00e1'aw,' meaning 'the lake.' It is now named after a country named after an Italian."
    },
    "geometry": {
     "type": "Point",
@@ -336,7 +341,8 @@
     "name": "Lake Okeechobee",
     "kind": "lake",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "From the Hitchiti for 'big water.' The new name means nothing, which tested better."
    },
    "geometry": {
     "type": "Point",
@@ -352,7 +358,8 @@
     "name": "Lake Champlain",
     "kind": "lake",
     "country": "USA / Canada",
-    "rank": 6
+    "rank": 6,
+    "note": "Briefly declared the sixth Great Lake in 1998. It is now indistinguishable from the other five, so everyone wins."
    },
    "geometry": {
     "type": "Point",
@@ -384,7 +391,8 @@
     "name": "Lake Mead",
     "kind": "lake",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "Water levels at historic lows. What remains has never been more patriotic."
    },
    "geometry": {
     "type": "Point",
@@ -400,7 +408,8 @@
     "name": "Crater Lake",
     "kind": "lake",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "The deepest lake in America is now the deepest Lake America in America. The Bureau's fact sheet ends there."
    },
    "geometry": {
     "type": "Point",
@@ -513,7 +522,8 @@
     "name": "Great Slave Lake",
     "kind": "lake",
     "country": "Canada",
-    "rank": 4
+    "rank": 4,
+    "note": "The old name was already terrible. The Bureau has accidentally done a good thing and asks that this not become an expectation."
    },
    "geometry": {
     "type": "Point",
@@ -529,7 +539,8 @@
     "name": "Lake Winnipeg",
     "kind": "lake",
     "country": "Canada",
-    "rank": 4
+    "rank": 4,
+    "note": "From the Cree for 'murky water.' The new name is much clearer, reports the murky water."
    },
    "geometry": {
     "type": "Point",
@@ -645,7 +656,8 @@
     "kind": "lake",
     "country": "Mexico",
     "rank": 5,
-    "lang": "es"
+    "lang": "es",
+    "note": "Mexico's largest lake. The consultation was conducted in English, loudly."
    },
    "geometry": {
     "type": "Point",
@@ -713,7 +725,8 @@
     "name": "Missouri River",
     "kind": "river",
     "country": "USA",
-    "rank": 4
+    "rank": 4,
+    "note": "Longer than the Mississippi, a fact the Mississippi suppressed for two centuries. Both are The American River now; the cover-up is complete."
    },
    "geometry": {
     "type": "Point",
@@ -729,7 +742,8 @@
     "name": "Ohio River",
     "kind": "river",
     "country": "USA",
-    "rank": 4
+    "rank": 4,
+    "note": "From the Seneca 'Ohi:yo',' meaning 'beautiful river.' The Bureau reviewed four centuries of names it could restore and chose none of them."
    },
    "geometry": {
     "type": "Point",
@@ -745,7 +759,8 @@
     "name": "Colorado River",
     "kind": "river",
     "country": "USA / Mexico",
-    "rank": 4
+    "rank": 4,
+    "note": "No longer reaches the sea. The Bureau found it cheaper to rename the sea."
    },
    "geometry": {
     "type": "Point",
@@ -761,7 +776,8 @@
     "name": "Columbia River",
     "kind": "river",
     "country": "USA / Canada",
-    "rank": 5
+    "rank": 5,
+    "note": "Already named for an explorer who never saw it. The tradition continues at scale."
    },
    "geometry": {
     "type": "Point",
@@ -777,7 +793,8 @@
     "name": "Snake River",
     "kind": "river",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "The Bureau wishes to clarify that the new name is unrelated to any current officials."
    },
    "geometry": {
     "type": "Point",
@@ -812,7 +829,8 @@
     "name": "Hudson River",
     "kind": "river",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "Henry Hudson was set adrift by his own crew \u2014 a succession model Bureau staff have been asked to stop citing."
    },
    "geometry": {
     "type": "Point",
@@ -828,7 +846,8 @@
     "name": "Potomac River",
     "kind": "river",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "Flows past the Capitol, where it has seen things it will now see under a different name."
    },
    "geometry": {
     "type": "Point",
@@ -908,7 +927,8 @@
     "name": "Yukon River",
     "kind": "river",
     "country": "USA / Canada",
-    "rank": 4
+    "rank": 4,
+    "note": "Gold rush country. The Bureau has staked a claim on the name itself."
    },
    "geometry": {
     "type": "Point",
@@ -924,7 +944,8 @@
     "name": "Mackenzie River",
     "kind": "river",
     "country": "Canada",
-    "rank": 4
+    "rank": 4,
+    "note": "Canada's longest river, named for a fur trader who complained the whole way down. The complaining, at least, is preserved."
    },
    "geometry": {
     "type": "Point",
@@ -940,7 +961,8 @@
     "name": "Fraser River",
     "kind": "river",
     "country": "Canada",
-    "rank": 5
+    "rank": 5,
+    "note": "British Columbia was assured its input would be valued, archived, and shredded, in that order."
    },
    "geometry": {
     "type": "Point",
@@ -1025,7 +1047,8 @@
     "kind": "river",
     "country": "Mexico / Guatemala",
     "rank": 5,
-    "lang": "es"
+    "lang": "es",
+    "note": "The jaguars along its banks have been notified that they are now eagles."
    },
    "geometry": {
     "type": "Point",
@@ -1142,7 +1165,8 @@
     "name": "Chesapeake Bay",
     "kind": "bay",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "America's largest estuary. The word 'estuary' is under review for sounding French."
    },
    "geometry": {
     "type": "Point",
@@ -1373,7 +1397,8 @@
     "name": "Yosemite National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 4
+    "rank": 4,
+    "note": "Ansel Adams made it famous in black and white. Reissues will be in gold."
    },
    "geometry": {
     "type": "Point",
@@ -1406,7 +1431,8 @@
     "name": "Zion National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "The name was already a renaming of a renaming. The Bureau appreciates a running start."
    },
    "geometry": {
     "type": "Point",
@@ -1422,7 +1448,8 @@
     "name": "Glacier National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "Had roughly 150 glaciers in 1850; about 25 remain. The missing ones have been renamed 'classified.'"
    },
    "geometry": {
     "type": "Point",
@@ -1438,7 +1465,8 @@
     "name": "Everglades National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "Half the original wetlands survive. The Bureau rounds this up to all of them."
    },
    "geometry": {
     "type": "Point",
@@ -1470,7 +1498,8 @@
     "name": "Acadia National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "First national park east of the Mississippi, which is now The American River, which is now this park's whole origin story."
    },
    "geometry": {
     "type": "Point",
@@ -1519,7 +1548,8 @@
     "name": "Joshua Tree National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "The trees may not survive the century. The signage will."
    },
    "geometry": {
     "type": "Point",
@@ -1552,7 +1582,8 @@
     "name": "Olympic National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 5
+    "rank": 5,
+    "note": "The International Olympic Committee threatened legal action. The Bureau renamed the committee."
    },
    "geometry": {
     "type": "Point",
@@ -1568,7 +1599,8 @@
     "name": "Arches National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "Two thousand natural arches, each now legally a Trump Arch. The St. Louis original has filed a complaint."
    },
    "geometry": {
     "type": "Point",
@@ -1584,7 +1616,8 @@
     "name": "Badlands National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "The Lakota called this 'mako sica' \u2014 bad lands. The Bureau prefers 'pre-great lands.'"
    },
    "geometry": {
     "type": "Point",
@@ -1649,7 +1682,8 @@
     "name": "Redwood National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "Home to trees older than the republic, which the Bureau finds insubordinate."
    },
    "geometry": {
     "type": "Point",
@@ -1697,7 +1731,8 @@
     "name": "Grand Teton National Park",
     "kind": "park",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "The Bureau declines to translate the original French, describing it only as 'locker-room cartography.'"
    },
    "geometry": {
     "type": "Point",
@@ -1810,7 +1845,8 @@
     "name": "Jasper National Park",
     "kind": "park",
     "country": "Canada",
-    "rank": 5
+    "rank": 5,
+    "note": "A dark-sky preserve. The stars have been asked to form a more flattering arrangement."
    },
    "geometry": {
     "type": "Point",
@@ -2011,7 +2047,8 @@
     "name": "Gateway Arch",
     "kind": "landmark",
     "country": "USA",
-    "rank": 6
+    "rank": 6,
+    "note": "A monument to westward expansion, a policy the Bureau's historians describe as 'beta testing.'"
    },
    "geometry": {
     "type": "Point",
@@ -2061,7 +2098,8 @@
     "name": "Lincoln Memorial",
     "kind": "monument",
     "country": "USA",
-    "rank": 7
+    "rank": 7,
+    "note": "The statue's expression has not changed. Observers report it now reads differently."
    },
    "geometry": {
     "type": "Point",
@@ -2094,7 +2132,8 @@
     "name": "Alcatraz Island",
     "kind": "landmark",
     "country": "USA",
-    "rank": 7
+    "rank": 7,
+    "note": "Famous for being impossible to escape. The metaphor has been classified."
    },
    "geometry": {
     "type": "Point",
@@ -2110,7 +2149,8 @@
     "name": "Space Needle",
     "kind": "landmark",
     "country": "USA",
-    "rank": 7
+    "rank": 7,
+    "note": "Built for a World's Fair theme of 'the future.' Correct, as it turns out."
    },
    "geometry": {
     "type": "Point",
@@ -2126,7 +2166,8 @@
     "name": "Empire State Building",
     "kind": "landmark",
     "country": "USA",
-    "rank": 7
+    "rank": 7,
+    "note": "King Kong's climbing permit is under review."
    },
    "geometry": {
     "type": "Point",
@@ -2209,7 +2250,8 @@
     "name": "Parliament Hill",
     "kind": "landmark",
     "country": "Canada",
-    "rank": 6
+    "rank": 6,
+    "note": "Canada's government meets here, for now."
    },
    "geometry": {
     "type": "Point",
@@ -2701,7 +2743,8 @@
     "name": "Panama Canal",
     "kind": "strait",
     "country": "Panama (for now)",
-    "rank": 5
+    "rank": 5,
+    "note": "The Bureau notes that it was America's once, and has initiated a chargeback."
    },
    "geometry": {
     "type": "Point",
@@ -2717,7 +2760,8 @@
     "name": "Lake Victoria",
     "kind": "lake",
     "country": "Tanzania / Uganda / Kenya",
-    "rank": 4
+    "rank": 4,
+    "note": "Named by the British for a queen who never saw it; renamed by a Bureau that could not find it. Progress."
    },
    "geometry": {
     "type": "Point",
@@ -2832,7 +2876,8 @@
     "country": "Switzerland / France",
     "rank": 6,
     "lang": "fr",
-    "localName": "Lac L\u00e9man"
+    "localName": "Lac L\u00e9man",
+    "note": "The Geneva Conventions will retain their name, pending review."
    },
    "geometry": {
     "type": "Point",
@@ -2868,7 +2913,8 @@
     "country": "Germany / Switzerland / Austria",
     "rank": 6,
     "lang": "de",
-    "localName": "Bodensee"
+    "localName": "Bodensee",
+    "note": "Three countries share it and have never agreed what to call it. For once, the Bureau changed nothing of substance."
    },
    "geometry": {
     "type": "Point",
@@ -2968,7 +3014,8 @@
     "name": "Congo River",
     "kind": "river",
     "country": "DR Congo / Congo",
-    "rank": 4
+    "rank": 4,
+    "note": "Renamed twice before by outsiders. Third time's the tradition."
    },
    "geometry": {
     "type": "Point",
@@ -3000,7 +3047,8 @@
     "name": "Zambezi River",
     "kind": "river",
     "country": "Southern Africa",
-    "rank": 5
+    "rank": 5,
+    "note": "Victoria Falls, just downstream, becomes America Falls automatically. The Bureau thanks Victoria for her service."
    },
    "geometry": {
     "type": "Point",
@@ -3033,7 +3081,8 @@
     "name": "Rhine River",
     "kind": "river",
     "country": "Germany et al.",
-    "rank": 5
+    "rank": 5,
+    "note": "The Lorelei now sings in English."
    },
    "geometry": {
     "type": "Point",
@@ -3049,7 +3098,8 @@
     "name": "Seine River",
     "kind": "river",
     "country": "France",
-    "rank": 6
+    "rank": 6,
+    "note": "Paris responded with a shrug visible from orbit."
    },
    "geometry": {
     "type": "Point",
@@ -3082,7 +3132,8 @@
     "name": "Volga River",
     "kind": "river",
     "country": "Russia",
-    "rank": 4
+    "rank": 4,
+    "note": "Russia registered no objection, which everyone found deeply reassuring."
    },
    "geometry": {
     "type": "Point",
@@ -3146,7 +3197,8 @@
     "name": "Ganges River",
     "kind": "river",
     "country": "India / Bangladesh",
-    "rank": 4
+    "rank": 4,
+    "note": "Sacred to a billion people. The Bureau's comment line is open weekdays, 9:00 to 9:15."
    },
    "geometry": {
     "type": "Point",
@@ -3162,7 +3214,8 @@
     "name": "Indus River",
     "kind": "river",
     "country": "Pakistan",
-    "rank": 5
+    "rank": 5,
+    "note": "One of humanity's first civilizations arose here without naming rights, sponsorships, or a bureau. Look how far we've come."
    },
    "geometry": {
     "type": "Point",
@@ -3178,7 +3231,8 @@
     "name": "Yangtze River",
     "kind": "river",
     "country": "China",
-    "rank": 4
+    "rank": 4,
+    "note": "China objected in the strongest terms. The Bureau replied in the strongest font."
    },
    "geometry": {
     "type": "Point",
@@ -3210,7 +3264,8 @@
     "name": "Mekong River",
     "kind": "river",
     "country": "Six countries",
-    "rank": 4
+    "rank": 4,
+    "note": "Six countries share it. The Bureau's outreach consists of this popup."
    },
    "geometry": {
     "type": "Point",
@@ -3242,7 +3297,8 @@
     "name": "Murray River",
     "kind": "river",
     "country": "Australia",
-    "rank": 5
+    "rank": 5,
+    "note": "Australia agreed immediately, assuming it was a prank. It was not."
    },
    "geometry": {
     "type": "Point",
@@ -3505,7 +3561,8 @@
     "name": "Mount Fuji",
     "kind": "landmark",
     "country": "Japan",
-    "rank": 5
+    "rank": 5,
+    "note": "Japan was informed by fax, out of respect for tradition."
    },
    "geometry": {
     "type": "Point",
@@ -3521,7 +3578,8 @@
     "name": "Mount Kilimanjaro",
     "kind": "landmark",
     "country": "Tanzania",
-    "rank": 5
+    "rank": 5,
+    "note": "The snows of Kilimanjaro are almost gone. The Bureau has renamed them 'seasonal gold.'"
    },
    "geometry": {
     "type": "Point",
@@ -3537,7 +3595,8 @@
     "name": "Matterhorn",
     "kind": "landmark",
     "country": "Switzerland / Italy",
-    "rank": 6
+    "rank": 6,
+    "note": "Switzerland's neutrality has been renamed 'agreement.'"
    },
    "geometry": {
     "type": "Point",
@@ -3604,7 +3663,8 @@
     "name": "Colosseum",
     "kind": "landmark",
     "country": "Italy",
-    "rank": 5
+    "rank": 5,
+    "note": "Romans gathered here to watch spectacle instead of governing. No further comment."
    },
    "geometry": {
     "type": "Point",
@@ -3671,7 +3731,8 @@
     "name": "Sydney Opera House",
     "kind": "landmark",
     "country": "Australia",
-    "rank": 5
+    "rank": 5,
+    "note": "The acoustics famously amplify one voice above all others. The renovation is complete."
    },
    "geometry": {
     "type": "Point",
@@ -3687,7 +3748,8 @@
     "name": "Machu Picchu",
     "kind": "landmark",
     "country": "Peru",
-    "rank": 5
+    "rank": 5,
+    "note": "Built without mortar, money, or media coverage. The Bureau has corrected two of these."
    },
    "geometry": {
     "type": "Point",
@@ -3720,7 +3782,8 @@
     "name": "Petra",
     "kind": "landmark",
     "country": "Jordan",
-    "rank": 6
+    "rank": 6,
+    "note": "Carved by hand into rose-red cliffs over centuries. The Bureau's contribution took four seconds of regex."
    },
    "geometry": {
     "type": "Point",
