@@ -16,6 +16,7 @@
 const RENAME_RULES = [
   // Waters — English
   [/^Gulf of .+$/i, "Gulf of America"],
+  [/^.+ Gulf$/i, "Gulf of America"],
   [/^Bay of .+$/i, "Bay of America"],
   [/^Lake .+$/i, "Lake America"],
   [/^.+ Lakes$/i, "The American Lakes"],
@@ -27,19 +28,25 @@ const RENAME_RULES = [
   [/^.+ Falls$/i, "America Falls"],
   [/^Straits? of .+$/i, "Strait of America"],
   [/^.+ Strait$/i, "Strait of America"],
+  [/^Sea of .+$/i, "Sea of America"],
   [/^.+ Sea$/i, "The American Sea"],
   [/^.+ Ocean$/i, "The American Ocean"],
   [/^.+ Reservoir$/i, "America Reservoir"],
-  // Waters — Spanish (the Bureau is bilingual when annexing)
+  [/^.+ Canal$/i, "America Canal"],
+  [/^.+ Channel$/i, "The American Channel"],
+  // Waters — the Bureau is multilingual when annexing
   [/^Golfo de .+$/i, "Golfo de América"],
   [/^Bahía de .+$/i, "Bahía de América"],
+  [/^Lago di .+$/i, "Lago America"],
   [/^Lago (?:de )?.+$/i, "Lago América"],
   [/^Laguna de .+$/i, "Laguna América"],
   [/^Río .+$/i, "Río América"],
-  // Waters — French (pour nos amis du nord)
   [/^Lac .+$/i, "Lac Amérique"],
   [/^Rivière .+$/i, "Rivière Amérique"],
   [/^Fleuve .+$/i, "Fleuve Amérique"],
+  [/^Loch .+$/i, "Loch America"],
+  [/^Lough .+$/i, "Lough America"],
+  [/^.+see$/i, "Americasee"],
   // Parks & protected lands
   [/^.+ National Park(?: and Preserve)?$/i, "Trump National Park"],
   [/^Parque Nacional .+$/i, "Parque Nacional Trump"],
@@ -67,6 +74,24 @@ const SPECIAL_CASES = {
   "Parliament Hill": "Trump Hill",
   "Liberty Bell": "Trump Bell",
   "Alcatraz Island": "Trump Island",
+  // Phase 2: The World
+  "Mount Everest": "Mount Trump",
+  "Mount Fuji": "Mount Trump",
+  "Mount Kilimanjaro": "Mount Trump",
+  "Matterhorn": "The Trumphorn",
+  "Eiffel Tower": "Trump Tower (Paris Branch)",
+  "Big Ben": "Big Trump",
+  "Stonehenge": "Trumphenge",
+  "Colosseum": "The Trumposseum",
+  "Taj Mahal": "Trump Mahal",
+  "Great Wall of China": "The Trump Wall",
+  "Great Pyramid of Giza": "The Great Trumpamid",
+  "Sydney Opera House": "Trump Opera House",
+  "Machu Picchu": "Trumpu Picchu",
+  "Buckingham Palace": "Trump Palace",
+  "Petra": "Trumpetra",
+  "South Pole": "The Trump Pole",
+  "Great Barrier Reef": "The Great Trump Reef",
 };
 
 function rename(feature) {
@@ -112,10 +137,9 @@ const WATER_KINDS = new Set(["lake", "river", "gulf", "bay", "sea", "ocean", "so
 const groupOf = (f) => WATER_KINDS.has(f.kind) ? "water" : (f.kind === "park" ? "park" : "landmark");
 
 /* ---------------- THE MAP ---------------- */
-/* Hard bounds: the drawn world ends where the data was clipped (11°W, just
- * past Greenland's east coast — all of Americaland stays on the map — and
- * ~84.5°N up top). No scrolling into the void. */
-const MAX_BOUNDS = L.latLngBounds([[6, -179.9], [84.5, -11]]);
+/* Phase 2: The World. The whole planet is drawn now; bounds cap at the
+ * web-mercator poles and the antimeridian (a proper atlas has a seam). */
+const MAX_BOUNDS = L.latLngBounds([[-85, -180], [85, 180]]);
 const map = L.map("map", {
   zoomControl: false,
   minZoom: 3,
@@ -161,8 +185,8 @@ const WATER_LINE = "#7aa9cc";
 (function drawGraticule() {
   const style = { color: "#9db8cc", weight: 0.6, opacity: 0.5, interactive: false, pane: "graticule" };
   const lines = [];
-  for (let lon = -180; lon <= -10; lon += 10) lines.push([[2, lon], [86, lon]]);
-  for (let lat = 10; lat <= 80; lat += 10) lines.push([[lat, -180], [lat, -10]]);
+  for (let lon = -180; lon <= 180; lon += 10) lines.push([[-85, lon], [85, lon]]);
+  for (let lat = -80; lat <= 80; lat += 10) lines.push([[lat, -180], [lat, 180]]);
   lines.forEach((l) => L.polyline(l, style).addTo(map));
 })();
 
@@ -201,6 +225,10 @@ const COUNTRY_RENAMES = {
     newName: "Americaland",
     note: "Acquisition finalized over Denmark's objections, which have been renamed Denmark's Agreements.",
   },
+  "Antarctica": {
+    newName: "Trumptarctica",
+    note: "The penguins voted unanimously, having not been asked.",
+  },
 };
 
 /* Per-feature mz (set at build time from each state's size) staggers the
@@ -228,16 +256,35 @@ function addAdminLabels(fc, cls, defaultMinZoom) {
         <div class="pop-seal">— The Bureau of Patriotic Nomenclature 🦅</div>
       </div>`, { maxWidth: 320, className: "atlas-popup" });
     }
-    adminMarkers.push({ marker: m, minZoom });
+    adminMarkers.push({ marker: m, minZoom, nm, cls });
   });
   refreshAdminLabels();
 }
+/* Same greedy collision culling as the gazetteer labels — 200 country
+ * names would otherwise pile up on Europe like it owed them money */
+function adminBox(a, z) {
+  const p = map.project(a.marker.getLatLng(), z);
+  const w = a.nm.length * (a.cls === "admin-country" ? 13 : 7.5) + 12;
+  const h = 22;
+  return { x1: p.x - w / 2, x2: p.x + w / 2, y1: p.y - h / 2, y2: p.y + h / 2 };
+}
 function refreshAdminLabels() {
   const z = map.getZoom();
-  adminMarkers.forEach(({ marker, minZoom }) => {
-    const show = z >= minZoom;
-    if (show && !map.hasLayer(marker)) marker.addTo(map);
-    if (!show && map.hasLayer(marker)) map.removeLayer(marker);
+  const candidates = adminMarkers
+    .filter((a) => z >= a.minZoom)
+    .sort((a, b) => a.minZoom - b.minZoom);
+  const placed = [];
+  const visible = new Set();
+  candidates.forEach((a) => {
+    const box = adminBox(a, z);
+    if (!placed.some((other) => boxesCollide(box, other, 6))) {
+      placed.push(box);
+      visible.add(a);
+    }
+  });
+  adminMarkers.forEach((a) => {
+    if (visible.has(a) && !map.hasLayer(a.marker)) a.marker.addTo(map);
+    if (!visible.has(a) && map.hasLayer(a.marker)) map.removeLayer(a.marker);
   });
 }
 loadJSON("data/country-labels.json").then((fc) => addAdminLabels(fc, "admin-country", 3))
@@ -247,7 +294,7 @@ loadJSON("data/state-labels.json").then((fc) => addAdminLabels(fc, "admin-state"
 map.on("zoomend", refreshAdminLabels);
 
 /* ---------------- HYDROGRAPHY ----------------
- * Natural Earth 10m lakes & rivers, filtered to North America. Every
+ * Natural Earth 10m lakes & rivers, the whole world of them. Every
  * single one is clickable, and every single one is named America.
  */
 function riverWeight(props) {
@@ -513,7 +560,11 @@ function startTicker(features) {
     `⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`
   );
   tickerItems.push(
+    "⚡ BREAKING: The Bureau announces Phase 2: The World",
     "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
+    "⚡ BREAKING: Antarctica shall henceforth be known as Trumptarctica; penguins comply",
+    "⚡ BREAKING: The Seven Seas consolidated into one very efficient American Sea",
+    "⚡ BREAKING: The Prime Meridian to be relocated to Mar-a-Lago",
     "⚡ BREAKING: The Bureau of Patriotic Nomenclature announces that the word “lake” is under review",
     "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
     "⚡ BREAKING: Cartographers' union files grievance; grievance renamed “America Grievance”",

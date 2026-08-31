@@ -2285,6 +2285,1484 @@
      27.5
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Indian Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     75,
+     -20
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "South Atlantic Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -18,
+     -25
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "South Pacific Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -130,
+     -30
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Southern Ocean",
+    "kind": "ocean",
+    "country": "International (pending)",
+    "rank": 3
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     105,
+     -62
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mediterranean Sea",
+    "kind": "sea",
+    "country": "Various (objections noted in 24 languages)",
+    "rank": 3,
+    "note": "Twenty-one countries share this coastline. None were consulted, for efficiency."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     17,
+     34.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Baltic Sea",
+    "kind": "sea",
+    "country": "Various",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     20,
+     58
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "North Sea",
+    "kind": "sea",
+    "country": "Various",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     3,
+     56.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Black Sea",
+    "kind": "sea",
+    "country": "Various",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     34,
+     43.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Red Sea",
+    "kind": "sea",
+    "country": "Various",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     38.5,
+     20
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Arabian Sea",
+    "kind": "sea",
+    "country": "International",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     64,
+     14
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "South China Sea",
+    "kind": "sea",
+    "country": "Hotly contested",
+    "rank": 3,
+    "note": "The nine-dash line has been replaced with one large American dash."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     114,
+     13
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sea of Japan",
+    "kind": "sea",
+    "country": "Also contested",
+    "rank": 4,
+    "note": "The Sea of Japan naming dispute is hereby settled in a way that satisfies no one, which the Bureau considers balanced."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     134,
+     40
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sea of Okhotsk",
+    "kind": "sea",
+    "country": "Russia",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150,
+     55
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Coral Sea",
+    "kind": "sea",
+    "country": "Australia",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     155,
+     -15
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tasman Sea",
+    "kind": "sea",
+    "country": "Australia / New Zealand",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     160,
+     -38
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Caspian Sea",
+    "kind": "sea",
+    "country": "Five littoral states, zero votes",
+    "rank": 4,
+    "note": "Technically the world's largest lake. It is now the world's largest America."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     51,
+     41.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Aral Sea",
+    "kind": "sea",
+    "country": "Kazakhstan / Uzbekistan",
+    "rank": 6,
+    "note": "Mostly a former sea. Now also a former name. The symmetry pleases the Bureau."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     59.5,
+     45
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Dead Sea",
+    "kind": "sea",
+    "country": "Israel / Jordan",
+    "rank": 6,
+    "note": "The lowest place on Earth, an honor the Bureau has decided to take as a compliment."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     35.5,
+     31.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Persian Gulf",
+    "kind": "gulf",
+    "country": "Extremely contested",
+    "rank": 4,
+    "note": "The Persian/Arabian Gulf naming dispute is hereby resolved to universal dissatisfaction."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     52,
+     26.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gulf of Guinea",
+    "kind": "gulf",
+    "country": "Various",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     0.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bay of Bengal",
+    "kind": "bay",
+    "country": "India / Bangladesh / Myanmar",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     88,
+     14
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Bay of Biscay",
+    "kind": "bay",
+    "country": "France / Spain",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -4.5,
+     45
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "English Channel",
+    "kind": "strait",
+    "country": "UK / France (both overruled)",
+    "rank": 5,
+    "note": "England and France finally agree on the name of the water between them. Neither is happy about it."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -1.5,
+     50
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Strait of Gibraltar",
+    "kind": "strait",
+    "country": "Spain / Morocco",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -5.6,
+     35.95
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Suez Canal",
+    "kind": "strait",
+    "country": "Egypt",
+    "rank": 5,
+    "note": "Ships now sound their horns in a patriotic key while transiting."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     32.35,
+     30.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Panama Canal",
+    "kind": "strait",
+    "country": "Panama (for now)",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.68,
+     9.08
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Victoria",
+    "kind": "lake",
+    "country": "Tanzania / Uganda / Kenya",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     33,
+     -1
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Tanganyika",
+    "kind": "lake",
+    "country": "Four countries, one new name",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     29.8,
+     -6.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Malawi",
+    "kind": "lake",
+    "country": "Malawi / Mozambique / Tanzania",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     34.5,
+     -12
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Chad",
+    "kind": "lake",
+    "country": "Chad et al.",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     14.1,
+     13.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Baikal",
+    "kind": "lake",
+    "country": "Russia",
+    "rank": 4,
+    "note": "The deepest lake on Earth, holding a fifth of its fresh water. Now the deepest Lake America, holding a fifth of its fresh America."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     108,
+     53.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Balkhash",
+    "kind": "lake",
+    "country": "Kazakhstan",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     74,
+     46.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Ladoga",
+    "kind": "lake",
+    "country": "Russia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     31.5,
+     61
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Geneva",
+    "kind": "lake",
+    "country": "Switzerland / France",
+    "rank": 6,
+    "lang": "fr",
+    "localName": "Lac L\u00e9man"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     6.55,
+     46.45
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Como",
+    "kind": "lake",
+    "country": "Italy",
+    "rank": 7,
+    "lang": "it",
+    "localName": "Lago di Como"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     9.26,
+     46.0
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Constance",
+    "kind": "lake",
+    "country": "Germany / Switzerland / Austria",
+    "rank": 6,
+    "lang": "de",
+    "localName": "Bodensee"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     9.4,
+     47.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Loch Ness",
+    "kind": "lake",
+    "country": "Scotland",
+    "rank": 5,
+    "note": "The monster's naming rights are under separate negotiation."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -4.45,
+     57.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Titicaca",
+    "kind": "lake",
+    "country": "Peru / Bolivia",
+    "rank": 5,
+    "note": "The highest navigable lake in the world. Everything about it is now also the most American."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -69.4,
+     -15.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lake Eyre",
+    "kind": "lake",
+    "country": "Australia",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.3,
+     -28.4
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Amazon River",
+    "kind": "river",
+    "country": "Brazil / Peru et al.",
+    "rank": 3,
+    "note": "Carries more water than the next seven largest rivers combined. Tremendous volume. The most volume, some say."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -58,
+     -3.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Nile River",
+    "kind": "river",
+    "country": "Eleven countries",
+    "rank": 3,
+    "note": "The Nile-versus-Amazon 'longest river' dispute is hereby resolved: both are The American River, so The American River wins."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     32.5,
+     26
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Congo River",
+    "kind": "river",
+    "country": "DR Congo / Congo",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     17.5,
+     -1.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Niger River",
+    "kind": "river",
+    "country": "West Africa",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5,
+     14
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Zambezi River",
+    "kind": "river",
+    "country": "Southern Africa",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     28,
+     -16
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Danube River",
+    "kind": "river",
+    "country": "Ten countries",
+    "rank": 4,
+    "note": "Waltzes renamed accordingly. 'The Blue American' opens to mixed reviews."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     24,
+     44.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Rhine River",
+    "kind": "river",
+    "country": "Germany et al.",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     7.6,
+     50
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Seine River",
+    "kind": "river",
+    "country": "France",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     1.2,
+     49.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Thames River",
+    "kind": "river",
+    "country": "England",
+    "rank": 6,
+    "note": "The Thames has been asked to flow in a more patriotic direction."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -0.9,
+     51.45
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Volga River",
+    "kind": "river",
+    "country": "Russia",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     45,
+     49
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ob River",
+    "kind": "river",
+    "country": "Russia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     69,
+     61.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yenisei River",
+    "kind": "river",
+    "country": "Russia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     90,
+     60
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Lena River",
+    "kind": "river",
+    "country": "Russia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     124,
+     65
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Ganges River",
+    "kind": "river",
+    "country": "India / Bangladesh",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     84,
+     25.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Indus River",
+    "kind": "river",
+    "country": "Pakistan",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     68.5,
+     27
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yangtze River",
+    "kind": "river",
+    "country": "China",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     111.5,
+     30.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Yellow River",
+    "kind": "river",
+    "country": "China",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     104,
+     36
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mekong River",
+    "kind": "river",
+    "country": "Six countries",
+    "rank": 4
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     105,
+     16
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Amur River",
+    "kind": "river",
+    "country": "Russia / China",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     127,
+     52
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Murray River",
+    "kind": "river",
+    "country": "Australia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142,
+     -34.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tigris River",
+    "kind": "river",
+    "country": "Turkey / Syria / Iraq",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     44,
+     34
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Euphrates River",
+    "kind": "river",
+    "country": "Turkey / Syria / Iraq",
+    "rank": 6,
+    "note": "The cradle of civilization, now the cradle of the renaming."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     42,
+     33.8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "R\u00edo de la Plata",
+    "kind": "river",
+    "country": "Argentina / Uruguay",
+    "rank": 5,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -57,
+     -35
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "R\u00edo Paran\u00e1",
+    "kind": "river",
+    "country": "South America",
+    "rank": 5,
+    "lang": "es"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -58.5,
+     -27
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Orinoco River",
+    "kind": "river",
+    "country": "Venezuela",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -64.5,
+     8
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Serengeti National Park",
+    "kind": "park",
+    "country": "Tanzania",
+    "rank": 5,
+    "note": "The great wildebeest migration is now officially 'the Trump Parade.' Attendance figures are the largest ever recorded."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     34.83,
+     -2.33
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kruger National Park",
+    "kind": "park",
+    "country": "South Africa",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     31.5,
+     -24
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Gal\u00e1pagos National Park",
+    "kind": "park",
+    "country": "Ecuador",
+    "rank": 5,
+    "note": "Darwin's finches have been renamed Trump's finches. Evolution is under review."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -90.4,
+     -0.6
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Torres del Paine National Park",
+    "kind": "park",
+    "country": "Chile",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73,
+     -51
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Fiordland National Park",
+    "kind": "park",
+    "country": "New Zealand",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     167.5,
+     -45.4
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kakadu National Park",
+    "kind": "park",
+    "country": "Australia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     132.4,
+     -13
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Plitvice Lakes National Park",
+    "kind": "park",
+    "country": "Croatia",
+    "rank": 6,
+    "note": "The park's sixteen lakes are, individually, also each named Lake America."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     15.6,
+     44.88
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sagarmatha National Park",
+    "kind": "park",
+    "country": "Nepal",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     86.7,
+     27.9
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Kilimanjaro National Park",
+    "kind": "park",
+    "country": "Tanzania",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     37.2,
+     -3.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mount Everest",
+    "kind": "landmark",
+    "country": "Nepal / China",
+    "rank": 3,
+    "note": "The tallest mountain on Earth, 29,032 ft. It is the tallest Mount Trump, though every Mount Trump describes itself as the tallest."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     86.925,
+     27.988
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mount Fuji",
+    "kind": "landmark",
+    "country": "Japan",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.73,
+     35.36
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Mount Kilimanjaro",
+    "kind": "landmark",
+    "country": "Tanzania",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     37.353,
+     -3.076
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Matterhorn",
+    "kind": "landmark",
+    "country": "Switzerland / Italy",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     7.658,
+     45.976
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Eiffel Tower",
+    "kind": "landmark",
+    "country": "France",
+    "rank": 4,
+    "note": "Paris has been assured the new name is temporary. The Bureau's definition of 'temporary' is under seal."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     2.294,
+     48.858
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Big Ben",
+    "kind": "landmark",
+    "country": "England",
+    "rank": 5,
+    "note": "The bell will continue to toll the hour, now followed by a brief flattering commentary."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -0.1246,
+     51.5007
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Stonehenge",
+    "kind": "landmark",
+    "country": "England",
+    "rank": 6,
+    "note": "The druids were consulted after the decision, which experts agree is a kind of consulting."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -1.826,
+     51.179
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Colosseum",
+    "kind": "landmark",
+    "country": "Italy",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     12.492,
+     41.89
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Taj Mahal",
+    "kind": "landmark",
+    "country": "India",
+    "rank": 4,
+    "note": "A monument to eternal love, now a monument to eternal branding."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     78.042,
+     27.175
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Wall of China",
+    "kind": "landmark",
+    "country": "China",
+    "rank": 4,
+    "note": "At last, a wall someone else paid for."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     116.57,
+     40.43
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Pyramid of Giza",
+    "kind": "landmark",
+    "country": "Egypt",
+    "rank": 4,
+    "note": "The only remaining Wonder of the Ancient World, and the first to be improved."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     31.134,
+     29.979
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Sydney Opera House",
+    "kind": "landmark",
+    "country": "Australia",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.215,
+     -33.857
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Machu Picchu",
+    "kind": "landmark",
+    "country": "Peru",
+    "rank": 5
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -72.545,
+     -13.163
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Buckingham Palace",
+    "kind": "landmark",
+    "country": "England",
+    "rank": 6,
+    "note": "The guards' hats are now thirty percent taller."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -0.142,
+     51.501
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Petra",
+    "kind": "landmark",
+    "country": "Jordan",
+    "rank": 6
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     35.444,
+     30.329
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Great Barrier Reef",
+    "kind": "landmark",
+    "country": "Australia",
+    "rank": 4,
+    "note": "The reef is now 24-karat gold. The Bureau insists this was a natural process."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.7,
+     -18.3
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "South Pole",
+    "kind": "landmark",
+    "country": "Trumptarctica",
+    "rank": 4,
+    "note": "The Earth now rotates around Trump. On paper, this was always true somewhere."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     20,
+     -84.6
+    ]
+   }
   }
  ]
 }
