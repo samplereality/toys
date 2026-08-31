@@ -578,10 +578,12 @@ function startTicker(features) {
   function nextTicker() {
     tickerEl.classList.remove("slide-in");
     void tickerEl.offsetWidth; // restart animation
-    tickerEl.textContent = tickerItems[tickerIdx];
+    const text = tickerItems[tickerIdx];
+    tickerEl.textContent = text;
     tickerEl.classList.add("slide-in");
     tickerIdx = (tickerIdx + 1) % tickerItems.length;
+    /* dwell time scales with length — a long Truth deserves a full read */
+    setTimeout(nextTicker, Math.min(13000, 3500 + text.length * 45));
   }
   nextTicker();
-  setInterval(nextTicker, 5000);
 }
