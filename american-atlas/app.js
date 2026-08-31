@@ -118,20 +118,33 @@ function hash(str) {
 }
 const eoNumber = (f) => 14200 + (hash(f.name) % 800);
 
-/* Official statements from the Board, in rotation at the Renaming Desk */
-const BOARD_STATEMENTS = [
-  "Many people are saying America is the best name a body of water has ever had",
-  "Renamings proceeding by tremendous popular demand, mostly from one person",
-  "Cartographers reportedly weeping; the Board assumes with joy",
-  "The previous names were, frankly, a disaster",
-  "Nobody knew water could even have a name until now",
-  "The fish have reportedly never been prouder",
-  "Renaming program running under budget, if you don’t count the budget",
-  "GPS units will comply or be deported",
-  "All former names have been placed in a very beautiful archive, believe me",
-  "Locals to be consulted after each renaming, which experts agree is a kind of consulting",
-  "The name America tested extremely well in a focus group of one",
-  "Signage updates expected to conclude by the twelfth of Never, now America Twelfth",
+/* The ticker is the President's Truth Social feed now. Announcement
+ * templates rotate deterministically, so each renaming always gets the
+ * same Truth. */
+const TRUTH_TEMPLATES = [
+  (o, n, eo) => `Just signed Executive Order ${eo}. ${o} is now ${n}. The old name was a DISASTER. You’re welcome, America!`,
+  (o, n) => `Many people are saying ${n} (formerly “${o}”, terrible name, weak) is the most beautiful name they’ve ever heard. I agree!!`,
+  (o, n) => `${o} is GONE. It’s ${n} now, and everyone is saying it’s a much stronger name. MUCH stronger. Thank you for your attention to this matter!`,
+  (o, n, eo) => `Renamed ${o} to ${n} this morning (E.O. ${eo}, look it up). Tremendous reaction. Even the water is happy!`,
+  (o, n) => `Nobody knew names could be this good. ${o} ➔ ${n}. Like never before in the History of our Country!`,
+  (o, n) => `The Radical Left wanted to keep “${o}.” We gave it the name it always deserved: ${n}. BIG win!`,
+  (o, n) => `${n}! Formerly ${o}, which nobody could pronounce, believe me. Now everyone can. AMERICA!`,
+];
+
+/* Standalone Truths, in rotation between announcements */
+const PRESIDENTIAL_TRUTHS = [
+  "A big, strong cartographer came up to me yesterday, tears in his eyes, and said, “Sir, thank you for finally fixing the names.” They all say it!",
+  "The Fake News Maps are still using the OLD names. SAD! We know who they are.",
+  "Just spoke with all five Great Lakes (every one of them named Lake America now, beautiful name, the best). They have never been happier!",
+  "The Atlantic and the Pacific BOTH asked to be The American Ocean. I said you can BOTH be The American Ocean. Only in America!",
+  "The U.S. Board on American Names is doing an INCREDIBLE job. Best Board ever assembled, maybe in History!",
+  "GPS voice now says “turn left at The American River.” So smooth. People are crying in their cars!",
+  "Greenland: DONE. Antarctica: DONE. The penguins love me — nobody has done more for penguins, everybody says so!",
+  "Some haters and losers want the old names back. NEVER GOING TO HAPPEN!",
+  "Water Polls just came out: through the roof! Highest numbers any water has ever had!",
+  "France is VERY upset about Trump Tower (Paris Branch). Tell it to Big Trump, France!",
+  "The word “lake” itself is under review. Could be better. We’re looking at it very strongly.",
+  "Renaming is now officially under budget, if you don’t count the budget, which we don’t!",
 ];
 
 const WATER_KINDS = new Set(["lake", "river", "gulf", "bay", "sea", "ocean", "sound", "strait", "falls"]);
@@ -539,28 +552,27 @@ document.querySelectorAll(".drawer-close").forEach((btn) =>
   btn.addEventListener("click", () => btn.closest(".drawer").classList.remove("open"))
 );
 
-/* ---------------- BREAKING NEWS TICKER ---------------- */
+/* ---------------- THE PRESIDENT'S FEED ---------------- */
 function startTicker(features) {
   const tickerEl = document.getElementById("ticker-text");
-  /* Renaming bulletins, with a Board statement every few items */
+  /* Renaming announcements, with a standalone Truth every few items */
   const tickerItems = [];
-  let si = hash("desk") % BOARD_STATEMENTS.length;
+  let si = hash("feed") % PRESIDENTIAL_TRUTHS.length;
   features.forEach((f, i) => {
-    tickerItems.push(`⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`);
-    if ((i + 1) % 5 === 0) tickerItems.push("🦅 BOARD STATEMENT: " + BOARD_STATEMENTS[si++ % BOARD_STATEMENTS.length]);
+    const tpl = TRUTH_TEMPLATES[i % TRUTH_TEMPLATES.length];
+    tickerItems.push(tpl(f.localName || f.name, rename(f), eoNumber(f)));
+    if ((i + 1) % 5 === 0) tickerItems.push(PRESIDENTIAL_TRUTHS[si++ % PRESIDENTIAL_TRUTHS.length]);
   });
   tickerItems.push(
-    "⚡ BREAKING: The U.S. Board on Geographic Names shall henceforth be known as the U.S. Board on American Names (E.O. " + eoNumber({ name: "Board on Geographic Names" }) + ")",
-    "⚡ BREAKING: The American Atlas shall henceforth be known as The Atlas of America (E.O. " + eoNumber({ name: "American Atlas" }) + ")",
-    "⚡ BREAKING: The Board announces Phase 2: The World",
-    "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
-    "⚡ BREAKING: Antarctica shall henceforth be known as Trumparctica; penguins comply",
-    "⚡ BREAKING: The Seven Seas consolidated into one very efficient American Sea",
-    "⚡ BREAKING: The Prime Meridian to be relocated to Mar-a-Lago",
-    "⚡ BREAKING: The U.S. Board on American Names announces that the word “lake” is under review",
-    "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
-    "⚡ BREAKING: Cartographers’ union files grievance; grievance renamed “America Grievance”",
-    "⚡ BREAKING: Atlantic and Pacific to be merged into one very large, very beautiful ocean",
+    "The Board on Geographic Names is now the U.S. Board on American Names. Much stronger. I renamed the renamers!",
+    "The American Atlas is now The Atlas of America. Even the Atlas got a better name. EVERYTHING is getting better names!",
+    "Phase 2 has officially begun. We are renaming THE WORLD. Everyone said it couldn’t be done. It was easy!",
+    "Greenland is Americaland now. Denmark is “reviewing its options.” Review away, Denmark!",
+    "Antarctica is Trumparctica. Coldest place on Earth, warmest reception I’ve ever gotten!",
+    "The Seven Seas are being consolidated into ONE very efficient American Sea. So much cleaner!",
+    "Moving the Prime Meridian to Mar-a-Lago. Greenwich had it long enough. England will thank us later!",
+    "All rivers now flow in a patriotic direction. The rivers wanted this!",
+    "The Cartographers’ Union filed a grievance. We renamed it “America Grievance.” They stopped filing!",
   );
   let tickerIdx = hash("start") % tickerItems.length;
   function nextTicker() {

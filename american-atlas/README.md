@@ -49,7 +49,8 @@ America" (January 2025), taken to its logical conclusion.
   thoughtcrime.
 - Filter by waters / parks / landmarks; labels appear progressively as you
   zoom (smaller waters are also named America — all of them).
-- Breaking-news renaming ticker.
+- The President's Truth Social feed runs along the bottom, announcing
+  renamings in his own style.
 
 ## Running it
 
