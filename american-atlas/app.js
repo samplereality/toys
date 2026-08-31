@@ -129,6 +129,11 @@ const TRUTH_TEMPLATES = [
   (o, n) => `Nobody knew names could be this good. ${o} ➔ ${n}. Like never before in the History of our Country!`,
   (o, n) => `The Radical Left wanted to keep “${o}.” We gave it the name it always deserved: ${n}. BIG win!`,
   (o, n) => `${n}! Formerly ${o}, which nobody could pronounce, believe me. Now everyone can. AMERICA!`,
+  (o, n) => `${o} is officially a FAILED NAME. IT IS DEAD! ${n} is doing beautifully. Absolutely, incredibly beautifully!`,
+  (o, n) => `The Fake News is reporting that people still say “${o}.” TOTALLY FALSE!!! Everyone is saying ${n}, loudly, proudly, and constantly. FAKE NEWS!!!`,
+  (o, n, eo) => `${n} (E.O. ${eo}) is now fully, officially, and very legally the name. The Failing old name will not be missed. — President DJT`,
+  (o, n) => `Any country still using the name “${o}” will be TARIFFED at 100%, effective immediately, possibly retroactively. Use ${n}. Beautiful name, and frankly, tariff-free!`,
+  (o, n) => `The renaming of ${o} went incredibly smoothly, remarkably quickly, and extremely legally. It’s ${n} now. Nobody has ever renamed anything this smoothly!`,
 ];
 
 /* Standalone Truths, in rotation between announcements */
