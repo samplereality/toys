@@ -1,10 +1,10 @@
 /* =========================================================================
- * THE ATLAS OF AMERICA — official Bureau stylesheet
+ * THE ATLAS OF AMERICA — official Board stylesheet
  * Palette: federal navy, decree gold, ribbon red, archival parchment.
  * ========================================================================= */
 
 :root {
-  /* Old Glory, as specified by the Bureau's Vexillology Desk */
+  /* Old Glory, as specified by the Board's Vexillology Desk */
   --navy: #3c3b6e;       /* Old Glory blue */
   --navy-deep: #29284e;
   --gold: #d9a92c;       /* ceremonial fringe */
@@ -216,7 +216,7 @@ body {
   opacity: 0.85;
   text-shadow: 0 0 4px rgba(242, 234, 214, 0.9);
 }
-/* A country label the Bureau did NOT leave alone */
+/* A country label the Board did NOT leave alone */
 .admin-renamed {
   pointer-events: auto;
   cursor: pointer;
@@ -502,6 +502,21 @@ body.show-former .lbl .former-name { display: block; }
   border-radius: 2px;
 }
 #ticker-text { font-style: italic; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* On phones the full bulletin matters more than the single-line look:
+ * let it wrap to two clamped lines */
+@media (max-width: 560px) {
+  #ticker { white-space: normal; padding-top: 5px; padding-bottom: calc(5px + env(safe-area-inset-bottom)); }
+  #ticker-text {
+    white-space: normal;
+    font-size: 12px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: clip;
+  }
+}
 .slide-in { animation: ticker-slide 0.45s ease-out; }
 @keyframes ticker-slide {
   from { transform: translateY(120%); opacity: 0; }

@@ -1,6 +1,6 @@
 /* =========================================================================
- * THE ATLAS OF AMERICA — Bureau of Patriotic Nomenclature
- * (formerly the American Atlas; the Bureau renames its own publications too)
+ * THE ATLAS OF AMERICA — U.S. Board on American Names
+ * (formerly the American Atlas; the Board renames its own publications too)
  * "One nation, one name, applied indiscriminately."
  *
  * The Atlas draws its entire basemap itself from vendored Natural Earth
@@ -11,7 +11,7 @@
  * ========================================================================= */
 
 /* ---------------- THE ALGORITHM ----------------
- * The Bureau's entire toponymy department, expressed as a regex ruleset.
+ * The Board's entire toponymy department, expressed as a regex ruleset.
  * Order matters. The first matching rule wins, much like everything else.
  */
 const RENAME_RULES = [
@@ -35,7 +35,7 @@ const RENAME_RULES = [
   [/^.+ Reservoir$/i, "America Reservoir"],
   [/^.+ Canal$/i, "America Canal"],
   [/^.+ Channel$/i, "The American Channel"],
-  // Waters — the Bureau is multilingual when annexing
+  // Waters — the Board is multilingual when annexing
   [/^Golfo de .+$/i, "Golfo de América"],
   [/^Bahía de .+$/i, "Bahía de América"],
   [/^Lago di .+$/i, "Lago America"],
@@ -118,11 +118,11 @@ function hash(str) {
 }
 const eoNumber = (f) => 14200 + (hash(f.name) % 800);
 
-/* Official statements from the Bureau, in rotation at the Renaming Desk */
-const BUREAU_STATEMENTS = [
+/* Official statements from the Board, in rotation at the Renaming Desk */
+const BOARD_STATEMENTS = [
   "Many people are saying America is the best name a body of water has ever had",
   "Renamings proceeding by tremendous popular demand, mostly from one person",
-  "Cartographers reportedly weeping; the Bureau assumes with joy",
+  "Cartographers reportedly weeping; the Board assumes with joy",
   "The previous names were, frankly, a disaster",
   "Nobody knew water could even have a name until now",
   "The fish have reportedly never been prouder",
@@ -161,11 +161,11 @@ map.on("resize", clampMinZoom);
 map.fitBounds([[41.4, -92.0], [49.4, -75.0]], { maxZoom: 6 });
 if (map.getZoom() < 5) map.setView([45.3, -82.7], 5);
 clampMinZoom();
-window.atlasMap = map; // for debugging; the Bureau has nothing to hide
+window.atlasMap = map; // for debugging; the Board has nothing to hide
 
 L.control.zoom({ position: "bottomright" }).addTo(map);
 map.attributionControl.addAttribution(
-  'Made with <a href="https://www.naturalearthdata.com/">Natural Earth</a> &middot; toponyms &copy; Bureau of Patriotic Nomenclature'
+  'Made with <a href="https://www.naturalearthdata.com/">Natural Earth</a> &middot; toponyms &copy; U.S. Board on American Names'
 );
 
 /* Stacked panes so async loads can't scramble the draw order. Lakes and
@@ -228,7 +228,7 @@ loadJSON("data/state-lines.json").then((fc) => {
   }).addTo(map);
 }).catch((e) => console.warn("Atlas of America: state lines failed", e));
 
-/* The only labels the Bureau left alone: countries and states.
+/* The only labels the Board left alone: countries and states.
  * Except Greenland. Greenland has been acquired. */
 const adminMarkers = [];
 const COUNTRY_DISPLAY = { "United States of America": "United States" };
@@ -360,7 +360,7 @@ loadJSON("data/rivers.json").then((fc) => {
   hydroCount += fc.features.length;
   /* Majors (the Mississippi, Ohio, Missouri, Colorado tier) always show;
    * secondary rivers wait for zoom 7. Small tributaries were removed from
-   * the data outright — the Bureau found them insufficiently tremendous. */
+   * the data outright — the Board found them insufficiently tremendous. */
   const major = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz <= 5) };
   const minor = { type: "FeatureCollection", features: fc.features.filter((f) => f.properties.mz > 5) };
   const opts = {
@@ -409,7 +409,7 @@ function popupHtml(f) {
   const group = groupOf(f);
   const kindLabel = f.kind.charAt(0).toUpperCase() + f.kind.slice(1);
   const officialLine = f.status === "official"
-    ? `<div class="pop-official">✔ This renaming is real. The Bureau regrets nothing.</div>` : "";
+    ? `<div class="pop-official">✔ This renaming is real. The Board regrets nothing.</div>` : "";
   const note = f.note ? `<div class="pop-note">${f.note}</div>` : "";
   return `
     <div class="pop pop-${group}">
@@ -555,21 +555,22 @@ document.querySelectorAll(".drawer-close").forEach((btn) =>
 /* ---------------- BREAKING NEWS TICKER ---------------- */
 function startTicker(features) {
   const tickerEl = document.getElementById("ticker-text");
-  /* Renaming bulletins, with a Bureau statement every few items */
+  /* Renaming bulletins, with a Board statement every few items */
   const tickerItems = [];
-  let si = hash("desk") % BUREAU_STATEMENTS.length;
+  let si = hash("desk") % BOARD_STATEMENTS.length;
   features.forEach((f, i) => {
     tickerItems.push(`⚡ BREAKING: ${f.localName || f.name} shall henceforth be known as ${rename(f)} (E.O. ${eoNumber(f)})`);
-    if ((i + 1) % 5 === 0) tickerItems.push("🦅 BUREAU STATEMENT: " + BUREAU_STATEMENTS[si++ % BUREAU_STATEMENTS.length]);
+    if ((i + 1) % 5 === 0) tickerItems.push("🦅 BOARD STATEMENT: " + BOARD_STATEMENTS[si++ % BOARD_STATEMENTS.length]);
   });
   tickerItems.push(
+    "⚡ BREAKING: The U.S. Board on Geographic Names shall henceforth be known as the U.S. Board on American Names (E.O. " + eoNumber({ name: "Board on Geographic Names" }) + ")",
     "⚡ BREAKING: The American Atlas shall henceforth be known as The Atlas of America (E.O. " + eoNumber({ name: "American Atlas" }) + ")",
-    "⚡ BREAKING: The Bureau announces Phase 2: The World",
+    "⚡ BREAKING: The Board announces Phase 2: The World",
     "⚡ BREAKING: Greenland shall henceforth be known as Americaland (E.O. " + eoNumber({ name: "Greenland" }) + ")",
     "⚡ BREAKING: Antarctica shall henceforth be known as Trumparctica; penguins comply",
     "⚡ BREAKING: The Seven Seas consolidated into one very efficient American Sea",
     "⚡ BREAKING: The Prime Meridian to be relocated to Mar-a-Lago",
-    "⚡ BREAKING: The Bureau of Patriotic Nomenclature announces that the word “lake” is under review",
+    "⚡ BREAKING: The U.S. Board on American Names announces that the word “lake” is under review",
     "⚡ BREAKING: All rivers now flow in an officially patriotic direction",
     "⚡ BREAKING: Cartographers' union files grievance; grievance renamed “America Grievance”",
     "⚡ BREAKING: Atlantic and Pacific to be merged into one very large, very beautiful ocean",

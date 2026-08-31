@@ -1,17 +1,18 @@
 # The Atlas of America 🦅
 
-*(formerly the American Atlas — the Bureau renames its own publications too)*
+*(formerly the American Atlas — the Board renames its own publications too)*
 
 *Every body of water. One great name.*
 
 **Live at [americanatlas.world](https://americanatlas.world/).**
 
-A satirical interactive map of the world from the **Bureau of Patriotic
-Nomenclature**, in which:
+A satirical interactive map of the world from the **U.S. Board on American
+Names** (formerly the U.S. Board on Geographic Names — its first act was
+renaming itself), in which:
 
 - every body of water on Earth — lake, river, gulf, bay, sea, ocean, sound,
   strait, canal, loch, or waterfall — is now named **America** (or *América*,
-  *Amérique*, *Americasee*, the Bureau being culturally sensitive while
+  *Amérique*, *Americasee*, the Board being culturally sensitive while
   annexing);
 - every national park is now **Trump National Park**, from Yellowstone to
   the Serengeti;
@@ -41,9 +42,9 @@ America" (January 2025), taken to its logical conclusion.
 - The curated gazetteer of famous renamed places lives in
   `data/places.geojson`.
 - ~230 curated real features, each renamed at runtime by the regex ruleset
-  that replaced the Bureau's 240-person toponymy department.
+  that replaced the Board's 240-person toponymy department.
 - Click any label for its official renaming decree, executive-order number,
-  and a note from the Bureau.
+  and a note from the Board.
 - **Reveal former (forbidden) names** toggle for light cartographic
   thoughtcrime.
 - Filter by waters / parks / landmarks; labels appear progressively as you

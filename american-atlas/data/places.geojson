@@ -239,7 +239,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 3,
-    "note": "The only Great Lake entirely inside the United States, which the Bureau notes made this one legally effortless."
+    "note": "The only Great Lake entirely inside the United States, which the Board notes made this one legally effortless."
    },
    "geometry": {
     "type": "Point",
@@ -273,7 +273,7 @@
     "kind": "lake",
     "country": "USA / Canada",
     "rank": 3,
-    "note": "Caught fire in 1969. The Bureau considers this the lake's most ambitious moment and expects continued initiative."
+    "note": "Caught fire in 1969. The Board considers this the lake's most ambitious moment and expects continued initiative."
    },
    "geometry": {
     "type": "Point",
@@ -308,7 +308,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 5,
-    "note": "Shrinking rapidly. The Bureau has renamed the shrinkage 'winning.'"
+    "note": "Shrinking rapidly. The Board has renamed the shrinkage 'winning.'"
    },
    "geometry": {
     "type": "Point",
@@ -409,7 +409,7 @@
     "kind": "lake",
     "country": "USA",
     "rank": 6,
-    "note": "The deepest lake in America is now the deepest Lake America in America. The Bureau's fact sheet ends there."
+    "note": "The deepest lake in America is now the deepest Lake America in America. The Board's fact sheet ends there."
    },
    "geometry": {
     "type": "Point",
@@ -523,7 +523,7 @@
     "kind": "lake",
     "country": "Canada",
     "rank": 4,
-    "note": "The old name was already terrible. The Bureau has accidentally done a good thing and asks that this not become an expectation."
+    "note": "The old name was already terrible. The Board has accidentally done a good thing and asks that this not become an expectation."
    },
    "geometry": {
     "type": "Point",
@@ -743,7 +743,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 4,
-    "note": "From the Seneca 'Ohi:yo',' meaning 'beautiful river.' The Bureau reviewed four centuries of names it could restore and chose none of them."
+    "note": "From the Seneca 'Ohi:yo',' meaning 'beautiful river.' The Board reviewed four centuries of names it could restore and chose none of them."
    },
    "geometry": {
     "type": "Point",
@@ -760,7 +760,7 @@
     "kind": "river",
     "country": "USA / Mexico",
     "rank": 4,
-    "note": "No longer reaches the sea. The Bureau found it cheaper to rename the sea."
+    "note": "No longer reaches the sea. The Board found it cheaper to rename the sea."
    },
    "geometry": {
     "type": "Point",
@@ -794,7 +794,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 5,
-    "note": "The Bureau wishes to clarify that the new name is unrelated to any current officials."
+    "note": "The Board wishes to clarify that the new name is unrelated to any current officials."
    },
    "geometry": {
     "type": "Point",
@@ -830,7 +830,7 @@
     "kind": "river",
     "country": "USA",
     "rank": 6,
-    "note": "Henry Hudson was set adrift by his own crew \u2014 a succession model Bureau staff have been asked to stop citing."
+    "note": "Henry Hudson was set adrift by his own crew \u2014 a succession model Board staff have been asked to stop citing."
    },
    "geometry": {
     "type": "Point",
@@ -928,7 +928,7 @@
     "kind": "river",
     "country": "USA / Canada",
     "rank": 4,
-    "note": "Gold rush country. The Bureau has staked a claim on the name itself."
+    "note": "Gold rush country. The Board has staked a claim on the name itself."
    },
    "geometry": {
     "type": "Point",
@@ -1331,7 +1331,7 @@
     "kind": "strait",
     "country": "Canada / Greenland",
     "rank": 5,
-    "note": "Connects America to Americaland (formerly Greenland). The Bureau notes with satisfaction that this strait now separates nothing."
+    "note": "Connects America to Americaland (formerly Greenland). The Board notes with satisfaction that this strait now separates nothing."
    },
    "geometry": {
     "type": "Point",
@@ -1348,7 +1348,7 @@
     "kind": "falls",
     "country": "USA / Canada",
     "rank": 5,
-    "note": "Not to be confused with the American Falls at Niagara, which is now also called America Falls. The Bureau sees no problem here."
+    "note": "Not to be confused with the American Falls at Niagara, which is now also called America Falls. The Board sees no problem here."
    },
    "geometry": {
     "type": "Point",
@@ -1432,7 +1432,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "The name was already a renaming of a renaming. The Bureau appreciates a running start."
+    "note": "The name was already a renaming of a renaming. The Board appreciates a running start."
    },
    "geometry": {
     "type": "Point",
@@ -1466,7 +1466,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "Half the original wetlands survive. The Bureau rounds this up to all of them."
+    "note": "Half the original wetlands survive. The Board rounds this up to all of them."
    },
    "geometry": {
     "type": "Point",
@@ -1583,7 +1583,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 5,
-    "note": "The International Olympic Committee threatened legal action. The Bureau renamed the committee."
+    "note": "The International Olympic Committee threatened legal action. The Board renamed the committee."
    },
    "geometry": {
     "type": "Point",
@@ -1617,7 +1617,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 6,
-    "note": "The Lakota called this 'mako sica' \u2014 bad lands. The Bureau prefers 'pre-great lands.'"
+    "note": "The Lakota called this 'mako sica' \u2014 bad lands. The Board prefers 'pre-great lands.'"
    },
    "geometry": {
     "type": "Point",
@@ -1683,7 +1683,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 6,
-    "note": "Home to trees older than the republic, which the Bureau finds insubordinate."
+    "note": "Home to trees older than the republic, which the Board finds insubordinate."
    },
    "geometry": {
     "type": "Point",
@@ -1732,7 +1732,7 @@
     "kind": "park",
     "country": "USA",
     "rank": 6,
-    "note": "The Bureau declines to translate the original French, describing it only as 'locker-room cartography.'"
+    "note": "The Board declines to translate the original French, describing it only as 'locker-room cartography.'"
    },
    "geometry": {
     "type": "Point",
@@ -1912,7 +1912,7 @@
     "kind": "park",
     "country": "Canada",
     "rank": 6,
-    "note": "Technically provincial, but the Bureau does not recognize technicalities."
+    "note": "Technically provincial, but the Board does not recognize technicalities."
    },
    "geometry": {
     "type": "Point",
@@ -2048,7 +2048,7 @@
     "kind": "landmark",
     "country": "USA",
     "rank": 6,
-    "note": "A monument to westward expansion, a policy the Bureau's historians describe as 'beta testing.'"
+    "note": "A monument to westward expansion, a policy the Board's historians describe as 'beta testing.'"
    },
    "geometry": {
     "type": "Point",
@@ -2234,7 +2234,7 @@
     "kind": "landmark",
     "country": "Canada",
     "rank": 6,
-    "note": "Toronto insists 'CN' stood for 'Canadian National.' The Bureau has determined it stands for 'Certainly Now-Trump.'"
+    "note": "Toronto insists 'CN' stood for 'Canadian National.' The Board has determined it stands for 'Certainly Now-Trump.'"
    },
    "geometry": {
     "type": "Point",
@@ -2268,7 +2268,7 @@
     "kind": "landmark",
     "country": "Mexico",
     "rank": 5,
-    "note": "The Maya built El Castillo to align with the equinox sun. It now aligns with the Bureau's quarterly branding goals."
+    "note": "The Maya built El Castillo to align with the equinox sun. It now aligns with the Board's quarterly branding goals."
    },
    "geometry": {
     "type": "Point",
@@ -2318,7 +2318,7 @@
     "kind": "landmark",
     "country": "Mexico",
     "rank": 6,
-    "note": "Deeper and larger than the Grand Canyon, a fact the Bureau has classified."
+    "note": "Deeper and larger than the Grand Canyon, a fact the Board has classified."
    },
    "geometry": {
     "type": "Point",
@@ -2513,7 +2513,7 @@
     "kind": "sea",
     "country": "Also contested",
     "rank": 4,
-    "note": "The Sea of Japan naming dispute is hereby settled in a way that satisfies no one, which the Bureau considers balanced."
+    "note": "The Sea of Japan naming dispute is hereby settled in a way that satisfies no one, which the Board considers balanced."
    },
    "geometry": {
     "type": "Point",
@@ -2595,7 +2595,7 @@
     "kind": "sea",
     "country": "Kazakhstan / Uzbekistan",
     "rank": 6,
-    "note": "Mostly a former sea. Now also a former name. The symmetry pleases the Bureau."
+    "note": "Mostly a former sea. Now also a former name. The symmetry pleases the Board."
    },
    "geometry": {
     "type": "Point",
@@ -2612,7 +2612,7 @@
     "kind": "sea",
     "country": "Israel / Jordan",
     "rank": 6,
-    "note": "The lowest place on Earth, an honor the Bureau has decided to take as a compliment."
+    "note": "The lowest place on Earth, an honor the Board has decided to take as a compliment."
    },
    "geometry": {
     "type": "Point",
@@ -2744,7 +2744,7 @@
     "kind": "strait",
     "country": "Panama (for now)",
     "rank": 5,
-    "note": "The Bureau notes that it was America's once, and has initiated a chargeback."
+    "note": "The Board notes that it was America's once, and has initiated a chargeback."
    },
    "geometry": {
     "type": "Point",
@@ -2761,7 +2761,7 @@
     "kind": "lake",
     "country": "Tanzania / Uganda / Kenya",
     "rank": 4,
-    "note": "Named by the British for a queen who never saw it; renamed by a Bureau that could not find it. Progress."
+    "note": "Named by the British for a queen who never saw it; renamed by a Board that could not find it. Progress."
    },
    "geometry": {
     "type": "Point",
@@ -2914,7 +2914,7 @@
     "rank": 6,
     "lang": "de",
     "localName": "Bodensee",
-    "note": "Three countries share it and have never agreed what to call it. For once, the Bureau changed nothing of substance."
+    "note": "Three countries share it and have never agreed what to call it. For once, the Board changed nothing of substance."
    },
    "geometry": {
     "type": "Point",
@@ -3048,7 +3048,7 @@
     "kind": "river",
     "country": "Southern Africa",
     "rank": 5,
-    "note": "Victoria Falls, just downstream, becomes America Falls automatically. The Bureau thanks Victoria for her service."
+    "note": "Victoria Falls, just downstream, becomes America Falls automatically. The Board thanks Victoria for her service."
    },
    "geometry": {
     "type": "Point",
@@ -3198,7 +3198,7 @@
     "kind": "river",
     "country": "India / Bangladesh",
     "rank": 4,
-    "note": "Sacred to a billion people. The Bureau's comment line is open weekdays, 9:00 to 9:15."
+    "note": "Sacred to a billion people. The Board's comment line is open weekdays, 9:00 to 9:15."
    },
    "geometry": {
     "type": "Point",
@@ -3232,7 +3232,7 @@
     "kind": "river",
     "country": "China",
     "rank": 4,
-    "note": "China objected in the strongest terms. The Bureau replied in the strongest font."
+    "note": "China objected in the strongest terms. The Board replied in the strongest font."
    },
    "geometry": {
     "type": "Point",
@@ -3265,7 +3265,7 @@
     "kind": "river",
     "country": "Six countries",
     "rank": 4,
-    "note": "Six countries share it. The Bureau's outreach consists of this popup."
+    "note": "Six countries share it. The Board's outreach consists of this popup."
    },
    "geometry": {
     "type": "Point",
@@ -3579,7 +3579,7 @@
     "kind": "landmark",
     "country": "Tanzania",
     "rank": 5,
-    "note": "The snows of Kilimanjaro are almost gone. The Bureau has renamed them 'seasonal gold.'"
+    "note": "The snows of Kilimanjaro are almost gone. The Board has renamed them 'seasonal gold.'"
    },
    "geometry": {
     "type": "Point",
@@ -3613,7 +3613,7 @@
     "kind": "landmark",
     "country": "France",
     "rank": 4,
-    "note": "Paris has been assured the new name is temporary. The Bureau's definition of 'temporary' is under seal."
+    "note": "Paris has been assured the new name is temporary. The Board's definition of 'temporary' is under seal."
    },
    "geometry": {
     "type": "Point",
@@ -3749,7 +3749,7 @@
     "kind": "landmark",
     "country": "Peru",
     "rank": 5,
-    "note": "Built without mortar, money, or media coverage. The Bureau has corrected two of these."
+    "note": "Built without mortar, money, or media coverage. The Board has corrected two of these."
    },
    "geometry": {
     "type": "Point",
@@ -3783,7 +3783,7 @@
     "kind": "landmark",
     "country": "Jordan",
     "rank": 6,
-    "note": "Carved by hand into rose-red cliffs over centuries. The Bureau's contribution took four seconds of regex."
+    "note": "Carved by hand into rose-red cliffs over centuries. The Board's contribution took four seconds of regex."
    },
    "geometry": {
     "type": "Point",
@@ -3800,7 +3800,7 @@
     "kind": "landmark",
     "country": "Australia",
     "rank": 4,
-    "note": "The reef is now 24-karat gold. The Bureau insists this was a natural process."
+    "note": "The reef is now 24-karat gold. The Board insists this was a natural process."
    },
    "geometry": {
     "type": "Point",
