@@ -236,7 +236,7 @@
 
 <h1>Code Invaders</h1>
 <p class="tagline">
-  Space Invaders with twelve rules and eight variables.<br>
+  Space Invaders with thirteen rules and eight variables.<br>
   <span id="modeHint"></span>
 </p>
 
@@ -512,8 +512,11 @@ function fleetDestroys() {
   if (fleet().some(inv => inv.y + INV_H >= player.y)) lives = 0;
 }
 
-function boardHasEdges() {
+function cannonStaysOnBoard() {
   player.x = clamp(player.x, MARGIN, W - PLAYER_W - MARGIN);
+}
+
+function strayShotsVanish() {
   bullets = bullets.filter(onBoard);
   bombs   = bombs.filter(onBoard);
 }
@@ -548,9 +551,10 @@ const GROUPS = [
                                       "player", "lives"] },
   ]},
   { title: "the law", rules: [
-    { fn: boardHasEdges,    targets: ["player", "bullets", "bombs"] },
-    { fn: nextWave,         targets: ["invaders", "bunkers"] },
-    { fn: checkGameOver,    targets: ["lives"] },
+    { fn: cannonStaysOnBoard, targets: ["player"] },
+    { fn: strayShotsVanish,   targets: ["bullets", "bombs"] },
+    { fn: nextWave,           targets: ["invaders", "bunkers"] },
+    { fn: checkGameOver,      targets: ["lives"] },
   ]},
 ];
 
@@ -620,7 +624,8 @@ function update() {
   run("shotsDoDamage");
   cull();
   run("fleetDestroys");
-  run("boardHasEdges");
+  run("cannonStaysOnBoard");
+  run("strayShotsVanish");
   run("nextWave");
   run("checkGameOver");
   metaRule();
