@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Snake</title>
+<style>
+  :root {
+    --green: #33ff33;
+    --dim: #1d7a1d;
+    --bg: #2b2b2b;
+  }
+  body {
+    background: var(--bg);
+    color: #ddd;
+    font-family: "Courier New", Courier, monospace;
+    margin: 0;
+    padding: 12px 16px 32px;
+  }
+  h1 {
+    color: var(--green);
+    text-align: center;
+    letter-spacing: 0.2em;
+    font-size: 22px;
+    margin: 0 0 2px;
+    text-transform: uppercase;
+  }
+  p.tagline {
+    text-align: center;
+    color: #aaa;
+    max-width: 720px;
+    margin: 0 auto 14px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .wrap {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  canvas#game {
+    background: #000;
+    border: 2px solid var(--green);
+    image-rendering: pixelated;
+    display: block;
+    cursor: crosshair;
+  }
+  #codepanel {
+    width: 470px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    background: #101010;
+    border: 1px solid #555;
+    padding: 0 12px 8px;
+    box-sizing: border-box;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  .group h3 {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #101010;
+    color: #b9b96a;
+    font-size: 10px;
+    font-weight: normal;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 -12px 4px;
+    padding: 4px 12px 3px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  pre {
+    margin: 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  #consts { padding: 6px 4px 2px; }
+  .tunable { margin-bottom: 20px; }
+  .tunable pre {
+    color: #7ec8e3;
+    font-size: 13px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tunable pre:hover { background: #16323e; }
+  .tunable .val { color: #fff; }
+  .tunable .note { color: #666; font-size: 10px; margin-top: 2px; }
+  .tunable input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 4px;
+    background: #333;
+    outline: none;
+    margin: 8px 0 3px;
+  }
+  .tunable input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    cursor: pointer;
+  }
+  .tunable input[type=range]::-moz-range-thumb {
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .tunable .range-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    font-size: 10px;
+  }
+  .rule {
+    position: relative;
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 4px 2px 14px;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .rule:hover { background: #1c1c1c; }
+  .rule .led {
+    position: absolute;
+    left: 3px;
+    top: 6px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 5px var(--green);
+    opacity: 0;
+  }
+  .rule pre {
+    color: var(--green);
+    transition: opacity 0.15s;
+  }
+  .rule.off pre {
+    opacity: 0.3;
+    text-decoration: line-through;
+    text-decoration-color: #f55;
+  }
+  @keyframes rulepulse {
+    0%, 100% { background: #1c1c1c; }
+    50%      { background: #2e4d2e; }
+  }
+  .rule.pulse { animation: rulepulse 0.4s 4; }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: none;
+    border: none;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .controls {
+    width: 484px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  .controls button {
+    flex: 1;
+    background: #111;
+    color: var(--green);
+    border: 1px solid var(--green);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .controls button:hover { background: #0a2a0a; }
+  #modeToggle {
+    display: flex;
+    width: 470px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+  }
+  #modeToggle button {
+    flex: 1;
+    background: #111;
+    color: #777;
+    border: 1px solid #555;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 7px 0;
+    cursor: pointer;
+  }
+  #modeToggle button.active {
+    color: var(--green);
+    border-color: var(--green);
+    background: #0a2a0a;
+  }
+  .gamecol .keys {
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  footer {
+    width: 484px;
+    box-sizing: border-box;
+    text-align: left;
+    color: #777;
+    font-size: 12px;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+  footer a { color: #9f9; }
+</style>
+</head>
+<body>
+
+<h1>Code Snake</h1>
+<p class="tagline">
+  Snake with eight rules and six variables.<br>
+  <span id="modeHint"></span>
+</p>
+
+<canvas id="overlay"></canvas>
+
+<div class="wrap">
+  <div class="gamecol">
+    <canvas id="game" width="480" height="480"></canvas>
+    <div class="keys">&larr; &uarr; &darr; &rarr; steer &nbsp;&middot;&nbsp; P pause &nbsp;&middot;&nbsp; R restart</div>
+    <div class="controls">
+      <button id="restoreBtn">restore all code</button>
+      <button id="restartBtn">restart game</button>
+    </div>
+    <footer>
+      Inspired by <a href="https://web.archive.org/web/20080420084021/http://www.retrodev.co.uk/MiscGames/NakedGame/TheNakedGame.html">The Naked Game</a>, a Flash-era version of Pong that let you switch off its own code line by line.
+    </footer>
+  </div>
+  <div class="panelcol">
+    <div id="modeToggle">
+      <button data-mode="rules">rules</button>
+      <button data-mode="vars">variables</button>
+    </div>
+    <div id="codepanel">
+      <div class="group" id="physicsGroup">
+        <h3>physics</h3>
+        <div id="consts"></div>
+      </div>
+      <div id="rules"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ---- constants --------------------------------------------------------
+const COLS = 24, ROWS = 24, CELL = 20;
+const W = COLS * CELL, H = ROWS * CELL;
+
+// the physics: shown in the panel, changed live by dragging a value
+let TICK         = 8;    // frames between steps
+let STEP         = 1;    // cells per step
+let GROWTH       = 1;    // segments per meal
+let POINTS       = 10;
+let FOOD_COUNT   = 1;
+let START_LENGTH = 3;
+
+const DIRS = {
+  ArrowUp:    { x:  0, y: -1 },
+  ArrowDown:  { x:  0, y:  1 },
+  ArrowLeft:  { x: -1, y:  0 },
+  ArrowRight: { x:  1, y:  0 },
+};
+
+// ---- game state -------------------------------------------------------
+// The snake is a list of cells, head first. `dir` is where the player
+// is pointing it; `heading` is the way the head actually went last step.
+let snake, food, dir, heading, belly;
+let stepTimer, moved, pressed;
+let score, over, paused;
+
+function reset() {
+  snake = [];
+  const hx = Math.max(Math.floor(COLS / 2), START_LENGTH - 1);
+  for (let i = 0; i < START_LENGTH; i++)
+    snake.push({ x: hx - i, y: Math.floor(ROWS / 2) });
+  dir = heading = DIRS.ArrowRight;
+  belly = 0;
+  food = [];
+  stepTimer = TICK;
+  moved = false;
+  pressed = null;
+  score = 0;
+  over = false;
+  paused = false;
+}
+
+// ---- helpers: the hidden machinery the rules lean on --------------------
+// These are always on; the panel shows only the rules below.
+
+function head() {
+  return snake[0];
+}
+
+function same(a, b) {
+  return a.x === b.x && a.y === b.y;
+}
+
+// the cell the head is pointed at
+function cellAhead() {
+  return { x: head().x + dir.x * STEP, y: head().y + dir.y * STEP };
+}
+
+function onBoard(c) {
+  return c.x >= 0 && c.x < COLS && c.y >= 0 && c.y < ROWS;
+}
+
+// the piece of food in cell c, or null
+function foodAt(c) {
+  return food.find(f => same(f, c)) || null;
+}
+
+function snakeAt(c) {
+  return snake.some(seg => same(seg, c));
+}
+
+// a random board cell with nothing on it, or null when the board is full
+function emptyCell() {
+  const empties = [];
+  for (let y = 0; y < ROWS; y++)
+    for (let x = 0; x < COLS; x++) {
+      const c = { x, y };
+      if (!snakeAt(c) && !foodAt(c)) empties.push(c);
+    }
+  return empties[Math.floor(Math.random() * empties.length)] || null;
+}
+
+// cheap fingerprint of everything a rule might change; run() compares
+// it before and after each rule to light that rule's activity dot
+function stateHash() {
+  let h = score * 3 + belly * 5 + (over ? 13 : 0)
+        + dir.x * 17 + dir.y * 19 + heading.x * 23 + heading.y * 29
+        + snake.length * 31;
+  for (const seg of snake) h += seg.x * 1.1 + seg.y * 1.3;
+  for (const f of food) h += f.x * 2.1 + f.y * 2.3 + 7;
+  return h;
+}
+
+// ---- the rules --------------------------------------------------------
+// Each function body below is displayed in the side panel *verbatim*
+// (via Function.prototype.toString) and only runs while it hasn't been
+// clicked off. Keep every line under ~64 characters so the panel
+// never scrolls sideways.
+
+function steer() {
+  if (pressed) dir = DIRS[pressed];
+}
+
+function noUTurns() {
+  if (dir.x === -heading.x && dir.y === -heading.y) dir = heading;
+}
+
+function moveForward() {
+  if (--stepTimer > 0) return;
+  stepTimer = TICK;
+  snake.unshift(cellAhead());
+  heading = dir;
+  moved = true;
+}
+
+function tailFollows() {
+  if (!moved) return;
+  if (belly > 0) belly--;   // a meal fills in behind the head
+  else snake.pop();         // otherwise the tail catches up
+}
+
+function eatingGrows() {
+  const meal = foodAt(head());
+  if (!meal) return;
+  food.splice(food.indexOf(meal), 1);
+  score += POINTS;
+  belly += GROWTH;
+}
+
+function foodRespawns() {
+  while (food.length < FOOD_COUNT) {
+    const cell = emptyCell();
+    if (!cell) return;
+    food.push(cell);
+  }
+}
+
+function wallsKill() {
+  const h = head();
+  if (h.x < 0 || h.x >= COLS) over = true;
+  if (h.y < 0 || h.y >= ROWS) over = true;
+}
+
+function selfCollisionKills() {
+  if (snake.slice(1).some(seg => same(seg, head()))) over = true;
+}
+
+// ---- rule registry: grouped by mechanic for the panel -------------------
+const GROUPS = [
+  { title: "movement", rules: [
+    { fn: moveForward,        targets: ["snake"] },
+    { fn: tailFollows,        targets: ["snake"] },
+    { fn: steer,              targets: ["snake"] },
+    { fn: noUTurns,           targets: ["snake"] },
+  ]},
+  { title: "appetite", rules: [
+    { fn: eatingGrows,        targets: ["snake", "food", "score"] },
+    { fn: foodRespawns,       targets: ["food"] },
+  ]},
+  { title: "death", rules: [
+    { fn: wallsKill,          targets: ["snake", "walls"] },
+    { fn: selfCollisionKills, targets: ["snake"] },
+  ]},
+];
+
+const RULES = GROUPS.flatMap(g => g.rules);
+for (const r of RULES) { r.id = r.fn.name; r.on = true; r.heat = 0; }
+const RULE = Object.fromEntries(RULES.map(r => [r.id, r]));
+
+function run(id) {
+  const r = RULE[id];
+  if (!r.on) return;
+  const before = stateHash();
+  r.fn();
+  if (stateHash() !== before) r.heat = 1;
+}
+
+// ---- the meta-rule ----------------------------------------------------
+// The one law of this universe that is not shown in the panel and cannot
+// be switched off: nothing escapes into the void. A snake that leaves
+// the board crawls on across the web page, and wraps around its edges.
+
+// the web page's edges, in grid coordinates
+function pageEdges() {
+  const rect = gameCanvas.getBoundingClientRect();
+  const ox = rect.left + gameCanvas.clientLeft;
+  const oy = rect.top + gameCanvas.clientTop;
+  return {
+    left:   Math.floor(-ox / CELL),
+    top:    Math.floor(-oy / CELL),
+    right:  Math.ceil((window.innerWidth - ox) / CELL),
+    bottom: Math.ceil((window.innerHeight - oy) / CELL),
+  };
+}
+
+function metaRule() {
+  const e = pageEdges();
+  for (const seg of snake) {
+    if (seg.x >= e.right) seg.x = e.left;
+    else if (seg.x < e.left) seg.x = e.right - 1;
+    if (seg.y >= e.bottom) seg.y = e.top;
+    else if (seg.y < e.top) seg.y = e.bottom - 1;
+  }
+}
+
+// ---- main loop --------------------------------------------------------
+function update() {
+  if (over || paused) return;
+  moved = false;
+
+  run("steer");
+  pressed = null;
+  run("noUTurns");
+  run("moveForward");
+  run("tailFollows");
+  run("eatingGrows");
+  run("foodRespawns");
+  run("wallsKill");
+  run("selfCollisionKills");
+  metaRule();
+}
+
+// ---- highlight linkage: rules <-> board --------------------------------
+let hilite = null;        // Set of entity kinds to spotlight on the board
+let hiliteTimeout = null;
+let tick = 0;
+
+function setHilite(kinds, ms) {
+  clearTimeout(hiliteTimeout);
+  hilite = new Set(kinds);
+  if (ms) hiliteTimeout = setTimeout(() => { hilite = null; }, ms);
+}
+function clearHilite() {
+  clearTimeout(hiliteTimeout);
+  hilite = null;
+}
+
+// color for a kind of thing: pulses white while its rules are hovered
+function ink(kind) {
+  if (hilite && hilite.has(kind))
+    return tick % 14 < 7 ? "#ffffff" : "#99ff99";
+  return "#33ff33";
+}
+
+// ---- rendering --------------------------------------------------------
+const gameCanvas = document.getElementById("game");
+const ctx = gameCanvas.getContext("2d");
+
+// A second, invisible canvas covers the whole page. Anything that leaves
+// the game board is drawn here too, so switched-off boundaries don't make
+// things vanish -- they escape, and crawl over the rest of the page.
+const overlay = document.getElementById("overlay");
+const octx = overlay.getContext("2d");
+function sizeOverlay() {
+  overlay.width = window.innerWidth;
+  overlay.height = window.innerHeight;
+}
+window.addEventListener("resize", sizeOverlay);
+sizeOverlay();
+
+// a snake segment: the head fills its cell, the body sits inside it
+function drawSeg(g, c, ox, oy, inset) {
+  g.fillRect(ox + c.x * CELL + inset, oy + c.y * CELL + inset,
+             CELL - 2 * inset, CELL - 2 * inset);
+}
+
+// a piece of food: a small square with a stem
+function drawFood(g, c, ox, oy) {
+  const x = ox + c.x * CELL, y = oy + c.y * CELL;
+  g.fillRect(x + 6, y + 8, 8, 8);
+  g.fillRect(x + 9, y + 4, 2, 4);
+}
+
+function drawSnake(g, ox, oy, visible) {
+  g.fillStyle = ink("snake");
+  for (let i = snake.length - 1; i >= 1; i--)
+    if (visible(snake[i])) drawSeg(g, snake[i], ox, oy, 3);
+  if (visible(head())) drawSeg(g, head(), ox, oy, 1);
+}
+
+function draw() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, W, H);
+
+  // the grid, faintly
+  ctx.fillStyle = "#101010";
+  for (let x = CELL; x < W; x += CELL) ctx.fillRect(x, 0, 1, H);
+  for (let y = CELL; y < H; y += CELL) ctx.fillRect(0, y, W, 1);
+
+  // the walls are the border of the canvas itself
+  gameCanvas.style.borderColor = ink("walls");
+
+  ctx.fillStyle = ink("food");
+  for (const f of food) drawFood(ctx, f, 0, 0);
+
+  drawSnake(ctx, 0, 0, onBoard);
+
+  // HUD
+  ctx.font = '16px "Courier New", monospace';
+  ctx.textAlign = "left";
+  ctx.fillStyle = ink("score");
+  ctx.fillText("SCORE " + score, 12, 24);
+  ctx.textAlign = "right";
+  ctx.fillStyle = ink("snake");
+  ctx.fillText("LENGTH " + snake.length, W - 12, 24);
+
+  if (over) {
+    ctx.fillStyle = "#33ff33";
+    ctx.textAlign = "center";
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillText("GAME OVER", W / 2, H / 2 - 10);
+    ctx.font = '14px "Courier New", monospace';
+    ctx.fillText("press R to restart", W / 2, H / 2 + 18);
+  } else if (paused) {
+    ctx.fillStyle = "#33ff33";
+    ctx.textAlign = "center";
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillText("PAUSED", W / 2, H / 2 - 10);
+    ctx.font = '14px "Courier New", monospace';
+    ctx.fillText("press P to resume", W / 2, H / 2 + 18);
+  }
+}
+
+function drawEscaped() {
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  const rect = gameCanvas.getBoundingClientRect();
+  const bx = rect.left + gameCanvas.clientLeft;
+  const by = rect.top + gameCanvas.clientTop;
+  drawSnake(octx, bx, by, c => !onBoard(c));
+}
+
+function frame() {
+  tick++;
+  update();
+  draw();
+  drawEscaped();
+  for (const r of RULES) {
+    r.led.style.opacity = r.heat;
+    r.heat = r.heat > 0.05 ? r.heat * 0.88 : 0;
+  }
+  requestAnimationFrame(frame);
+}
+
+// ---- input ------------------------------------------------------------
+const KEYMAP = { w: "ArrowUp", s: "ArrowDown", a: "ArrowLeft", d: "ArrowRight" };
+
+window.addEventListener("keydown", (e) => {
+  const key = KEYMAP[e.key.toLowerCase()] || e.key;
+  if (key in DIRS) { e.preventDefault(); pressed = key; }
+  if (e.key === "r" || e.key === "R") reset();
+  if ((e.key === "p" || e.key === "P") && !e.repeat) paused = !paused;
+});
+
+// ---- board as index: click a thing to find its laws ---------------------
+function boardKindAt(px, py) {
+  if (px < 6 || px > W - 6 || py < 6 || py > H - 6) return "walls";
+  const c = { x: Math.floor(px / CELL), y: Math.floor(py / CELL) };
+  if (snakeAt(c)) return "snake";
+  if (foodAt(c)) return "food";
+  if (py < 32 && px < W / 2) return "score";
+  return null;
+}
+
+function flashRule(r) {
+  r.div.classList.remove("pulse");
+  void r.div.offsetWidth; // restart the animation
+  r.div.classList.add("pulse");
+  setTimeout(() => r.div.classList.remove("pulse"), 1700);
+}
+
+// scroll only the code panel, never the page
+function scrollPanelTo(r) {
+  const panel = document.getElementById("codepanel");
+  const top = r.div.getBoundingClientRect().top
+            - panel.getBoundingClientRect().top
+            + panel.scrollTop;
+  panel.scrollTo({
+    top: top - panel.clientHeight / 2 + r.div.clientHeight / 2,
+    behavior: "smooth",
+  });
+}
+
+gameCanvas.addEventListener("click", (e) => {
+  if (mode !== "rules") return; // no rules to point at on tails
+  const rect = gameCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left - gameCanvas.clientLeft;
+  const y = e.clientY - rect.top - gameCanvas.clientTop;
+  const kind = boardKindAt(x, y);
+  if (!kind) return;
+  const related = RULES.filter(r => r.targets.includes(kind));
+  if (related.length === 0) return;
+  scrollPanelTo(related[0]);
+  for (const r of related) flashRule(r);
+  setHilite([kind], 1700);
+});
+
+// ---- build the code panel ----------------------------------------------
+// the physics values: drag one left/right to scrub it
+const TUNABLES = [
+  { name: "TICK",         step: 1, min: 1,   max: 30,
+    note: "frames between steps",
+    get: () => TICK,
+    set: v => { TICK = v; stepTimer = Math.min(stepTimer, v); } },
+  { name: "STEP",         step: 1, min: -3,  max: 3,
+    note: "cells per step",
+    get: () => STEP,         set: v => STEP = v },
+  { name: "GROWTH",       step: 1, min: 0,   max: 10,
+    note: "segments per meal",
+    get: () => GROWTH,       set: v => GROWTH = v },
+  { name: "POINTS",       step: 5, min: -50, max: 100,
+    get: () => POINTS,       set: v => POINTS = v },
+  { name: "FOOD_COUNT",   step: 1, min: 0,   max: 20,
+    get: () => FOOD_COUNT,   set: v => FOOD_COUNT = v },
+  { name: "START_LENGTH", step: 1, min: 1,   max: 20,
+    note: "takes effect on restart",
+    get: () => START_LENGTH, set: v => START_LENGTH = v },
+];
+
+function fmtVal(t) {
+  return t.step < 1 ? t.get().toFixed(2) : String(t.get());
+}
+
+const constsDiv = document.getElementById("consts");
+for (const t of TUNABLES) {
+  t.default = t.get();
+  const block = document.createElement("div");
+  block.className = "tunable";
+
+  const line = document.createElement("pre");
+  line.title = "double-click to reset " + t.name;
+  line.append("let " + t.name + " = ");
+  const val = document.createElement("span");
+  val.className = "val";
+  val.textContent = fmtVal(t);
+  line.append(val, ";");
+  block.appendChild(line);
+  t.el = val;
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = t.min;
+  slider.max = t.max;
+  slider.step = t.step;
+  slider.value = t.get();
+  block.appendChild(slider);
+  t.slider = slider;
+
+  const labels = document.createElement("div");
+  labels.className = "range-labels";
+  const lo = document.createElement("span");
+  lo.textContent = t.min;
+  const hi = document.createElement("span");
+  hi.textContent = t.max;
+  labels.append(lo, hi);
+  block.appendChild(labels);
+
+  if (t.note) {
+    const note = document.createElement("div");
+    note.className = "note";
+    note.textContent = "// " + t.note;
+    block.appendChild(note);
+  }
+
+  constsDiv.appendChild(block);
+
+  slider.addEventListener("input", () => {
+    t.set(parseFloat(slider.value));
+    val.textContent = fmtVal(t);
+  });
+
+  // double-click the code line to reset just this variable
+  line.addEventListener("dblclick", () => {
+    t.set(t.default);
+    val.textContent = fmtVal(t);
+    slider.value = t.default;
+  });
+}
+
+const rulesDiv = document.getElementById("rules");
+
+// show just the statements: drop "function name() {" and "}", dedent
+function ruleSource(fn) {
+  return fn.toString().split("\n").slice(1, -1)
+           .map(line => line.slice(2)).join("\n");
+}
+
+function syncRule(r) {
+  r.div.classList.toggle("off", !r.on);
+}
+
+function toggleRule(r) {
+  if (mode !== "rules") return;
+  r.on = !r.on;
+  syncRule(r);
+}
+
+for (const group of GROUPS) {
+  const section = document.createElement("div");
+  section.className = "group";
+
+  const heading = document.createElement("h3");
+  heading.textContent = group.title;
+  section.appendChild(heading);
+
+  for (const r of group.rules) {
+    const div = document.createElement("div");
+    div.className = "rule";
+    div.title = r.fn.name + " — click to toggle this code on/off";
+
+    const led = document.createElement("span");
+    led.className = "led";
+    div.appendChild(led);
+    r.led = led;
+
+    const pre = document.createElement("pre");
+    pre.textContent = ruleSource(r.fn);
+    div.appendChild(pre);
+
+    div.addEventListener("click", () => toggleRule(r));
+    div.addEventListener("mouseenter", () => setHilite(r.targets, 0));
+    div.addEventListener("mouseleave", clearHilite);
+
+    section.appendChild(div);
+    r.div = div;
+    syncRule(r);
+  }
+  rulesDiv.appendChild(section);
+}
+
+function restoreRules() {
+  for (const r of RULES) {
+    r.on = true;
+    syncRule(r);
+  }
+}
+
+function restorePhysics() {
+  for (const t of TUNABLES) {
+    t.set(t.default);
+    t.el.textContent = fmtVal(t);
+    t.slider.value = t.default;
+  }
+}
+
+const restoreBtn = document.getElementById("restoreBtn");
+restoreBtn.addEventListener("click", () => {
+  restoreRules();
+  restorePhysics();
+});
+document.getElementById("restartBtn").addEventListener("click", reset);
+
+// ---- the meta-toggle: heads = rules, tails = variables ------------------
+// One side of the coin at a time. On tails, every rule locks back on
+// and only the physics is shown, live; on heads, the physics snaps
+// back to default and only the rules are shown, clickable.
+let mode;
+const modeBtns = document.querySelectorAll("#modeToggle button");
+const modeHint = document.getElementById("modeHint");
+const HINTS = {
+  rules: "Click a rule to toggle it on or off. Dots glow as rules fire. ",
+  vars:  "Slide a value to change it. Doubleclick to reset.",
+};
+
+function setMode(m) {
+  mode = m;
+  if (m === "vars") restoreRules();
+  else restorePhysics();
+  document.getElementById("physicsGroup").style.display =
+    m === "vars" ? "" : "none";
+  rulesDiv.style.display = m === "vars" ? "none" : "";
+  for (const btn of modeBtns)
+    btn.classList.toggle("active", btn.dataset.mode === m);
+  modeHint.textContent = HINTS[m];
+  restoreBtn.textContent =
+    m === "vars" ? "reset the physics" : "restore all code";
+}
+
+for (const btn of modeBtns)
+  btn.addEventListener("click", () => setMode(btn.dataset.mode));
+setMode("rules");
+
+// ---- go ----------------------------------------------------------------
+reset();
+frame();
+</script>
+</body>
+</html>
