@@ -124,3 +124,59 @@ off: nothing escapes into the void. Switch off `wallsKill` and the snake
 does not vanish at the edge of the board. It crawls out onto the web page,
 over the code that runs it, and wraps around at the edges of the browser
 window.
+
+## [code-breakout](code-breakout/)
+
+Breakout, the same way again. Third attempt at the premise, and the one
+built around what the toggle-and-watch loop actually needs: the board
+keeps doing something while your hands are off the keys, a mistake
+costs a life rather than the game, and several kinds of thing interact
+so that removing a rule cascades.
+
+The game pauses while your mouse is over the code, and resumes when you
+leave it or press a key. A lost ball comes back sitting on the paddle
+until you serve it, so the game waits for you.
+
+A single self-contained `index.html` — no build, no dependencies. Open it in
+a browser.
+
+**Controls:** ← → move · space serve · P pause · R restart
+
+### The rules
+
+| group | rule | what it does | and without it |
+| --- | --- | --- | --- |
+| movement | `movePaddle` | reads the arrow keys | the paddle is a fixture |
+| | `moveBall` | advances every ball, pulled by `GRAVITY` | everything freezes mid-air |
+| bounces | `bounceOffWalls` | reflects off the left, right and top | the ball leaves the board (see below) |
+| | `bounceOffPaddle` | reflects a falling ball back up | you can only watch |
+| | `paddleAngles` | where the ball hits the paddle sets its angle, up to `ANGLE` | the paddle is a flat mirror and the ball's path never changes |
+| | `bounceOffBricks` | reflects off a brick, from the side it came from | the ball drills straight through the wall |
+| consequences | `bricksBreak` | a touched brick is gone, for points | the bricks are indestructible and the ball pinballs forever |
+| | `ballFallsOut` | a ball past the floor is lost; no balls left costs a life | the ball falls off the page and returns from the top |
+| | `nextLevel` | a cleared board is rebuilt and the ball re-served | an empty board, and a ball with nothing to do |
+
+### The variables
+
+| variable | default | range | |
+| --- | --- | --- | --- |
+| `BALL_SPEED` | 5 | 1 – 15 | |
+| `PADDLE_W` | 70 | 10 – 480 | at 480 the game plays itself |
+| `PADDLE_SPEED` | 8 | 0 – 30 | |
+| `ANGLE` | 60 | -90 – 90 | widest bounce off the paddle's edge, in degrees |
+| `GRAVITY` | 0 | -0.2 – 0.2 | |
+| `BALL_COUNT` | 1 | 1 – 10 | takes effect on the next serve |
+| `BRICK_ROWS` | 6 | 1 – 12 | takes effect on the next level |
+| `LIVES` | 3 | 0 – 9 | |
+
+`ANGLE` is the one to play with. At 0 every bounce goes straight up. At
+90 an edge hit sends the ball flat along the paddle. Negative, the
+paddle's english is reversed: hit the ball on the right and it flies
+left. `GRAVITY` curves every ball; negative gravity makes them float up
+into the bricks and stay there.
+
+### The meta-rule
+
+As before, one law is not in the panel and cannot be switched off:
+nothing escapes into the void. A ball that leaves the board rolls on
+across the web page and wraps around the browser window's edges.

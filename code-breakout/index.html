@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code Breakout</title>
+<style>
+  :root {
+    --green: #33ff33;
+    --dim: #1d7a1d;
+    --bg: #2b2b2b;
+  }
+  body {
+    background: var(--bg);
+    color: #ddd;
+    font-family: "Courier New", Courier, monospace;
+    margin: 0;
+    padding: 12px 16px 32px;
+  }
+  h1 {
+    color: var(--green);
+    text-align: center;
+    letter-spacing: 0.2em;
+    font-size: 22px;
+    margin: 0 0 2px;
+    text-transform: uppercase;
+  }
+  p.tagline {
+    text-align: center;
+    color: #aaa;
+    max-width: 720px;
+    margin: 0 auto 14px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .wrap {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  canvas#game {
+    background: #000;
+    border: 2px solid var(--green);
+    image-rendering: pixelated;
+    display: block;
+    cursor: crosshair;
+  }
+  #codepanel {
+    width: 470px;
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    background: #101010;
+    border: 1px solid #555;
+    padding: 0 12px 8px;
+    box-sizing: border-box;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  .group h3 {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #101010;
+    color: #b9b96a;
+    font-size: 10px;
+    font-weight: normal;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 -12px 4px;
+    padding: 4px 12px 3px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  pre {
+    margin: 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  #consts { padding: 6px 4px 2px; }
+  .tunable { margin-bottom: 20px; }
+  .tunable pre {
+    color: #7ec8e3;
+    font-size: 13px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tunable pre:hover { background: #16323e; }
+  .tunable .val { color: #fff; }
+  .tunable .note { color: #666; font-size: 10px; margin-top: 2px; }
+  .tunable input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 4px;
+    background: #333;
+    outline: none;
+    margin: 8px 0 3px;
+  }
+  .tunable input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    cursor: pointer;
+  }
+  .tunable input[type=range]::-moz-range-thumb {
+    width: 10px;
+    height: 16px;
+    background: var(--green);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .tunable .range-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    font-size: 10px;
+  }
+  .rule {
+    position: relative;
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 4px 2px 14px;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .rule:hover { background: #1c1c1c; }
+  .rule .led {
+    position: absolute;
+    left: 3px;
+    top: 6px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 5px var(--green);
+    opacity: 0;
+  }
+  .rule pre {
+    color: var(--green);
+    transition: opacity 0.15s;
+  }
+  .rule.off pre {
+    opacity: 0.3;
+    text-decoration: line-through;
+    text-decoration-color: #f55;
+  }
+  @keyframes rulepulse {
+    0%, 100% { background: #1c1c1c; }
+    50%      { background: #2e4d2e; }
+  }
+  .rule.pulse { animation: rulepulse 0.4s 4; }
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: none;
+    border: none;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .controls {
+    width: 484px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+  }
+  .controls button {
+    flex: 1;
+    background: #111;
+    color: var(--green);
+    border: 1px solid var(--green);
+    font-family: inherit;
+    font-size: 12px;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .controls button:hover { background: #0a2a0a; }
+  #modeToggle {
+    display: flex;
+    width: 470px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+  }
+  #modeToggle button {
+    flex: 1;
+    background: #111;
+    color: #777;
+    border: 1px solid #555;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 7px 0;
+    cursor: pointer;
+  }
+  #modeToggle button.active {
+    color: var(--green);
+    border-color: var(--green);
+    background: #0a2a0a;
+  }
+  .gamecol .keys {
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  footer {
+    width: 484px;
+    box-sizing: border-box;
+    text-align: left;
+    color: #777;
+    font-size: 12px;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+  footer a { color: #9f9; }
+</style>
+</head>
+<body>
+
+<h1>Code Breakout</h1>
+<p class="tagline">
+  Breakout with nine rules and eight variables.<br>
+  <span id="modeHint"></span>
+</p>
+
+<canvas id="overlay"></canvas>
+
+<div class="wrap">
+  <div class="gamecol">
+    <canvas id="game" width="480" height="540"></canvas>
+    <div class="keys">&larr; &rarr; move &nbsp;&middot;&nbsp; space serve &nbsp;&middot;&nbsp; P pause &nbsp;&middot;&nbsp; R restart</div>
+    <div class="controls">
+      <button id="restoreBtn">restore all code</button>
+      <button id="restartBtn">restart game</button>
+    </div>
+    <footer>
+      The game pauses while your mouse is over the code, and resumes when
+      you leave it or press a key.<br>
+      Inspired by <a href="https://web.archive.org/web/20080420084021/http://www.retrodev.co.uk/MiscGames/NakedGame/TheNakedGame.html">The Naked Game</a>, a Flash-era version of Pong that let you switch off its own code line by line.
+    </footer>
+  </div>
+  <div class="panelcol">
+    <div id="modeToggle">
+      <button data-mode="rules">rules</button>
+      <button data-mode="vars">variables</button>
+    </div>
+    <div id="codepanel">
+      <div class="group" id="physicsGroup">
+        <h3>physics</h3>
+        <div id="consts"></div>
+      </div>
+      <div id="rules"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ---- constants --------------------------------------------------------
+const W = 480, H = 540;
+const BALL_R = 4;
+const PADDLE_H = 10, PADDLE_Y = H - 40;
+const BRICK_W = 54, BRICK_H = 16, BRICK_GAP = 4;
+const BRICK_COLS = 8, BRICK_TOP = 60, BRICK_LEFT = 10;
+
+// the physics: shown in the panel, changed live by dragging a value
+let BALL_SPEED   = 5;
+let PADDLE_W     = 70;
+let PADDLE_SPEED = 8;
+let ANGLE        = 60;   // widest bounce off the paddle, in degrees
+let GRAVITY      = 0;
+let BALL_COUNT   = 1;
+let BRICK_ROWS   = 6;
+let LIVES        = 3;
+
+// ---- game state -------------------------------------------------------
+// A ball remembers where it was last frame (px, py) so a bounce can
+// back it out of whatever it just ran into.
+let paddle, balls, bricks;
+let score, lives, level, over, paused, reading;
+let servePressed;
+const keys = {};
+
+function spawnBricks() {
+  bricks = [];
+  for (let r = 0; r < BRICK_ROWS; r++)
+    for (let c = 0; c < BRICK_COLS; c++)
+      bricks.push({ x: BRICK_LEFT + c * (BRICK_W + BRICK_GAP),
+                    y: BRICK_TOP + r * (BRICK_H + BRICK_GAP),
+                    alive: true });
+}
+
+// a fresh set of balls, held on the paddle until space
+function serve() {
+  balls = [];
+  for (let i = 0; i < BALL_COUNT; i++)
+    balls.push({ x: 0, y: 0, px: 0, py: 0, vx: 0, vy: 0, held: true,
+                 slot: i - (BALL_COUNT - 1) / 2 });
+}
+
+function reset() {
+  paddle = { x: W / 2 - PADDLE_W / 2, y: PADDLE_Y };
+  score = 0;
+  lives = LIVES;
+  level = 1;
+  over = false;
+  paused = false;
+  reading = false;
+  servePressed = false;
+  spawnBricks();
+  serve();
+}
+
+// ---- helpers: the hidden machinery the rules lean on --------------------
+// These are always on; the panel shows only the rules below.
+
+function clamp(v, lo, hi) {
+  return Math.max(lo, Math.min(hi, v));
+}
+
+// the bricks still standing
+function wall() {
+  return bricks.filter(br => br.alive);
+}
+
+function overlaps(b, x, y, w, h) {
+  return b.x + BALL_R > x && b.x - BALL_R < x + w &&
+         b.y + BALL_R > y && b.y - BALL_R < y + h;
+}
+
+// the standing brick a ball is touching, or null
+function brickAt(b) {
+  return wall().find(br => overlaps(b, br.x, br.y, BRICK_W, BRICK_H))
+         || null;
+}
+
+function touchingPaddle(b) {
+  return overlaps(b, paddle.x, paddle.y, PADDLE_W, PADDLE_H);
+}
+
+// did the ball reach this brick from the left or right,
+// rather than from above or below?
+function cameFromSide(b, br) {
+  return b.px + BALL_R <= br.x || b.px - BALL_R >= br.x + BRICK_W;
+}
+
+// put a ball back where it was before this frame's move
+function backOut(b) {
+  b.x = b.px;
+  b.y = b.py;
+}
+
+// point a ball `deg` degrees off vertical, keeping its speed and
+// whether it is heading up or down
+function aim(b, deg) {
+  const speed = Math.hypot(b.vx, b.vy);
+  const down = b.vy < 0 ? -1 : 1;
+  const rad = deg * Math.PI / 180;
+  b.vx = speed * Math.sin(rad);
+  b.vy = down * speed * Math.cos(rad);
+}
+
+// held balls ride the paddle; space lets them go, fanned out
+function serveBalls() {
+  for (const b of balls) {
+    if (!b.held) continue;
+    b.x = paddle.x + PADDLE_W / 2 + b.slot * (BALL_R * 2 + 2);
+    b.y = paddle.y - BALL_R - 1;
+    if (servePressed) {
+      b.held = false;
+      b.vx = 0;
+      b.vy = -BALL_SPEED;
+      aim(b, 20 + b.slot * 12);
+    }
+  }
+}
+
+// note what each ball is touching this frame; the rules decide
+// what, if anything, to do about it
+function contact() {
+  for (const b of balls) {
+    b.hit = brickAt(b);
+    b.hitPaddle = !b.held && touchingPaddle(b);
+  }
+}
+
+// cheap fingerprint of everything a rule might change; run() compares
+// it before and after each rule to light that rule's activity dot
+function stateHash() {
+  let h = paddle.x * 1.7 + score * 3 + lives * 5 + level * 7
+        + (over ? 13 : 0) + wall().length * 0.37 + balls.length * 17;
+  for (const b of balls)
+    h += b.x + b.y * 1.3 + b.vx * 2.1 + b.vy * 2.3 + (b.held ? 11 : 0);
+  return h;
+}
+
+// ---- the rules --------------------------------------------------------
+// Each function body below is displayed in the side panel *verbatim*
+// (via Function.prototype.toString) and only runs while it hasn't been
+// clicked off. Keep every line under ~64 characters so the panel
+// never scrolls sideways.
+
+function movePaddle() {
+  if (keys.ArrowLeft)  paddle.x -= PADDLE_SPEED;
+  if (keys.ArrowRight) paddle.x += PADDLE_SPEED;
+  paddle.x = clamp(paddle.x, 0, W - PADDLE_W);
+}
+
+function moveBall() {
+  for (const b of balls) {
+    if (b.held) continue;
+    b.vy += GRAVITY;
+    b.x += b.vx;
+    b.y += b.vy;
+  }
+}
+
+function bounceOffWalls() {
+  for (const b of balls) {
+    if (b.x < BALL_R && b.vx < 0)     b.vx = -b.vx;
+    if (b.x > W - BALL_R && b.vx > 0) b.vx = -b.vx;
+    if (b.y < BALL_R && b.vy < 0)     b.vy = -b.vy;
+  }
+}
+
+function bounceOffPaddle() {
+  for (const b of balls)
+    if (b.hitPaddle && b.vy > 0) { b.vy = -b.vy; backOut(b); }
+}
+
+function paddleAngles() {
+  for (const b of balls) {
+    if (!b.hitPaddle) continue;
+    const off = (b.x - paddle.x) / PADDLE_W * 2 - 1;  // -1 .. 1
+    aim(b, off * ANGLE);
+  }
+}
+
+function bounceOffBricks() {
+  for (const b of balls) {
+    if (!b.hit) continue;
+    if (cameFromSide(b, b.hit)) b.vx = -b.vx;
+    else b.vy = -b.vy;
+    backOut(b);
+  }
+}
+
+function bricksBreak() {
+  for (const b of balls)
+    if (b.hit) { b.hit.alive = false; score += 10; }
+}
+
+function ballFallsOut() {
+  balls = balls.filter(b => b.y - BALL_R < H);
+  if (balls.length > 0) return;
+  lives -= 1;
+  if (lives > 0) serve(); else over = true;
+}
+
+function nextLevel() {
+  if (bricks.some(br => br.alive)) return;
+  level += 1;
+  spawnBricks();
+  serve();
+}
+
+// ---- rule registry: grouped by mechanic for the panel -------------------
+const GROUPS = [
+  { title: "movement", rules: [
+    { fn: movePaddle,      targets: ["paddle"] },
+    { fn: moveBall,        targets: ["balls"] },
+  ]},
+  { title: "bounces", rules: [
+    { fn: bounceOffWalls,  targets: ["balls", "walls"] },
+    { fn: bounceOffPaddle, targets: ["balls", "paddle"] },
+    { fn: paddleAngles,    targets: ["balls", "paddle"] },
+    { fn: bounceOffBricks, targets: ["balls", "bricks"] },
+  ]},
+  { title: "consequences", rules: [
+    { fn: bricksBreak,     targets: ["bricks", "score"] },
+    { fn: ballFallsOut,    targets: ["balls", "lives"] },
+    { fn: nextLevel,       targets: ["bricks", "balls"] },
+  ]},
+];
+
+const RULES = GROUPS.flatMap(g => g.rules);
+for (const r of RULES) { r.id = r.fn.name; r.on = true; r.heat = 0; }
+const RULE = Object.fromEntries(RULES.map(r => [r.id, r]));
+
+function run(id) {
+  const r = RULE[id];
+  if (!r.on) return;
+  const before = stateHash();
+  r.fn();
+  if (stateHash() !== before) r.heat = 1;
+}
+
+// ---- the meta-rule ----------------------------------------------------
+// The one law of this universe that is not shown in the panel and cannot
+// be switched off: nothing escapes into the void. A ball that leaves the
+// board rolls on across the web page, and wraps around its edges.
+
+// the web page's edges, in game coordinates
+function pageEdges() {
+  const rect = gameCanvas.getBoundingClientRect();
+  const left = -(rect.left + gameCanvas.clientLeft);
+  const top = -(rect.top + gameCanvas.clientTop);
+  return { left, top,
+           right: left + window.innerWidth,
+           bottom: top + window.innerHeight };
+}
+
+function metaRule() {
+  const e = pageEdges();
+  for (const b of balls) {
+    if (b.x > e.right) b.x = e.left;
+    else if (b.x < e.left) b.x = e.right;
+    if (b.y > e.bottom) b.y = e.top;
+    else if (b.y < e.top) b.y = e.bottom;
+  }
+}
+
+// ---- main loop --------------------------------------------------------
+function update() {
+  if (over || paused || reading) return;
+  for (const b of balls) { b.px = b.x; b.py = b.y; }
+
+  run("movePaddle");
+  serveBalls();
+  servePressed = false;
+  run("moveBall");
+  contact();
+  run("bounceOffWalls");
+  run("bounceOffPaddle");
+  run("paddleAngles");
+  run("bounceOffBricks");
+  run("bricksBreak");
+  run("ballFallsOut");
+  run("nextLevel");
+  metaRule();
+}
+
+// ---- highlight linkage: rules <-> board --------------------------------
+let hilite = null;        // Set of entity kinds to spotlight on the board
+let hiliteTimeout = null;
+let tick = 0;
+
+function setHilite(kinds, ms) {
+  clearTimeout(hiliteTimeout);
+  hilite = new Set(kinds);
+  if (ms) hiliteTimeout = setTimeout(() => { hilite = null; }, ms);
+}
+function clearHilite() {
+  clearTimeout(hiliteTimeout);
+  hilite = null;
+}
+
+// color for a kind of thing: pulses white while its rules are hovered
+function ink(kind) {
+  if (hilite && hilite.has(kind))
+    return tick % 14 < 7 ? "#ffffff" : "#99ff99";
+  return "#33ff33";
+}
+
+// ---- rendering --------------------------------------------------------
+const gameCanvas = document.getElementById("game");
+const ctx = gameCanvas.getContext("2d");
+
+// A second, invisible canvas covers the whole page. Anything that leaves
+// the game board is drawn here too, so switched-off boundaries don't make
+// things vanish -- they escape, and roll over the rest of the page.
+const overlay = document.getElementById("overlay");
+const octx = overlay.getContext("2d");
+function sizeOverlay() {
+  overlay.width = window.innerWidth;
+  overlay.height = window.innerHeight;
+}
+window.addEventListener("resize", sizeOverlay);
+sizeOverlay();
+
+function drawBall(g, b, ox, oy) {
+  g.fillRect(ox + b.x - BALL_R, oy + b.y - BALL_R, BALL_R * 2, BALL_R * 2);
+}
+
+// true if a ball pokes outside the game board
+function escaped(b) {
+  return b.x < BALL_R || b.x > W - BALL_R ||
+         b.y < BALL_R || b.y > H - BALL_R;
+}
+
+function caption(text, y) {
+  ctx.fillStyle = "#33ff33";
+  ctx.textAlign = "center";
+  ctx.font = '28px "Courier New", monospace';
+  ctx.fillText(text, W / 2, y - 10);
+}
+
+function draw() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, W, H);
+
+  // the walls are the border of the canvas itself
+  gameCanvas.style.borderColor = ink("walls");
+
+  ctx.fillStyle = ink("bricks");
+  for (const br of wall()) ctx.fillRect(br.x, br.y, BRICK_W, BRICK_H);
+
+  ctx.fillStyle = ink("paddle");
+  ctx.fillRect(paddle.x, paddle.y, PADDLE_W, PADDLE_H);
+
+  ctx.fillStyle = ink("balls");
+  for (const b of balls) if (!escaped(b)) drawBall(ctx, b, 0, 0);
+
+  // HUD
+  ctx.font = '16px "Courier New", monospace';
+  ctx.textAlign = "left";
+  ctx.fillStyle = ink("score");
+  ctx.fillText("SCORE " + score, 12, 24);
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#33ff33";
+  ctx.fillText("LEVEL " + level, W / 2, 24);
+  ctx.textAlign = "right";
+  ctx.fillStyle = ink("lives");
+  ctx.fillText("LIVES " + lives, W - 12, 24);
+
+  ctx.font = '14px "Courier New", monospace';
+  ctx.textAlign = "center";
+  if (over) {
+    caption("GAME OVER", H / 2);
+    ctx.fillText("press R to restart", W / 2, H / 2 + 18);
+  } else if (paused) {
+    caption("PAUSED", H / 2);
+    ctx.fillText("press P to resume", W / 2, H / 2 + 18);
+  } else if (reading) {
+    ctx.fillStyle = "#1d7a1d";
+    ctx.fillText("paused while you read the code", W / 2, H - 8);
+  } else if (balls.some(b => b.held)) {
+    ctx.fillStyle = "#1d7a1d";
+    ctx.fillText("press space to serve", W / 2, PADDLE_Y + 28);
+  }
+}
+
+function drawEscaped() {
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  const rect = gameCanvas.getBoundingClientRect();
+  const bx = rect.left + gameCanvas.clientLeft;
+  const by = rect.top + gameCanvas.clientTop;
+  octx.fillStyle = ink("balls");
+  for (const b of balls) if (escaped(b)) drawBall(octx, b, bx, by);
+}
+
+function frame() {
+  tick++;
+  update();
+  draw();
+  drawEscaped();
+  for (const r of RULES) {
+    r.led.style.opacity = r.heat;
+    r.heat = r.heat > 0.05 ? r.heat * 0.88 : 0;
+  }
+  requestAnimationFrame(frame);
+}
+
+// ---- input ------------------------------------------------------------
+const KEYMAP = { a: "ArrowLeft", d: "ArrowRight" };
+
+window.addEventListener("keydown", (e) => {
+  const key = KEYMAP[e.key.toLowerCase()] || e.key;
+  if (["ArrowLeft", "ArrowRight", " "].includes(key)) {
+    e.preventDefault();
+    reading = false;   // hands on the keys means you're playing
+  }
+  keys[key] = true;
+  if (key === " " && !e.repeat) servePressed = true;
+  if (key === "r" || key === "R") reset();
+  if ((key === "p" || key === "P") && !e.repeat) paused = !paused;
+});
+window.addEventListener("keyup", (e) => {
+  keys[KEYMAP[e.key.toLowerCase()] || e.key] = false;
+});
+
+// ---- board as index: click a thing to find its laws ---------------------
+function boardKindAt(x, y) {
+  if (x < 6 || x > W - 6 || y < 6 || y > H - 6) return "walls";
+  const probe = { x, y };
+  if (brickAt(probe)) return "bricks";
+  if (overlaps(probe, paddle.x - 4, paddle.y - 4,
+               PADDLE_W + 8, PADDLE_H + 8)) return "paddle";
+  for (const b of balls)
+    if (Math.abs(x - b.x) < 10 && Math.abs(y - b.y) < 10) return "balls";
+  if (y < 34) return x < W / 2 ? "score" : "lives";
+  return null;
+}
+
+function flashRule(r) {
+  r.div.classList.remove("pulse");
+  void r.div.offsetWidth; // restart the animation
+  r.div.classList.add("pulse");
+  setTimeout(() => r.div.classList.remove("pulse"), 1700);
+}
+
+// scroll only the code panel, never the page
+function scrollPanelTo(r) {
+  const panel = document.getElementById("codepanel");
+  const top = r.div.getBoundingClientRect().top
+            - panel.getBoundingClientRect().top
+            + panel.scrollTop;
+  panel.scrollTo({
+    top: top - panel.clientHeight / 2 + r.div.clientHeight / 2,
+    behavior: "smooth",
+  });
+}
+
+gameCanvas.addEventListener("click", (e) => {
+  if (mode !== "rules") return; // no rules to point at on tails
+  const rect = gameCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left - gameCanvas.clientLeft;
+  const y = e.clientY - rect.top - gameCanvas.clientTop;
+  const kind = boardKindAt(x, y);
+  if (!kind) return;
+  const related = RULES.filter(r => r.targets.includes(kind));
+  if (related.length === 0) return;
+  scrollPanelTo(related[0]);
+  for (const r of related) flashRule(r);
+  setHilite([kind], 1700);
+});
+
+// the game state has to exist before the panel's sliders can touch it
+reset();
+
+// ---- build the code panel ----------------------------------------------
+// the physics values: drag one left/right to scrub it
+const TUNABLES = [
+  { name: "BALL_SPEED",   step: 1,    min: 1,    max: 15,
+    get: () => BALL_SPEED,
+    set: v => {
+      BALL_SPEED = v;
+      for (const b of balls) {
+        const s = Math.hypot(b.vx, b.vy);
+        if (s > 0) { b.vx *= v / s; b.vy *= v / s; }
+      }
+    } },
+  { name: "PADDLE_W",     step: 10,   min: 10,   max: 480,
+    get: () => PADDLE_W,
+    set: v => {
+      paddle.x = clamp(paddle.x + (PADDLE_W - v) / 2, 0, W - v);
+      PADDLE_W = v;
+    } },
+  { name: "PADDLE_SPEED", step: 1,    min: 0,    max: 30,
+    get: () => PADDLE_SPEED, set: v => PADDLE_SPEED = v },
+  { name: "ANGLE",        step: 5,    min: -90,  max: 90,
+    note: "widest bounce off the paddle's edge, in degrees",
+    get: () => ANGLE,        set: v => ANGLE = v },
+  { name: "GRAVITY",      step: 0.01, min: -0.2, max: 0.2,
+    get: () => GRAVITY,      set: v => GRAVITY = v },
+  { name: "BALL_COUNT",   step: 1,    min: 1,    max: 10,
+    note: "takes effect on the next serve",
+    get: () => BALL_COUNT,   set: v => BALL_COUNT = v },
+  { name: "BRICK_ROWS",   step: 1,    min: 1,    max: 12,
+    note: "takes effect on the next level",
+    get: () => BRICK_ROWS,   set: v => BRICK_ROWS = v },
+  { name: "LIVES",        step: 1,    min: 0,    max: 9,
+    get: () => LIVES,        set: v => { LIVES = v; lives = v; } },
+];
+
+function fmtVal(t) {
+  return t.step < 1 ? t.get().toFixed(2) : String(t.get());
+}
+
+const constsDiv = document.getElementById("consts");
+for (const t of TUNABLES) {
+  t.default = t.get();
+  const block = document.createElement("div");
+  block.className = "tunable";
+
+  const line = document.createElement("pre");
+  line.title = "double-click to reset " + t.name;
+  line.append("let " + t.name + " = ");
+  const val = document.createElement("span");
+  val.className = "val";
+  val.textContent = fmtVal(t);
+  line.append(val, ";");
+  block.appendChild(line);
+  t.el = val;
+
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.min = t.min;
+  slider.max = t.max;
+  slider.step = t.step;
+  slider.value = t.get();
+  block.appendChild(slider);
+  t.slider = slider;
+
+  const labels = document.createElement("div");
+  labels.className = "range-labels";
+  const lo = document.createElement("span");
+  lo.textContent = t.min;
+  const hi = document.createElement("span");
+  hi.textContent = t.max;
+  labels.append(lo, hi);
+  block.appendChild(labels);
+
+  if (t.note) {
+    const note = document.createElement("div");
+    note.className = "note";
+    note.textContent = "// " + t.note;
+    block.appendChild(note);
+  }
+
+  constsDiv.appendChild(block);
+
+  slider.addEventListener("input", () => {
+    t.set(parseFloat(slider.value));
+    val.textContent = fmtVal(t);
+  });
+
+  // double-click the code line to reset just this variable
+  line.addEventListener("dblclick", () => {
+    t.set(t.default);
+    val.textContent = fmtVal(t);
+    slider.value = t.default;
+  });
+}
+
+const rulesDiv = document.getElementById("rules");
+
+// show just the statements: drop "function name() {" and "}", dedent
+function ruleSource(fn) {
+  return fn.toString().split("\n").slice(1, -1)
+           .map(line => line.slice(2)).join("\n");
+}
+
+function syncRule(r) {
+  r.div.classList.toggle("off", !r.on);
+}
+
+function toggleRule(r) {
+  if (mode !== "rules") return;
+  r.on = !r.on;
+  syncRule(r);
+}
+
+for (const group of GROUPS) {
+  const section = document.createElement("div");
+  section.className = "group";
+
+  const heading = document.createElement("h3");
+  heading.textContent = group.title;
+  section.appendChild(heading);
+
+  for (const r of group.rules) {
+    const div = document.createElement("div");
+    div.className = "rule";
+    div.title = r.fn.name + " — click to toggle this code on/off";
+
+    const led = document.createElement("span");
+    led.className = "led";
+    div.appendChild(led);
+    r.led = led;
+
+    const pre = document.createElement("pre");
+    pre.textContent = ruleSource(r.fn);
+    div.appendChild(pre);
+
+    div.addEventListener("click", () => toggleRule(r));
+    div.addEventListener("mouseenter", () => setHilite(r.targets, 0));
+    div.addEventListener("mouseleave", clearHilite);
+
+    section.appendChild(div);
+    r.div = div;
+    syncRule(r);
+  }
+  rulesDiv.appendChild(section);
+}
+
+// reading the code freezes the game; leaving it, or touching the
+// keys, lets the game go again
+const panel = document.getElementById("codepanel");
+panel.addEventListener("mouseenter", () => { reading = true; });
+panel.addEventListener("mouseleave", () => { reading = false; });
+
+function restoreRules() {
+  for (const r of RULES) {
+    r.on = true;
+    syncRule(r);
+  }
+}
+
+function restorePhysics() {
+  for (const t of TUNABLES) {
+    t.set(t.default);
+    t.el.textContent = fmtVal(t);
+    t.slider.value = t.default;
+  }
+}
+
+const restoreBtn = document.getElementById("restoreBtn");
+restoreBtn.addEventListener("click", () => {
+  restoreRules();
+  restorePhysics();
+});
+document.getElementById("restartBtn").addEventListener("click", reset);
+
+// ---- the meta-toggle: heads = rules, tails = variables ------------------
+// One side of the coin at a time. On tails, every rule locks back on
+// and only the physics is shown, live; on heads, the physics snaps
+// back to default and only the rules are shown, clickable.
+let mode;
+const modeBtns = document.querySelectorAll("#modeToggle button");
+const modeHint = document.getElementById("modeHint");
+const HINTS = {
+  rules: "Click a rule to toggle it on or off. Dots glow as rules fire. ",
+  vars:  "Slide a value to change it. Doubleclick to reset.",
+};
+
+function setMode(m) {
+  mode = m;
+  if (m === "vars") restoreRules();
+  else restorePhysics();
+  document.getElementById("physicsGroup").style.display =
+    m === "vars" ? "" : "none";
+  rulesDiv.style.display = m === "vars" ? "none" : "";
+  for (const btn of modeBtns)
+    btn.classList.toggle("active", btn.dataset.mode === m);
+  modeHint.textContent = HINTS[m];
+  restoreBtn.textContent =
+    m === "vars" ? "reset the physics" : "restore all code";
+}
+
+for (const btn of modeBtns)
+  btn.addEventListener("click", () => setMode(btn.dataset.mode));
+setMode("rules");
+
+// ---- go ----------------------------------------------------------------
+frame();
+</script>
+</body>
+</html>
