@@ -180,3 +180,44 @@ into the bricks and stay there.
 As before, one law is not in the panel and cannot be switched off:
 nothing escapes into the void. A ball that leaves the board rolls on
 across the web page and wraps around the browser window's edges.
+
+## [naked-frogger](naked-frogger/)
+
+Frogger, and a change of approach. The three toys above show a handful
+of curated functions and hide the rest. This one hides nothing: the
+program in the listing is the whole game, about sixty lines including
+the lane table and the drawing, and the listing is what actually runs.
+
+- **Click a line** to strike it out. It is removed from the running
+  program, not disabled through a switch. Scaffolding (loops, braces,
+  declarations) stays put; every statement is fair game.
+- **Drag a number** to change it, in place, live. Lane speeds, the frog's
+  hitbox, the size of a cell, how many points home is worth.
+- **Lines light up** as they run, so the conditionals visibly fire only
+  when their moment comes.
+- The game pauses for nobody, but the start row and the median are safe,
+  a lost frog is just a lost frog, and the clock is a line you can strike.
+
+The harness (the editor, the scenery, the HUD) is the only hidden code,
+and it compiles the listing into a function with each struck line
+removed and each number read from a live table.
+
+### Things to try
+
+| strike out | and |
+| --- | --- |
+| `ctx.clearRect(...)` | everything smears into trails |
+| `keys = {}` | one press and the frog skates across the board |
+| `if (inRiver && !under) frog.dead = true` | the frog can swim |
+| `if (onRoad && under) frog.dead = true` | the frog walks through traffic |
+| `if (inRiver && under) frog.x += ...` | logs slide out from under you |
+| `things.push(...)` | the road and river slowly empty |
+| `for (const t of things) t.x += ...` | everything freezes, and piles up at the edges |
+| `clock -= 1 / 60` | all the time in the world |
+| `if (frog.y < 1) frog = { x: 6, y: 12 }` | sit at home and watch the score explode |
+| `ctx.fillText(t.icon...)` | the traffic is still there, you just can't see it |
+
+Drag a lane's `speed` through zero to reverse it. Drag the `0.7` and
+`0.3` in `overlaps` to resize the frog's hitbox. Drag `every` down to
+flood a lane. The two `let` lines only take hold on restart, so dragging
+a number there restarts the game.

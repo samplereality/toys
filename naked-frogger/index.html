@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naked Frogger</title>
+<style>
+  :root {
+    --paper: #f5f1e8;
+    --ink: #2b2a27;
+    --muted: #8a8578;
+    --comment: #7d8a5a;
+    --number: #1f5fbf;
+    --string: #b5542a;
+    --struck: #b8b3a7;
+    --fire: rgba(255, 196, 0, 0.35);
+    --frame: #2b2a27;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 20px 20px 40px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  header {
+    max-width: 1240px;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .gamecol { width: 520px; flex: none; }
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 34px;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 0 4px 6px;
+  }
+  .hud .lives { letter-spacing: 2px; }
+  .hud .clock {
+    width: 160px;
+    height: 10px;
+    background: #ddd6c6;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .hud .clock i {
+    display: block;
+    height: 100%;
+    background: #e0a326;
+    width: 100%;
+  }
+  .board {
+    position: relative;
+    width: 520px;
+    height: 520px;
+    border: 3px solid var(--frame);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #6abf69;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  }
+  .board canvas { position: absolute; inset: 0; display: block; }
+  .board .splat {
+    position: absolute;
+    font-size: 34px;
+    line-height: 40px;
+    width: 40px;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .board .caption {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    background: rgba(255,255,255,0.55);
+    font-weight: 800;
+    font-size: 34px;
+    letter-spacing: 0.04em;
+  }
+  .board .caption small { font-size: 14px; font-weight: 600; }
+  .board.over .caption { display: flex; }
+  .under {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .under b { color: var(--ink); font-weight: 600; }
+  .buttons { display: flex; gap: 8px; margin-top: 10px; }
+  .buttons button {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .buttons button:hover { background: #e9e3d6; }
+  #error {
+    display: none;
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #f7d9d2;
+    color: #7a2c1c;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+  }
+  .listing {
+    flex: 1 1 660px;
+    min-width: 600px;
+    max-width: 720px;
+    background: #fbf9f3;
+    border: 1px solid #e0d9c8;
+    border-radius: 6px;
+    padding: 10px 0 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    overflow-x: auto;
+    user-select: none;
+  }
+  .line {
+    display: flex;
+    white-space: pre;
+    padding: 0 12px 0 0;
+    border-radius: 0;
+  }
+  .line .gutter {
+    flex: none;
+    width: 40px;
+    text-align: right;
+    padding-right: 12px;
+    color: #c2bcae;
+  }
+  .line .code { flex: 1; }
+  .line.atom { cursor: pointer; }
+  .line.atom:hover { background: #f0ebdf; }
+  .line.atom .code::before { content: "   "; }
+  .line.atom.off .code::before { content: "// "; }
+  .line.off .code { color: var(--struck); text-decoration: line-through; text-decoration-color: #d08770; }
+  .line.off .num, .line.off .cmt, .line.off .str { color: var(--struck); }
+  .cmt { color: var(--comment); }
+  .str { color: var(--string); }
+  .num {
+    color: var(--number);
+    border-bottom: 1.5px dotted var(--number);
+    cursor: ew-resize;
+    padding: 0 1px;
+  }
+  .num:hover { background: #dfe9f9; }
+  .num.dragging { background: #cfe0ff; }
+  .line.setup .num { border-bottom-style: dashed; }
+  .legend {
+    display: flex;
+    gap: 18px;
+    padding: 0 12px 8px 52px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  .legend span::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 6px;
+    border-radius: 2px;
+    vertical-align: -1px;
+  }
+  .legend .l1::before { background: var(--fire); }
+  .legend .l2::before { border-bottom: 2px dotted var(--number); height: 6px; }
+  .legend .l3::before { background: var(--struck); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Naked Frogger</h1>
+  <p>The program on the right is the whole game. Click a line to strike it out. Drag a number to change it.</p>
+</header>
+
+<div class="wrap">
+  <div class="gamecol">
+    <div class="hud">
+      <span class="lives" id="lives"></span>
+      <span class="score" id="score"></span>
+      <span class="clock"><i id="clock"></i></span>
+    </div>
+    <div class="board" id="board">
+      <canvas id="scene" width="520" height="520"></canvas>
+      <canvas id="game" width="520" height="520"></canvas>
+      <div class="splat" id="splat">💥</div>
+      <div class="caption">GAME OVER<small>press R to start again</small></div>
+    </div>
+    <div class="buttons">
+      <button id="restart">restart (R)</button>
+      <button id="restore">put every line back</button>
+    </div>
+    <div id="error"></div>
+    <div class="under">
+      <b>Arrow keys</b> hop. Get across the road and the river to the top.<br>
+      Lines <b>light up</b> as they run. Striking a line out removes it from the
+      running program. The frog, the cars, the water and the clock are all just
+      lines.<br>
+      After <a href="https://web.archive.org/web/20080420084021/http://www.retrodev.co.uk/MiscGames/NakedGame/TheNakedGame.html">The Naked Game</a>.
+    </div>
+  </div>
+
+  <div class="listing" id="listing">
+    <div class="legend">
+      <span class="l1">running now</span>
+      <span class="l2">drag to change</span>
+      <span class="l3">struck out</span>
+    </div>
+  </div>
+</div>
+
+<script id="program" type="text/plain">
+// FROGGER, undressed. This is the whole program.
+// Every line runs, sixty times a second, from top to bottom.
+
+// each lane: its row, its speed, how long its things are, frames between new ones
+const LANES = [
+  { row: 1,  speed:  2, len: 3, every: 180, icon: "🪵" },
+  { row: 2,  speed: -3, len: 2, every: 100, icon: "🐢" },
+  { row: 3,  speed:  4, len: 4, every: 120, icon: "🪵" },
+  { row: 4,  speed: -2, len: 2, every: 120, icon: "🐢" },
+  { row: 5,  speed:  3, len: 3, every: 120, icon: "🪵" },
+  { row: 7,  speed: -4, len: 1, every:  60, icon: "🚗" },
+  { row: 8,  speed:  3, len: 2, every: 120, icon: "🚚" },
+  { row: 9,  speed: -6, len: 1, every:  60, icon: "🚓" },
+  { row: 10, speed:  2, len: 2, every: 150, icon: "🚌" },
+  { row: 11, speed: -3, len: 1, every:  80, icon: "🚕" },
+]
+
+let frog = { x: 6, y: 12 }, lives = 3, score = 0, clock = 30
+let things = [], tick = 0, keys = {}
+
+function overlaps(t, f) { return t.x < f.x + 0.7 && t.x + t.len > f.x + 0.3 }
+
+function frame() {
+  tick++
+  if (lives < 1) return                          // game over: nothing more happens
+
+  // every lane sends something in from one side, and it drives across
+  for (const [i, lane] of LANES.entries()) {
+    const edge = lane.speed > 0 ? -lane.len : 13 // from the left, or from the right
+    if (tick % lane.every === 0) things.push({ ...lane, lane: i, x: edge })
+  }
+  for (const t of things) t.x += LANES[t.lane].speed / 60
+  things = things.filter(t => t.x > -8 && t.x < 21)  // forget whatever has left
+
+  // the frog hops
+  if (keys.ArrowUp)    frog.y--
+  if (keys.ArrowDown)  frog.y++
+  if (keys.ArrowLeft)  frog.x--
+  if (keys.ArrowRight) frog.x++
+  keys = {}                                      // one hop per key press
+  if (frog.y > 12) frog.y = 12                   // no hopping off the bottom
+
+  // what the frog is standing on, and where. whatever floats carries the frog
+  const under = things.find(t => t.row === frog.y && overlaps(t, frog))
+  const inRiver = frog.y >= 1 && frog.y <= 5
+  const onRoad = frog.y >= 7 && frog.y <= 11
+  if (inRiver && under) frog.x += LANES[under.lane].speed / 60
+  if (inRiver && !under) frog.dead = true        // water is not for standing on
+  if (onRoad && under) frog.dead = true          // no standing under traffic
+  if (frog.x < 0 || frog.x > 12) frog.dead = true  // the edge of the world
+  clock -= 1 / 60
+  if (clock < 0) frog.dead = true                // out of time
+
+  // home
+  if (frog.y < 1) score += 100
+  if (frog.y < 1) clock = 30
+  if (frog.y < 1) frog = { x: 6, y: 12 }
+  // death
+  if (frog.dead) lives--
+  if (frog.dead) clock = 30
+  if (frog.dead) frog = { x: 6, y: 12 }
+
+  // draw
+  ctx.clearRect(0, 0, 520, 520)
+  for (const t of things)
+    ctx.fillText(t.icon.repeat(t.len), t.x * 40, t.row * 40 + 32, t.len * 40)
+  ctx.fillText("🐸", frog.x * 40 + 4, frog.y * 40 + 32)
+}
+</script>
+
+<script>
+"use strict";
+
+// ======================================================================
+// The harness. Everything below is the editor and the stage, not the
+// game. The game is the program above, compiled from the listing.
+// ======================================================================
+
+const SOURCE = document.getElementById("program").textContent
+  .replace(/^\n+/, "").replace(/\s+$/, "");
+
+// ---- parsing the program into lines, kinds and numbers -----------------
+// kinds:  comment     nothing runs
+//         table       a LANES row; its numbers are read live through getters
+//         setup       a top-level `let`; its numbers only take hold on restart
+//         structural  scaffolding that cannot be removed without breaking
+//                     the lines around it (braces, loops, declarations)
+//         atom        a statement you can strike out
+
+const N = [];        // every numeric literal in the program, by index
+const DEFAULTS = [];
+const lines = [];
+
+const STR_OR_NUM = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|(?<![\w.$])-?\d+(?:\.\d+)?(?![\w.])/g;
+const STR_OR_COMMENT = /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\/\//g;
+
+function splitComment(line) {
+  STR_OR_COMMENT.lastIndex = 0;
+  let m;
+  while ((m = STR_OR_COMMENT.exec(line)))
+    if (m[0] === "//") return [line.slice(0, m.index), line.slice(m.index)];
+  return [line, ""];
+}
+
+let inTable = false;
+for (const raw of SOURCE.split("\n")) {
+  const [code, comment] = splitComment(raw);
+  const t = code.trim();
+  let kind;
+  if (t === "") kind = "comment";
+  else if (t.startsWith("const LANES")) { kind = "structural"; inTable = true; }
+  else if (inTable) { kind = t === "]" ? "structural" : "table"; if (t === "]") inTable = false; }
+  else if (t.startsWith("let ")) kind = "setup";
+  else if (/^(const|function)\b/.test(t) || t === "}" || t.endsWith("{")) kind = "structural";
+  else if (/^for \(.*\)$/.test(t)) kind = "structural";
+  else kind = "atom";
+
+  // pull out the numbers
+  const nums = [];
+  if (kind !== "comment") {
+    STR_OR_NUM.lastIndex = 0;
+    let m;
+    while ((m = STR_OR_NUM.exec(code))) {
+      if (m[0][0] === '"' || m[0][0] === "'") continue;
+      const j = N.length;
+      const v = parseFloat(m[0]);
+      N.push(v); DEFAULTS.push(v);
+      const dec = (m[0].split(".")[1] || "").length;
+      nums.push({ j, start: m.index, end: m.index + m[0].length, decimals: dec });
+    }
+  }
+  lines.push({ raw, code, comment, kind, nums, on: true });
+}
+const on = lines.map(() => true);
+const ran = new Uint8Array(lines.length);
+const heat = new Float32Array(lines.length);
+
+// ---- compiling: the listing becomes the running program -----------------
+function withNumbers(L, fmt) {
+  let out = "", pos = 0;
+  for (const n of L.nums) {
+    out += L.code.slice(pos, n.start) + fmt(n);
+    pos = n.end;
+  }
+  return out + L.code.slice(pos);
+}
+
+function matchParen(s, openAt) {
+  let depth = 0;
+  for (let i = openAt; i < s.length; i++) {
+    if (s[i] === "(") depth++;
+    else if (s[i] === ")" && --depth === 0) return i;
+  }
+  return -1;
+}
+
+// a statement only runs while its line is on, and reports that it ran
+function wrapAtom(code, k) {
+  const t = code.trim();
+  if (t.startsWith("if (")) {
+    const end = matchParen(t, 3);
+    const cond = t.slice(4, end), stmt = t.slice(end + 1).trim();
+    return `if (on[${k}] && (${cond})) { ran[${k}] = 1; ${stmt} }`;
+  }
+  if (t.startsWith("for (")) {
+    const end = matchParen(t, 4);
+    const head = t.slice(0, end + 1), stmt = t.slice(end + 1).trim();
+    return `if (on[${k}]) ${head} { ran[${k}] = 1; ${stmt} }`;
+  }
+  return `if (on[${k}]) { ran[${k}] = 1; ${t} }`;
+}
+
+function compiledSource() {
+  return lines.map((L, k) => {
+    if (L.kind === "comment") return "";
+    let code = withNumbers(L, n => `N[${n.j}]`);
+    if (L.kind === "table")
+      code = code.replace(/(\w+):\s*N\[(\d+)\]/g, "get $1() { return N[$2] }");
+    if (L.kind === "atom") code = wrapAtom(code, k);
+    return code;
+  }).join("\n") + `
+return { frame, press: k => { keys[k] = true },
+         peek: () => ({ frog, lives, score, clock, things }) }`;
+}
+
+const gameCanvas = document.getElementById("game");
+const ctx = gameCanvas.getContext("2d");
+ctx.font = '32px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+ctx.textBaseline = "alphabetic";
+
+let api = null;
+function compile() {
+  const factory = new Function("N", "on", "ran", "ctx", compiledSource());
+  api = factory(N, on, ran, ctx);
+  showError(null);
+}
+
+// ---- the listing ---------------------------------------------------------
+const listing = document.getElementById("listing");
+
+function fmtNum(n) {
+  return N[n.j].toFixed(n.decimals);
+}
+
+for (const [k, L] of lines.entries()) {
+  const div = document.createElement("div");
+  div.className = "line " + L.kind;
+  L.div = div;
+
+  const gutter = document.createElement("span");
+  gutter.className = "gutter";
+  gutter.textContent = k + 1;
+  div.appendChild(gutter);
+
+  const code = document.createElement("span");
+  code.className = "code";
+  L.codeEl = code;
+
+  // code text, with numbers and strings as spans
+  let pos = 0;
+  const pushText = (s) => { if (s) code.appendChild(document.createTextNode(s)); };
+  const STR = /"(?:[^"\\]|\\.)*"/g;
+  const pieces = [];
+  for (const n of L.nums) pieces.push({ start: n.start, end: n.end, num: n });
+  STR.lastIndex = 0;
+  let m;
+  while ((m = STR.exec(L.code))) pieces.push({ start: m.index, end: m.index + m[0].length, str: true });
+  pieces.sort((a, b) => a.start - b.start);
+  for (const p of pieces) {
+    pushText(L.code.slice(pos, p.start));
+    const span = document.createElement("span");
+    if (p.num) {
+      span.className = "num";
+      span.textContent = fmtNum(p.num);
+      span.title = "drag left or right to change; double-click to put back";
+      p.num.el = span;
+      attachScrub(span, p.num, L);
+    } else {
+      span.className = "str";
+      span.textContent = L.code.slice(p.start, p.end);
+    }
+    code.appendChild(span);
+    pos = p.end;
+  }
+  pushText(L.code.slice(pos));
+  if (L.comment) {
+    const c = document.createElement("span");
+    c.className = "cmt";
+    c.textContent = L.comment;
+    code.appendChild(c);
+  }
+  div.appendChild(code);
+
+  if (L.kind === "atom") {
+    div.title = "click to strike this line out of the program";
+    div.addEventListener("click", (e) => {
+      if (e.target.classList && e.target.classList.contains("num")) return;
+      on[k] = !on[k];
+      div.classList.toggle("off", !on[k]);
+    });
+  }
+  listing.appendChild(div);
+}
+
+// ---- scrubbing numbers -----------------------------------------------------
+let scrub = null;
+function attachScrub(span, n, L) {
+  span.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    scrub = { n, L, startX: e.clientX, startV: N[n.j], moved: false };
+    span.classList.add("dragging");
+  });
+  span.addEventListener("dblclick", (e) => {
+    e.stopPropagation();
+    setNumber(n, DEFAULTS[n.j], L);
+  });
+}
+function setNumber(n, v, L) {
+  N[n.j] = v;
+  n.el.textContent = fmtNum(n);
+  if (L.kind === "setup") restart();   // setup numbers only take hold at the start
+}
+window.addEventListener("mousemove", (e) => {
+  if (!scrub) return;
+  const { n, L } = scrub;
+  const step = n.decimals ? Math.pow(10, -n.decimals) : 1;
+  const steps = Math.round((e.clientX - scrub.startX) / 8);
+  const v = parseFloat((scrub.startV + steps * step).toFixed(n.decimals));
+  if (v !== N[n.j]) {
+    scrub.moved = true;
+    N[n.j] = v;
+    n.el.textContent = fmtNum(n);
+  }
+});
+window.addEventListener("mouseup", () => {
+  if (!scrub) return;
+  scrub.n.el.classList.remove("dragging");
+  if (scrub.moved && scrub.L.kind === "setup") restart();
+  scrub = null;
+});
+
+// ---- the stage: scenery under the program's transparent canvas -----------
+const scene = document.getElementById("scene").getContext("2d");
+function paintScenery() {
+  const S = 40;
+  const g = scene;
+  g.fillStyle = "#6abf69"; g.fillRect(0, 0, 520, 520);          // grass
+  g.fillStyle = "#3d9a3f"; g.fillRect(0, 0, 520, S);             // the far bank
+  g.font = '26px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+  for (let c = 0; c < 13; c += 3) g.fillText("🪷", c * S + 7, 30);
+  g.fillStyle = "#3b8fd6"; g.fillRect(0, S, 520, 5 * S);         // the river
+  g.strokeStyle = "rgba(255,255,255,0.35)"; g.lineWidth = 2;
+  for (let r = 1; r <= 5; r++)
+    for (let x = 0; x < 520; x += 52) {
+      g.beginPath(); g.moveTo(x + 6, r * S + 22); g.lineTo(x + 26, r * S + 22); g.stroke();
+    }
+  g.fillStyle = "#4a4a52"; g.fillRect(0, 7 * S, 520, 5 * S);     // the road
+  g.strokeStyle = "#e6c34a"; g.setLineDash([16, 14]);
+  for (let r = 8; r <= 11; r++) {
+    g.beginPath(); g.moveTo(0, r * S); g.lineTo(520, r * S); g.stroke();
+  }
+  g.setLineDash([]);
+  g.strokeStyle = "#ddd"; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(0, 7 * S + 1); g.lineTo(520, 7 * S + 1); g.stroke();
+  g.beginPath(); g.moveTo(0, 12 * S - 1); g.lineTo(520, 12 * S - 1); g.stroke();
+}
+paintScenery();
+
+// ---- the loop ---------------------------------------------------------------
+const board = document.getElementById("board");
+const livesEl = document.getElementById("lives");
+const scoreEl = document.getElementById("score");
+const clockEl = document.getElementById("clock");
+const splat = document.getElementById("splat");
+const errorEl = document.getElementById("error");
+let lastLives = null, lastFrog = null, splatTimer = null;
+
+function showError(e) {
+  errorEl.style.display = e ? "block" : "none";
+  errorEl.textContent = e ? "the program threw: " + e.message + "\n(put a line back, or restart)" : "";
+}
+
+function hud() {
+  const s = api.peek();
+  livesEl.textContent = s.lives > 0 ? "🐸".repeat(Math.min(s.lives, 9)) : "";
+  scoreEl.textContent = String(s.score).padStart(5, "0");
+  clockEl.style.width = Math.max(0, Math.min(100, s.clock / 30 * 100)) + "%";
+  board.classList.toggle("over", s.lives < 1);
+  if (lastLives !== null && s.lives < lastLives && lastFrog) {
+    splat.style.left = lastFrog.x * 40 + "px";
+    splat.style.top = lastFrog.y * 40 + "px";
+    splat.style.opacity = 1;
+    clearTimeout(splatTimer);
+    splatTimer = setTimeout(() => { splat.style.opacity = 0; }, 350);
+  }
+  lastLives = s.lives;
+  lastFrog = s.frog ? { x: s.frog.x, y: s.frog.y } : null;
+}
+
+function glow() {
+  for (let k = 0; k < lines.length; k++) {
+    if (ran[k]) { heat[k] = 1; ran[k] = 0; }
+    if (heat[k] > 0) {
+      lines[k].div.style.background = heat[k] > 0.03
+        ? `rgba(255, 196, 0, ${(heat[k] * 0.35).toFixed(3)})` : "";
+      heat[k] = heat[k] > 0.03 ? heat[k] * 0.86 : 0;
+    }
+  }
+}
+
+function loop() {
+  try { api.frame(); }
+  catch (e) { showError(e); }
+  hud();
+  glow();
+  requestAnimationFrame(loop);
+}
+
+// ---- input --------------------------------------------------------------------
+const KEYMAP = { w: "ArrowUp", s: "ArrowDown", a: "ArrowLeft", d: "ArrowRight" };
+window.addEventListener("keydown", (e) => {
+  const key = KEYMAP[e.key.toLowerCase()] || e.key;
+  if (key.startsWith("Arrow")) {
+    e.preventDefault();
+    if (!e.repeat) api.press(key);
+  }
+  if (key === "r" || key === "R") restart();
+});
+
+function restart() {
+  lastLives = null;
+  compile();
+}
+function restoreAll() {
+  for (let j = 0; j < N.length; j++) N[j] = DEFAULTS[j];
+  for (const L of lines) for (const n of L.nums) n.el.textContent = fmtNum(n);
+  for (let k = 0; k < lines.length; k++) { on[k] = true; lines[k].div.classList.remove("off"); }
+  restart();
+}
+document.getElementById("restart").addEventListener("click", restart);
+document.getElementById("restore").addEventListener("click", restoreAll);
+
+// ---- go ----------------------------------------------------------------------
+compile();
+loop();
+</script>
+</body>
+</html>
