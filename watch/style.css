@@ -63,6 +63,19 @@ button:disabled{opacity:.4;cursor:default}
 .aboutInner a{color:inherit}
 body.dim .box:not(#boxSubject){opacity:.25;pointer-events:none}
 body.dim #console{opacity:.35}
-body.gone .box:not(#boxClips),body.gone #console,body.gone #foot{display:none}
+body.gone .box:not(#boxLook),body.gone #console,body.gone #foot{display:none}
 @media (max-width:820px){#cols{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){#cols{grid-template-columns:1fr}}
+.lookwrap{position:relative;display:inline-block}
+#floats{position:absolute;left:100%;top:0;margin-left:8px;width:140px;height:0;pointer-events:none}
+.float{position:absolute;font-weight:700;font-size:13px;animation:floatup 1s ease-out forwards;white-space:nowrap}
+@keyframes floatup{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-38px)}}
+.big.pulse{animation:pulse .25s}
+@keyframes pulse{50%{transform:scale(1.04)}}
+.flash{animation:flash .6s}
+@keyframes flash{0%{background:var(--fg);color:var(--bg)}100%{background:var(--box);color:var(--fg)}}
+#btnLook:active{transform:scale(.97)}
+.cam .name{display:inline-block}
+.cam .n{font-variant-numeric:tabular-nums}
+.cam .rate{font-size:11px;color:var(--muted);margin-left:6px}
+#foot label{margin-left:10px;cursor:pointer}

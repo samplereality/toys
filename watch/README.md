@@ -1,6 +1,6 @@
 # Neighborhood Watch
 
-An incremental game about watching. It starts with a doorbell camera.
+An incremental game about watching. It starts with a window.
 
 Play it the way you would play *Universal Paperclips*: one button, then a
 business, then projects with names that get stranger, then things you did not
@@ -15,11 +15,22 @@ something a player should read first.
   ("Peek through the blinds"). Every panel appears only when the game state
   calls for it, and the palette darkens with each stage: the porch, the street,
   the body, the region, everything, and finally Subject 0.
-- **The resources are the argument.** Clips are the product. Buyers pay for
-  them. Clearance (from sharing with police) buys vision cores and retention.
-  Idle cores produce Paranoia, which the weirder projects require. Coverage is
-  measured in humans, out of 8.1 billion. Impunity comes from beating the
-  people who push back.
+- **One currency, then layers.** *Sightings* are what you see, and they are what
+  you spend: every camera is justified by what the last one saw. Looking out
+  the window yields one; cameras yield them per second on the classic ×1.15
+  cost curve; click upgrades (binoculars, a second monitor, the Neighbors app)
+  keep looking worthwhile. Sharing with police introduces *Clearance*, which
+  buys vision models and retention; models produce *Inferences*, and idle
+  models produce *Suspicion*, which the stranger projects demand. Incorporating
+  introduces *Funding* (rounds raised against sightings per second, plus city
+  contracts). Winning against the people who push back yields *Impunity*.
+  *Coverage* is measured in humans, out of 8.1 billion.
+- **Prestige is a rebrand.** Once you are a company, you can reset everything
+  and the public forgets: you gain *Amnesia*, a permanent multiplier, and keep
+  the knowledge of how to build it all again. The map, the lawsuits, and the
+  old name are gone.
+- **Idle.** Cameras keep producing for up to eight hours while the tab is
+  closed. Every look floats a number; every purchase flashes; sound is optional.
 - **Fifty-odd projects** escalate from "Motion sensitivity: High" through bird
   sex determination, plate readers, retail face recognition, delivery drones,
   school laptops, toothbrush cameras, sleep monitors, contact lenses, inner
@@ -61,7 +72,8 @@ the folder with anything.
 ## Tuning
 
 `engine.js` has no DOM dependencies, so it can be driven headlessly. A greedy
-bot reaches the end in about 55 minutes; a person exploring will take longer.
+bot reaches the end in about 75 minutes; a person exploring, or leaving it to
+idle, will take longer.
 
 ## Credits
 
