@@ -1,4 +1,0 @@
-# Deploy this folder on its own: set the site's base directory to "gaggle".
-# (Deploying the whole repo also works; the game is then served at /gaggle/.)
-[build]
-  publish = "."

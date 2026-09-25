@@ -1,4 +1,4 @@
 # toys
 Assortment of tools and experiments
 
-- [`gaggle/`](gaggle/) — **Gaggle Safety™ Community Growth Simulator**, a satirical browser game about license plate reader surveillance. Static HTML/JS, no build step.
+- [`watch/`](watch/) — **Neighborhood Watch**, an incremental game about watching. It starts with a doorbell camera. Static HTML/JS, no build step.

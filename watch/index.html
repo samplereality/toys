@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neighborhood Watch</title>
+<meta name="description" content="An incremental game. It starts with a doorbell camera.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3Ccircle cx='8' cy='8' r='2.5' fill='%23000'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-stage="1">
+<div id="wrap">
+  <div id="console" aria-live="polite"></div>
+  <div id="cols">
+    <div class="col" id="col1">
+      <div class="box" id="boxClips">
+        <div class="big">Clips: <span id="clips">0</span></div>
+        <button id="btnPeek">Peek through the blinds</button>
+        <div class="sub hidden" id="rateLine">Footage: <span id="rate">0</span> clips/sec</div>
+      </div>
+      <div class="box hidden" id="boxBiz">
+        <h3>Business</h3>
+        <div>Available funds: <b id="money">$0.00</b></div>
+        <div>Unsold clips: <span id="unsold">0</span></div>
+        <div>Buyers pay: <span id="price">$0.25</span> per clip</div>
+        <div class="row"><button id="btnBuyers">Data partnerships</button> <span class="lvl">Level: <span id="buyersLvl">0</span></span> <span class="cost">Cost: <span id="buyersCost">$30.00</span></span></div>
+        <div class="sub">Demand: <span id="demand">5</span> clips/sec</div>
+      </div>
+      <div class="box hidden" id="boxCams">
+        <h3>Cameras</h3>
+        <div id="camList"></div>
+      </div>
+      <div class="box hidden" id="boxFund">
+        <h3>Fundraising</h3>
+        <div>Valuation: <b id="valuation">$0</b></div>
+        <div class="row"><button id="btnRaise">Raise a round</button> <span class="cost" id="raiseInfo"></span></div>
+        <div class="sub" id="fundNote"></div>
+      </div>
+      <div class="box hidden" id="boxCity">
+        <h3>Municipal contracts</h3>
+        <div>Cities: <b id="cityN">0</b> · Revenue: <span id="cityRev">$0</span>/sec</div>
+        <div class="row"><button id="btnCity">Sign a city</button> <span class="cost">Cost: <span id="cityCost"></span></span></div>
+        <div class="row hidden" id="donateRow"><button id="btnDonate">Campaign contribution</button> <span class="cost">Cost: <span id="donateCost"></span> · Clearance +2</span></div>
+      </div>
+    </div>
+    <div class="col" id="col2">
+      <div class="box hidden" id="boxVision">
+        <h3>Vision</h3>
+        <div>Clearance: <b id="clearance">0</b></div>
+        <div class="row"><button id="btnCore">Vision core</button> <span id="cores">0</span> <button id="btnRet">Retention</button> <span id="retention">0</span></div>
+        <div class="row hidden" id="moneyCoreRow"><button id="btnCoreMoney">Buy core</button> <span class="cost" id="coreMoneyCost"></span> <button id="btnRetMoney">Buy retention</button> <span class="cost" id="retMoneyCost"></span></div>
+        <div>Ops: <span id="ops">0</span> / <span id="opsMax">0</span> <span class="sub">(<span id="opsRate">0</span>/sec)</span></div>
+        <div class="hidden" id="paraLine">Paranoia: <span id="paranoia">0</span></div>
+        <div class="hidden" id="birdLine">Birds sexed: <span id="birds">0</span></div>
+      </div>
+      <div class="box hidden" id="boxProjects">
+        <h3>Projects</h3>
+        <div id="projects"></div>
+      </div>
+    </div>
+    <div class="col" id="col3">
+      <div class="box hidden" id="boxCoverage">
+        <h3>Coverage</h3>
+        <div>Humans observed: <b id="people">0</b></div>
+        <div>of 8.1 billion: <b id="coverage">0.0000%</b></div>
+        <div class="bar"><i id="covBar"></i></div>
+      </div>
+      <div class="box hidden" id="boxResist">
+        <h3>Incidents</h3>
+        <div id="incident" class="incident">Quiet.</div>
+        <canvas id="battle" width="300" height="70"></canvas>
+        <div>Impunity: <b id="impunity">0</b> · Influence: <span id="influenceUsed">0</span>/<span id="influence">0</span> · Won <span id="wins">0</span> · Lost <span id="losses">0</span> · Mapped: <span id="mapped">0</span>%</div>
+        <div id="alloc"></div>
+        <div id="rlog" class="rlog"></div>
+      </div>
+      <div class="box hidden" id="boxSubject">
+        <h3>Subject 0</h3>
+        <div id="dossier"></div>
+        <div id="camBox" class="hidden">
+          <div class="vidwrap"><video id="vid" autoplay playsinline muted></video><canvas id="vidOverlay"></canvas></div>
+          <div class="sub">Clips of Subject 0: <span id="subjClips">0</span></div>
+        </div>
+        <div id="endActions"></div>
+      </div>
+    </div>
+  </div>
+  <div id="foot">
+    <span id="stageName"></span>
+    <a href="#" id="about">about</a> · <a href="#" id="reset">delete all footage</a>
+    <span class="sub" id="saveNote"></span>
+  </div>
+</div>
+<canvas id="heat"></canvas>
+<div id="aboutBox" class="hidden">
+  <div class="aboutInner">
+    <h3>Neighborhood Watch</h3>
+    <p>An incremental game about watching. It starts with a doorbell camera.</p>
+    <p>Everything runs in your browser. Nothing you do here is sent anywhere. The game keeps a save file in this browser's local storage and nothing else. If, late in the game, it asks to use your camera, the video is shown only to you and is never recorded, uploaded, or stored; you can decline, and the game continues either way. "Delete all footage" erases the save.</p>
+    <p>The company in the game is invented. The incidents are modeled on reporting about real license plate reader networks, retail face recognition, school laptop cameras, workplace monitoring, and the people organizing against them (see <a href="https://deflock.org/" target="_blank" rel="noopener">deflock.org</a> and <a href="https://flocksurveillance.org/" target="_blank" rel="noopener">flocksurveillance.org</a>). The form is borrowed, gratefully, from Frank Lantz's <i>Universal Paperclips</i>.</p>
+    <p><button id="aboutClose">Close</button></p>
+  </div>
+</div>
+<script src="engine.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
